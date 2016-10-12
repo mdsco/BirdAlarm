@@ -8,10 +8,9 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-
 public class AlarmListFragment extends ListFragment {
 
-    ArrayList<Alarm> alarmItems = new ArrayList<Alarm>();
+    ArrayList<Alarm> alarmItems = new ArrayList<>();
     AlarmArrayAdapter adapter;
 
     @Override
@@ -30,7 +29,7 @@ public class AlarmListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.list_fragment, null);
+        View view = inflater.inflate(R.layout.list_fragment, container);
 
         adapter = new AlarmArrayAdapter(getActivity(), R.layout.item, alarmItems);
 
@@ -48,7 +47,7 @@ public class AlarmListFragment extends ListFragment {
 
     public void addAlarm(String hour, String minute) {
 
-        Alarm alarm = new Alarm(new Integer(hour), new Integer(minute));
+        Alarm alarm = new Alarm(Integer.valueOf(hour), Integer.valueOf(minute));
         alarmItems.add(alarm);
 
         adapter = new AlarmArrayAdapter(getActivity(), R.layout.item, alarmItems);

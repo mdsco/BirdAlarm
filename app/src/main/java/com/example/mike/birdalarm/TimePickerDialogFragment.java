@@ -6,16 +6,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
-import android.widget.TimePicker;
 import java.util.Calendar;
-
 
 public class TimePickerDialogFragment extends DialogFragment {
 
     TimePickerDialog.OnTimeSetListener mCallback;
-
-    private int alarmHour;
-    private int alarmMinute;
 
     @Override
     public void onAttach(Context context) {
@@ -26,7 +21,6 @@ public class TimePickerDialogFragment extends DialogFragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "Must implement OnTimeSetListener");
         }
-
     }
 
     @Override
@@ -41,21 +35,5 @@ public class TimePickerDialogFragment extends DialogFragment {
                 DateFormat.is24HourFormat(getContext()));
 
         return timePicker;
-    }
-
-//    @Override
-//    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-//
-//        alarmHour = hour;
-//        alarmMinute = minute;
-//
-//    }
-
-    public int getHour(){
-        return alarmHour;
-    }
-
-    public int getMinute(){
-        return alarmMinute;
     }
 }

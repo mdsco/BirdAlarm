@@ -1,11 +1,9 @@
 package com.example.mike.birdalarm;
 
-import android.app.ListFragment;
 import android.app.TimePickerDialog;
-import android.provider.Settings;
+import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.TimePicker;
 
@@ -27,15 +25,12 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         alarmListFragment = (AlarmListFragment) getFragmentManager()
                                     .findFragmentById(R.id.alarmListFragment);
 
-
     }
 
     public void showTimePickerDialog(View view){
 
         DialogFragment timePickerDialogFragment = new TimePickerDialogFragment();
         timePickerDialogFragment.show(getSupportFragmentManager(), "timePicker");
-//        ListView alarmListView = (ListView) findViewById(R.id.alarmListView);
-
     }
 
 //    public void setTime(final String time){
@@ -76,7 +71,5 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
         System.out.println("Got the time! : " + hour + ":" + minute);
         alarmListFragment.addAlarm(hour+"", minute+"");
-
-
     }
 }
