@@ -30,10 +30,9 @@ public class TimePickerDialogFragment extends DialogFragment {
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
 
-        TimePickerDialog timePicker = new TimePickerDialog(getContext(),
+        return new TimePickerDialog(getContext(),
                 mCallback, hour, minute,
                 DateFormat.is24HourFormat(getContext()));
 
-        return timePicker;
     }
 }

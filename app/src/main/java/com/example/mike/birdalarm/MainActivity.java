@@ -10,7 +10,6 @@ import android.widget.TimePicker;
 public class MainActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
     AlarmListFragment alarmListFragment;
-    DialogFragment timePickerDialogFragment = new TimePickerDialogFragment();
 
 //    long tie = System.currentTimeMillis() + 5000;
 //
@@ -69,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-        System.out.println("Got the time! : " + hour + ":" + minute);
         alarmListFragment.addAlarm(hour+"", minute+"");
     }
 }

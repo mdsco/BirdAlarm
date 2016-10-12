@@ -9,6 +9,7 @@
     <string name="imgdesc">imgdesc</string>
     <string name="title">Title of this thing</string>
     <string name="txt_content">Content in this thing</string>
+    <string name="add">Add</string>
 
     <string-array name="Planets">
         <item>Sun</item>

@@ -2,6 +2,7 @@ package com.example.mike.birdalarm;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +11,14 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
+class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
 
     private Context context;
     private int layoutResourceId;
     private List<Alarm> alarmList;
 
-    public AlarmArrayAdapter(Context context, int layoutResourceId, List<Alarm> alarmList){
+    AlarmArrayAdapter(Context context, int layoutResourceId, List<Alarm> alarmList){
         super(context, layoutResourceId, alarmList);
 
         this.context = context;
@@ -25,6 +26,8 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         this.alarmList = alarmList;
     }
 
+
+    @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
