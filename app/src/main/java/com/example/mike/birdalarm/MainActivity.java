@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 public class MainActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         alarmListFragment = (AlarmListFragment) getFragmentManager()
                                     .findFragmentById(R.id.alarmListFragment);
 
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+
         alarmListFragment.addAlarm(hour+"", minute+"");
     }
+
 }

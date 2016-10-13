@@ -9,13 +9,13 @@
     tools:context="com.example.mike.birdalarm.MainActivity"
     android:layout_margin="10dp"
     android:elevation="0dp"
-    android:translationZ="10dp">
+    android:translationZ="10dp"
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/alarm_list_item"
         style="@style/title_help"
-        android:text=""
-        android:clickable="true"
+        android:text="words"
         android:padding="5dp"
         android:textAlignment="center"
         android:gravity="center_vertical" />
@@ -24,24 +24,6 @@
         android:id="@+id/alarm_list_item_content"
         style="@style/txt_help"
         android:text="@string/txt_content"
-        android:padding="10dp" />
+        android:padding="10dp"/>
 
 </LinearLayout>
-
-
-
-<!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="fill_parent"-->
-    <!--android:padding="10dp">-->
-
-    <!--<TextView xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--android:id="@+id/alarm_list_item"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:text="">-->
-
-    <!--</TextView>-->
-
-<!--</RelativeLayout>-->

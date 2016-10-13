@@ -14,25 +14,11 @@ public class AlarmListFragment extends ListFragment {
     AlarmArrayAdapter adapter;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-//        items = new ArrayList<String>();
-//
-//        adapter = new ArrayAdapter<String>(
-//                getActivity(), android.R.layout.simple_list_item_1, items);
-//
-//        setListAdapter(adapter);
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.list_fragment, container);
 
         adapter = new AlarmArrayAdapter(getActivity(), R.layout.item, alarmItems);
-
         setListAdapter(adapter);
 
         return view;
@@ -43,6 +29,8 @@ public class AlarmListFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        getListView().setOnItemClickListener(new OnItemClickListenerListViewItem());
+
     }
 
     public void addAlarm(String hour, String minute) {
@@ -51,7 +39,6 @@ public class AlarmListFragment extends ListFragment {
         alarmItems.add(alarm);
 
         adapter = new AlarmArrayAdapter(getActivity(), R.layout.item, alarmItems);
-
         setListAdapter(adapter);
 
     }

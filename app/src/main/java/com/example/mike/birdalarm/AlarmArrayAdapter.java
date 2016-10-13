@@ -47,4 +47,5 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         return convertView;
 
     }
+
 }
