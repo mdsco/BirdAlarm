@@ -3,10 +3,13 @@
     android:fillAfter="true">
 
     <alpha
-        android:duration="100"
-        android:fromAlpha="1.0"
-        android:interpolator="@android:anim/accelerate_interpolator"
-        android:toAlpha="0.0" />
+    android:duration="100"
+    android:fromAlpha="1.0"
+    android:interpolator="@android:anim/accelerate_interpolator"
+    android:toAlpha="0.0" />
+
+
+
 
 </set>
 
@@ -17,3 +20,4 @@
 <!--android:interpolator="@android:anim/linear_interpolator"-->
 <!--android:toXScale="1.0"-->
 <!--android:toYScale="0.0" />-->
+

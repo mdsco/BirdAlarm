@@ -3,19 +3,19 @@
     android:fillAfter="true">
 
     <alpha
-        android:duration="100"
-        android:fromAlpha="0.0"
-        android:interpolator="@android:anim/accelerate_interpolator"
-        android:toAlpha="1.0" />
+    android:duration="100"
+    android:fromAlpha="0.0"
+    android:interpolator="@android:anim/accelerate_interpolator"
+    android:toAlpha="1.0" />
 
-    </set>
 
-    <!--<scale-->
-        <!--android:duration="50"-->
-        <!--android:fromXScale="1.0"-->
-        <!--android:fromYScale="0.0"-->
-        <!--android:interpolator="@android:anim/linear_interpolator"-->
-        <!--android:toXScale="1.0"-->
-        <!--android:toYScale="1.0"/>-->
 
-<!--</set>-->
+</set>
+
+<!--<scale-->
+<!--android:duration="50"-->
+<!--android:fromXScale="1.0"-->
+<!--android:fromYScale="0.0"-->
+<!--android:interpolator="@android:anim/linear_interpolator"-->
+<!--android:toXScale="1.0"-->
+<!--android:toYScale="1.0"/>-->

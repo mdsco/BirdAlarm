@@ -14,7 +14,7 @@
 
     <TextView
         android:id="@+id/alarm_list_item"
-        style="@style/title_help"
+        style="@style/alarm_title_style"
         android:text="words"
         android:padding="5dp"
         android:textAlignment="center"
@@ -22,7 +22,7 @@
 
     <TextView
         android:id="@+id/alarm_list_item_content"
-        style="@style/txt_help"
+        style="@style/alarm_content_style"
         android:text="@string/txt_content"
         android:padding="10dp"/>
 

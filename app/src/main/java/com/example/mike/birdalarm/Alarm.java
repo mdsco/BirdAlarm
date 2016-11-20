@@ -1,10 +1,12 @@
 package com.example.mike.birdalarm;
 
+import android.content.Intent;
+
 public class Alarm {
     public int getHour() {
         return hour;
     }
-
+ 
     private int hour;
 
     private int minute;
@@ -14,6 +16,7 @@ public class Alarm {
         this.hour = hour;
         this.minute = minute;
         alarmIsRepeating = false;
+
     }
 
     public void setDayAlarmOnOrOff(Days day){
