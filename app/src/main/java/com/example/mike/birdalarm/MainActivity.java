@@ -28,10 +28,18 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
 
     }
 
+    public void collapseAlarmItem(View view){
+
+        TextView placeholder = (TextView) view.findViewById(R.id.placeholdertextView);
+//        placeholder.setVisibility(View.GONE);
+
+    }
+
     public void showTimePickerDialog(View view){
 
         DialogFragment timePickerDialogFragment = new TimePickerDialogFragment();
         timePickerDialogFragment.show(getSupportFragmentManager(), "timePicker");
+
     }
 
 //    public void setTime(final String time){
@@ -71,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
 
-        alarmListFragment.addAlarm(hour+"", minute+"");
+        alarmListFragment.addAlarm(hour + "", minute + "");
     }
 
 }

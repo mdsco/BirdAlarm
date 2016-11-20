@@ -10,10 +10,10 @@ public class OnItemClickListenerListViewItem implements AdapterView.OnItemClickL
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-        Context context = view.getContext();
-        TextView alarmListItemContent = (TextView) view.findViewById(R.id.alarm_list_item_content);
-
-        Fx.toggleContents(context, alarmListItemContent);
+//        Context context = view.getContext();
+//        TextView alarmListItemContent = (TextView) view.findViewById(R.id.alarm_list_item_content);
+//
+//        Fx.toggleContents(context, alarmListItemContent);
 
     }
 }

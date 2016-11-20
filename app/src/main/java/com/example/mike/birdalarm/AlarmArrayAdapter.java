@@ -18,11 +18,11 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
     private int layoutResourceId;
     private List<Alarm> alarmList;
 
-    AlarmArrayAdapter(Context context, int layoutResourceId, List<Alarm> alarmList){
-        super(context, layoutResourceId, alarmList);
+
+    AlarmArrayAdapter(Context context, List<Alarm> alarmList) {
+        super(context, R.layout.alarm_list_item, alarmList);
 
         this.context = context;
-        this.layoutResourceId = layoutResourceId;
         this.alarmList = alarmList;
     }
 
@@ -31,18 +31,21 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        if( convertView == null ) {
+        if (convertView == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            convertView = inflater.inflate(layoutResourceId, parent, false);
+            convertView = inflater.inflate(R.layout.alarm_list_item, parent, false);
         }
 
         Alarm alarmItem = alarmList.get(position);
 
-        TextView alarmListItem = (TextView) convertView.findViewById(R.id.alarm_list_item);
+        TextView alarmListItemTime = (TextView) convertView.findViewById(R.id.alarmTimeTextView);
 
-        alarmListItem.setText("Alarm set for: "
+        alarmListItemTime.setText(
                 + alarmItem.getHour() + ":"
-                + alarmItem.getMinute());
+                + String.format("%02d", alarmItem.getMinute()));
+
+        TextView alarmAmPm = (TextView) convertView.findViewById(R.id.aMpMTextView);
+        alarmAmPm.setText(alarmItem.getaMpM());
 
         return convertView;
 

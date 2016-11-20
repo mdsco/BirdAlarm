@@ -3,19 +3,41 @@ package com.example.mike.birdalarm;
 import android.content.Intent;
 
 public class Alarm {
-    public int getHour() {
-        return hour;
-    }
- 
-    private int hour;
 
+    private boolean aMpM;
+    private int hour;
     private int minute;
     private boolean alarmIsRepeating;
     private Days[] days = {Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY, Days.THURSDAY, Days.FRIDAY, Days.SATURDAY, Days.SUNDAY};
+
     public Alarm (int hour, int minute){
-        this.hour = hour;
+
+        this.hour = getCorrectHour(hour);
         this.minute = minute;
+        this.aMpM = setAmPm(hour);
+
         alarmIsRepeating = false;
+
+    }
+
+    public int getCorrectHour(int hour){
+
+        if(hour == 0){
+            return 12;
+        } else if(hour > 12){
+            return hour - 12;
+        }
+
+        return hour;
+    }
+
+    public boolean setAmPm(int hour){
+
+        if(hour < 12 || hour == 24){
+            return true;
+        } else {
+            return false;
+        }
 
     }
 
@@ -34,6 +56,10 @@ public class Alarm {
         }
 
     }
+
+    public String getaMpM() { return aMpM == true ? "AM" : "PM"; }
+
+    public int getHour() { return hour; }
 
     public void setHour(int hour) {
         this.hour = hour;

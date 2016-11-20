@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.mike.birdalarm.MainActivity"
+    android:layout_margin="10dp"
+    android:elevation="0dp"
+    android:translationZ="10dp"
+    android:padding="5dp">
+
+
+    <TextView
+        android:text="8:00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/alarmTimeTextView"
+        android:textSize="70sp"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:text="AM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/aMpMTextView"
+        android:layout_alignBaseline="@+id/alarmTimeTextView"
+        android:layout_alignBottom="@+id/alarmTimeTextView"
+        android:layout_toRightOf="@id/alarmTimeTextView"/>
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="21dp"
+        android:id="@+id/switch1"
+        android:layout_above="@+id/aMpMTextView"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="PLACEHOLDERTEXT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/alarmTimeTextView"
+        android:textSize="35sp"
+        android:id="@+id/placeholdertextView"
+        android:layout_toStartOf="@+id/switch1"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/placeholdertextView"
+        android:id="@+id/button"
+        android:onClick="collapseAlarmItem"
+        android:stateListAnimator="@null"
+        android:drawableLeft="@android:drawable/arrow_down_float"
+        android:layout_alignStart="@+id/switch1"
+        android:layout_alignEnd="@+id/switch1"
+        android:backgroundTint="@android:color/transparent" />
+
+
+</RelativeLayout>
