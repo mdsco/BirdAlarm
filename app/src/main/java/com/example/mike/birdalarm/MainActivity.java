@@ -28,13 +28,6 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
 
     }
 
-    public void collapseAlarmItem(View view){
-
-        TextView placeholder = (TextView) view.findViewById(R.id.placeholdertextView);
-//        placeholder.setVisibility(View.GONE);
-
-    }
-
     public void showTimePickerDialog(View view){
 
         DialogFragment timePickerDialogFragment = new TimePickerDialogFragment();

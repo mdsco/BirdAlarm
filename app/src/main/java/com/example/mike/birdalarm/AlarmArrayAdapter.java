@@ -6,7 +6,9 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -44,10 +46,32 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                 + alarmItem.getHour() + ":"
                 + String.format("%02d", alarmItem.getMinute()));
 
+        Button collapseButton = (Button) convertView.findViewById(R.id.collapseButton);
+        final TextView placeholderView = (TextView) convertView.findViewById(R.id.placeholdertextView);
+
+        collapseButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                collapseAlarmItem(placeholderView);
+            }
+
+        });
+
         TextView alarmAmPm = (TextView) convertView.findViewById(R.id.aMpMTextView);
         alarmAmPm.setText(alarmItem.getaMpM());
 
         return convertView;
+
+    }
+
+    public void collapseAlarmItem(View view){
+
+        if(view.getVisibility() == View.VISIBLE) {
+            view.setVisibility(View.GONE);
+        } else if(view.getVisibility() == View.GONE){
+            view.setVisibility(View.VISIBLE);
+        }
 
     }
 
