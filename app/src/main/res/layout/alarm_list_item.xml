@@ -49,8 +49,7 @@
         android:textSize="35sp"
         android:id="@+id/placeholdertextView"
         android:layout_toStartOf="@+id/switch1"
-        android:layout_alignParentEnd="true"
-        android:visibility="gone" />
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -62,6 +61,5 @@
         android:layout_alignStart="@+id/switch1"
         android:layout_alignEnd="@+id/switch1"
         android:backgroundTint="@android:color/transparent" />
-
 
 </RelativeLayout>
