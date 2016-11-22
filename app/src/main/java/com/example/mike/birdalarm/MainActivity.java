@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
     AlarmListFragment alarmListFragment;
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
 
-        alarmListFragment.addAlarm(hour + "", minute + "");
+        alarmListFragment.addAlarm(MainActivity.this, hour + "", minute + "");
     }
 
 }

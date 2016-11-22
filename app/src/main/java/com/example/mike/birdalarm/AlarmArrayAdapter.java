@@ -14,11 +14,8 @@ import java.util.List;
 
 class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
-
     private Context context;
-    private int layoutResourceId;
     private List<Alarm> alarmList;
-
 
     AlarmArrayAdapter(Context context, List<Alarm> alarmList) {
         super(context, R.layout.alarm_list_item, alarmList);
@@ -45,8 +42,6 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                 + alarmItem.getHour() + ":"
                 + String.format("%02d", alarmItem.getMinute()));
 
-        convertView.findViewById(R.id.placeholdertextView).setVisibility(View.GONE);
-
         Button collapseButton = (Button) convertView.findViewById(R.id.collapseButton);
         final TextView placeholderView = (TextView) convertView.findViewById(R.id.placeholdertextView);
 
@@ -66,7 +61,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
     }
 
-    public void collapseAlarmItem(View view){
+    private void collapseAlarmItem(View view){
 
         if(view.getVisibility() == View.VISIBLE) {
             view.setVisibility(View.GONE);

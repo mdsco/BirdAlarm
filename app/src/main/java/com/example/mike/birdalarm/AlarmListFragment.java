@@ -1,11 +1,11 @@
 package com.example.mike.birdalarm;
 
 import android.app.ListFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 
@@ -35,9 +35,9 @@ public class AlarmListFragment extends ListFragment {
 
     }
 
-    public void addAlarm(String hour, String minute) {
+    public void addAlarm(Context context, String hour, String minute) {
 
-        Alarm alarm = new Alarm(Integer.valueOf(hour), Integer.valueOf(minute));
+        Alarm alarm = new Alarm(context, Integer.valueOf(hour), Integer.valueOf(minute));
         alarmItems.add(alarm);
 
         adapter = new AlarmArrayAdapter(getActivity(), alarmItems);

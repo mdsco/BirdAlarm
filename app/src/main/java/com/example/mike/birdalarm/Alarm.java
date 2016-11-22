@@ -1,6 +1,12 @@
 package com.example.mike.birdalarm;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
+
+import java.util.Calendar;
 
 public class Alarm {
 
@@ -10,7 +16,10 @@ public class Alarm {
     private boolean alarmIsRepeating;
     private Days[] days = {Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY, Days.THURSDAY, Days.FRIDAY, Days.SATURDAY, Days.SUNDAY};
 
-    public Alarm (int hour, int minute){
+    AlarmManager alarmManager;
+
+
+    public Alarm (Context context, int hour, int minute){
 
         this.hour = getCorrectHour(hour);
         this.minute = minute;
@@ -18,9 +27,23 @@ public class Alarm {
 
         alarmIsRepeating = false;
 
+        registerAlarm(context, hour);
     }
 
-    public int getCorrectHour(int hour){
+    private void registerAlarm(Context context, int hour) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, this.minute);
+
+        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pendingAlarmIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingAlarmIntent);
+    }
+
+    private int getCorrectHour(int hour){
 
         if(hour == 0){
             return 12;
@@ -31,18 +54,10 @@ public class Alarm {
         return hour;
     }
 
-    public boolean setAmPm(int hour){
-
-        if(hour < 12 || hour == 24){
-            return true;
-        } else {
-            return false;
-        }
-
-    }
+    private boolean setAmPm(int hour){ return hour < 12; }
 
     public void setDayAlarmOnOrOff(Days day){
-        day.alarmOn = day.alarmOn ? false : true;
+        day.alarmOn = !day.alarmOn;
     }
 
     enum Days {
@@ -57,7 +72,7 @@ public class Alarm {
 
     }
 
-    public String getaMpM() { return aMpM == true ? "AM" : "PM"; }
+    String getaMpM() { return aMpM ? "AM" : "PM"; }
 
     public int getHour() { return hour; }
 
