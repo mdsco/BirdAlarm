@@ -21,6 +21,10 @@
             </intent-filter>
 
         </activity>
+        <activity android:name=".AlarmLockScreenActivity">
+
+        </activity>
+
 
         <receiver android:name=".AlarmReceiver" />
 

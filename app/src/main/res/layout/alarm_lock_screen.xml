@@ -15,19 +15,20 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/indigo_bunting"
+        android:src="@drawable/indigo_bunting"
         android:id="@+id/imageView"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content" />
 
     <TextView
         android:text="Indigo Bunting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="47dp"
         android:id="@+id/textView2"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="19dp" />
+
 </RelativeLayout>
