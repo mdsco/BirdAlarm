@@ -7,7 +7,7 @@ import android.content.Intent;
 
 import java.util.Calendar;
 
-public class Alarm {
+class Alarm {
 
     private boolean aMpM;
     private int hour;
@@ -15,10 +15,10 @@ public class Alarm {
     private boolean alarmIsRepeating;
     private Days[] days = {Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY, Days.THURSDAY, Days.FRIDAY, Days.SATURDAY, Days.SUNDAY};
 
-    AlarmManager alarmManager;
+    private AlarmManager alarmManager;
 
 
-    public Alarm (Context context, int hour, int minute){
+    Alarm (Context context, int hour, int minute){
 
         this.hour = getCorrectHour(hour);
         this.minute = minute;
@@ -75,7 +75,7 @@ public class Alarm {
 
     String getaMpM() { return aMpM ? "AM" : "PM"; }
 
-    public int getHour() { return hour; }
+    int getHour() { return hour; }
 
     public void setHour(int hour) {
         this.hour = hour;
