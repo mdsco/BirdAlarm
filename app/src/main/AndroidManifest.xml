@@ -20,6 +20,10 @@
 
         <activity android:name=".AlarmLockScreenActivity"></activity>
         <activity android:name=".AlarmLockScreenVideoActivity"></activity>
+        <activity android:name=".SettingsActivity"
+                  android:label="settings">
+
+        </activity>
 
         <receiver android:name=".AlarmReceiver" />
 
