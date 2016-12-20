@@ -3,6 +3,7 @@ package com.example.mike.birdalarm;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
+public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
     private Context context;
     private List<Alarm> alarmList;
@@ -24,7 +25,6 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         this.alarmList = alarmList;
     }
 
-
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -34,22 +34,34 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             convertView = inflater.inflate(R.layout.alarm_list_item, parent, false);
         }
 
-        Alarm alarmItem = alarmList.get(position);
+        final Alarm alarmItem = alarmList.get(position);
 
         TextView alarmListItemTime = (TextView) convertView.findViewById(R.id.alarmTimeTextView);
 
         alarmListItemTime.setText(
-                + alarmItem.getHour() + ":"
-                + String.format("%02d", alarmItem.getMinute()));
+                +alarmItem.getHour() + ":"
+                        + String.format("%02d", alarmItem.getMinute()));
 
         Button collapseButton = (Button) convertView.findViewById(R.id.collapseButton);
-        final TextView placeholderView = (TextView) convertView.findViewById(R.id.placeholdertextView);
+        final TextView placeholderView =
+                (TextView) convertView.findViewById(R.id.placeholdertextView);
+
+        if (!alarmItem.isExpanded()) {
+            collapseAlarmItem(placeholderView);
+        }
 
         collapseButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                collapseAlarmItem(placeholderView);
+
+                if (placeholderView.getVisibility() == View.VISIBLE) {
+                    Log.v("Got", "Here 1 " + view.toString());
+                    collapseAlarmItem(placeholderView);
+                } else if (placeholderView.getVisibility() == View.GONE) {
+                    Log.v("Got", "Here 2");
+                    expandAlarmItem(placeholderView);
+                }
             }
 
         });
@@ -61,13 +73,17 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
     }
 
-    private void collapseAlarmItem(View view){
+    public static void collapseAlarmItem(View view) {
 
-        if(view.getVisibility() == View.VISIBLE) {
+        if (view.getVisibility() == View.VISIBLE) {
             view.setVisibility(View.GONE);
-        } else if(view.getVisibility() == View.GONE){
+        }
+    }
+
+    public static void expandAlarmItem(View view) {
+
+        if (view.getVisibility() == View.GONE) {
             view.setVisibility(View.VISIBLE);
         }
-
     }
 }
