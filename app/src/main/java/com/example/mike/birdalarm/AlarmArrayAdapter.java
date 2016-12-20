@@ -3,7 +3,6 @@ package com.example.mike.birdalarm;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +12,25 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
+class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
+
+    interface Deleter {
+
+        void deleteThis(Alarm alarm);
+
+    }
 
     private Context context;
     private List<Alarm> alarmList;
+    private AlarmListFragment fragment;
 
-    AlarmArrayAdapter(Context context, List<Alarm> alarmList) {
+    AlarmArrayAdapter(Context context, AlarmListFragment fragment, List<Alarm> alarmList) {
         super(context, R.layout.alarm_list_item, alarmList);
 
         this.context = context;
+        this.fragment = fragment;
         this.alarmList = alarmList;
+
     }
 
     @NonNull
@@ -42,7 +50,10 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                 +alarmItem.getHour() + ":"
                         + String.format("%02d", alarmItem.getMinute()));
 
-        Button collapseButton = (Button) convertView.findViewById(R.id.collapseButton);
+        TextView alarmAmPm = (TextView) convertView.findViewById(R.id.aMpMTextView);
+        alarmAmPm.setText(alarmItem.getaMpM());
+
+
         final TextView placeholderView =
                 (TextView) convertView.findViewById(R.id.placeholdertextView);
 
@@ -50,37 +61,46 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             collapseAlarmItem(placeholderView);
         }
 
+
+        Button deleteButton = (Button) convertView.findViewById(R.id.deleteAlarmButton);
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Deleter fragment = AlarmArrayAdapter.this.fragment;
+                fragment.deleteThis(alarmItem);
+            }
+        });
+
+
+        Button collapseButton = (Button) convertView.findViewById(R.id.collapseButton);
+
         collapseButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
 
                 if (placeholderView.getVisibility() == View.VISIBLE) {
-                    Log.v("Got", "Here 1 " + view.toString());
                     collapseAlarmItem(placeholderView);
                 } else if (placeholderView.getVisibility() == View.GONE) {
-                    Log.v("Got", "Here 2");
                     expandAlarmItem(placeholderView);
                 }
             }
 
         });
 
-        TextView alarmAmPm = (TextView) convertView.findViewById(R.id.aMpMTextView);
-        alarmAmPm.setText(alarmItem.getaMpM());
-
         return convertView;
 
     }
 
-    public static void collapseAlarmItem(View view) {
+    private static void collapseAlarmItem(View view) {
 
         if (view.getVisibility() == View.VISIBLE) {
             view.setVisibility(View.GONE);
         }
     }
 
-    public static void expandAlarmItem(View view) {
+    private static void expandAlarmItem(View view) {
 
         if (view.getVisibility() == View.GONE) {
             view.setVisibility(View.VISIBLE);

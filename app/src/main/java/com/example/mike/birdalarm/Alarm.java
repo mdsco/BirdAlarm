@@ -61,6 +61,7 @@ class Alarm implements Parcelable {
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP,
                     calendar.getTimeInMillis(), pendingAlarmIntent);
+
     }
 
     private int getCorrectHour(int hour){

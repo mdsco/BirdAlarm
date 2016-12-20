@@ -3,7 +3,6 @@ package com.example.mike.birdalarm;
 import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,8 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 
-public class AlarmListFragment extends ListFragment {
+public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter.Deleter{
 
     ArrayList<Alarm> alarmItems = new ArrayList<>();
     AlarmArrayAdapter adapter;
@@ -32,7 +30,7 @@ public class AlarmListFragment extends ListFragment {
 
         View View = inflater.inflate(R.layout.alarm_list_fragment, container);
 
-        adapter = new AlarmArrayAdapter(getActivity(), alarmItems);
+        adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
         setListAdapter(adapter);
 
         return View;
@@ -64,7 +62,7 @@ public class AlarmListFragment extends ListFragment {
             alarmItems = savedInstanceState.getParcelableArrayList("alarms");
         }
 
-        adapter = new AlarmArrayAdapter(getActivity(), alarmItems);
+        adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
         setListAdapter(adapter);
 
     }
@@ -79,16 +77,18 @@ public class AlarmListFragment extends ListFragment {
 
         sortAlarms(alarmItems);
 
-        adapter = new AlarmArrayAdapter(getActivity(), alarmItems);
+        adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
         setListAdapter(adapter);
 
         ListView listView = (ListView) getActivity().findViewById(android.R.id.list);
         listView.post(new Runnable() {
+
             @Override
             public void run() {
                 ListView listView = getListView();
                 listView.smoothScrollToPosition(Alarm.id);
             }
+
         });
 
     }
@@ -98,6 +98,7 @@ public class AlarmListFragment extends ListFragment {
         Collections.sort(alarmItems, new Comparator<Alarm>() {
             @Override
             public int compare(Alarm alarmOne, Alarm alarmTwo) {
+
                 if(alarmOne.getHour() < alarmTwo.getHour()){
                     return -1;
                 }
@@ -115,12 +116,15 @@ public class AlarmListFragment extends ListFragment {
     }
 
     private void inactivateAllOtherAlarms(ArrayList<Alarm> alarmItems) {
-
-        Iterator<Alarm> iterator = alarmItems.iterator();
-        while(iterator.hasNext()) {
-
-            Alarm next = iterator.next();
+        for (Alarm next : alarmItems) {
             next.setExpandedState(false);
         }
+    }
+
+    @Override
+    public void deleteThis(Alarm alarm) {
+        alarmItems.remove(alarm);
+        adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
+        setListAdapter(adapter);
     }
 }
