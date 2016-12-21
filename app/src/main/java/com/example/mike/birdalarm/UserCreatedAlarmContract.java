@@ -4,9 +4,6 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-/**
- * Created by mike on 12/3/16.
- */
 
 public class UserCreatedAlarmContract {
 

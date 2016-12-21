@@ -18,14 +18,17 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".AlarmLockScreenActivity"></activity>
-        <activity android:name=".AlarmLockScreenVideoActivity"></activity>
+        <activity android:name=".AlarmLockScreenActivity"/>
+        <activity android:name=".AlarmLockScreenVideoActivity"/>
         <activity android:name=".SettingsActivity"
-                  android:label="settings">
+                  android:label="settings"/>
 
-        </activity>
 
         <receiver android:name=".AlarmReceiver" />
+
+        <provider
+            android:authorities="com.example.mike.birdalarm"
+            android:name=".StoredAlarmProvider"/>
 
     </application>
 

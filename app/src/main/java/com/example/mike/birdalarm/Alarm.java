@@ -2,12 +2,17 @@ package com.example.mike.birdalarm;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Calendar;
+import java.util.Date;
 
 class Alarm implements Parcelable {
 
@@ -36,6 +41,31 @@ class Alarm implements Parcelable {
 
         id++;
         registerAlarm(context, hour, Alarm.id);
+
+        ContentResolver contentResolver = context.getContentResolver();
+
+        ContentValues alarmValues = new ContentValues();
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, this.minute);
+        calendar.set(Calendar.SECOND, 0);
+
+        long timestamp = calendar.getTimeInMillis();
+
+        alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TIME, timestamp);
+        alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE, 1);
+        alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING, 1);
+        alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE, "robin");
+
+        Uri uri = contentResolver.insert(UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI, alarmValues);
+
+        if(uri == null){
+            Log.v("I ", " guess this doesn't work");
+        }
+        Log.v("I ", " guess this does work");
+
     }
 
     private Alarm(Parcel in){

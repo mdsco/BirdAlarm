@@ -16,7 +16,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
     interface Deleter {
 
-        void deleteThis(Alarm alarm);
+        void deleteThisAlarm(Alarm alarm);
 
     }
 
@@ -68,7 +68,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             @Override
             public void onClick(View view) {
                 Deleter fragment = AlarmArrayAdapter.this.fragment;
-                fragment.deleteThis(alarmItem);
+                fragment.deleteThisAlarm(alarmItem);
             }
         });
 

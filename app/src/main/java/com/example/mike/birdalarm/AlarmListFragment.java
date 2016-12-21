@@ -1,21 +1,41 @@
 package com.example.mike.birdalarm;
 
 import android.app.ListFragment;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter.Deleter{
 
     ArrayList<Alarm> alarmItems = new ArrayList<>();
     AlarmArrayAdapter adapter;
+
+    String[] projection = {
+
+            UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TIME,
+            UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE,
+            UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING,
+            UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE
+    };
+
+    private int COL_TIME = 0;
+    private int COL_ACTIVE = 1;
+    private int COL_REPEATING = 2;
+    private int COL_TYPE = 3;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,13 +47,46 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-
         View View = inflater.inflate(R.layout.alarm_list_fragment, container);
+
+        ContentResolver contentResolver = getActivity().getContentResolver();
+        Cursor cursor = contentResolver.query(UserCreatedAlarmContract
+                .NewAlarmEntry.CONTENT_URI, projection, null, null, null);
+
+        if(cursor == null){
+
+            Log.v("I gue: ", "This didn't work");
+        }
+
+        Log.v("I guess: ", "This did work!");
+
+        fillAlarmItems(cursor);
 
         adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
         setListAdapter(adapter);
 
         return View;
+
+    }
+
+    private void fillAlarmItems(Cursor cursor) {
+
+        if(cursor.moveToFirst()){
+
+            do {
+                long timestamp = cursor.getLong(0);
+                int active = cursor.getInt(1);
+                int repeating = cursor.getInt(2);
+                String type = cursor.getString(3);
+
+                Calendar calendar = Calendar.getInstance().getInstance();
+                calendar.setTime(new Date(timestamp));
+                int hours = calendar.get(Calendar.HOUR_OF_DAY);
+                int minutes = calendar.get(Calendar.MINUTE);
+
+                alarmItems.add(new Alarm(getActivity(), hours, minutes));
+            } while(cursor.moveToNext());
+        }
 
     }
 
@@ -122,7 +175,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
     }
 
     @Override
-    public void deleteThis(Alarm alarm) {
+    public void deleteThisAlarm(Alarm alarm) {
         alarmItems.remove(alarm);
         adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
         setListAdapter(adapter);
