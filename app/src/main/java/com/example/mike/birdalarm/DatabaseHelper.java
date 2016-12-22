@@ -22,6 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         final String CREATE_USER_ALARM_TABLE = "CREATE TABLE " +
                 UserCreatedAlarmContract.NewAlarmEntry.ALARM_TABLE_NAME + "(" +
                 UserCreatedAlarmContract.NewAlarmEntry._ID + " INTEGER PRIMARY KEY," +
+                UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " INTEGER NOT NULL," +
                 UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TIME + " INTEGER NOT NULL," +
                 UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE + " INTEGER NOT NULL," +
                 UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING + " INTEGER NOT NULL," +

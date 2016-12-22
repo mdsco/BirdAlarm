@@ -24,18 +24,18 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     String[] projection = {
 
+            UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID,
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TIME,
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE,
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING,
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE
     };
 
-    private int COL_TIME = 0;
-    private int COL_ACTIVE = 1;
-    private int COL_REPEATING = 2;
-    private int COL_TYPE = 3;
-
-
+    private int COL_ALARM_ID = 0;
+    private int COL_TIME = 1;
+    private int COL_ACTIVE = 2;
+    private int COL_REPEATING = 3;
+    private int COL_TYPE = 4;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,14 +53,13 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
         Cursor cursor = contentResolver.query(UserCreatedAlarmContract
                 .NewAlarmEntry.CONTENT_URI, projection, null, null, null);
 
-        if(cursor == null){
+        if(cursor.getCount() > 0){
 
-            Log.v("I gue: ", "This didn't work");
+            fillAlarmItems(cursor);
+            sortAlarms(alarmItems);
+            setExpandedStateOfAlarmsToFalse(alarmItems);
+            Log.v("I guess: ", " the cursor has something in it.");
         }
-
-        Log.v("I guess: ", "This did work!");
-
-        fillAlarmItems(cursor);
 
         adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
         setListAdapter(adapter);
@@ -71,20 +70,26 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     private void fillAlarmItems(Cursor cursor) {
 
+        int count = cursor.getCount();
+
         if(cursor.moveToFirst()){
 
             do {
-                long timestamp = cursor.getLong(0);
-                int active = cursor.getInt(1);
-                int repeating = cursor.getInt(2);
-                String type = cursor.getString(3);
+                int alarmId =  cursor.getInt(0);
+                long timestamp = cursor.getLong(1);
+                int active = cursor.getInt(2);
+                int repeating = cursor.getInt(3);
+                String type = cursor.getString(4);
 
                 Calendar calendar = Calendar.getInstance().getInstance();
                 calendar.setTime(new Date(timestamp));
                 int hours = calendar.get(Calendar.HOUR_OF_DAY);
                 int minutes = calendar.get(Calendar.MINUTE);
 
-                alarmItems.add(new Alarm(getActivity(), hours, minutes));
+                Log.v("", hours + " : " + minutes);
+
+                alarmItems.add(new Alarm(getActivity(), hours, minutes, alarmId));
+
             } while(cursor.moveToNext());
         }
 
@@ -124,11 +129,13 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
         Alarm alarm = new Alarm(context, Integer.valueOf(hour), Integer.valueOf(minute));
 
-        inactivateAllOtherAlarms(alarmItems);
+        setExpandedStateOfAlarmsToFalse(alarmItems);
 
         alarmItems.add(alarm);
 
         sortAlarms(alarmItems);
+
+        final int alarmPosition = alarmItems.indexOf(alarm);
 
         adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
         setListAdapter(adapter);
@@ -139,7 +146,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
             @Override
             public void run() {
                 ListView listView = getListView();
-                listView.smoothScrollToPosition(Alarm.id);
+                listView.smoothScrollToPosition(alarmPosition);
             }
 
         });
@@ -168,7 +175,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     }
 
-    private void inactivateAllOtherAlarms(ArrayList<Alarm> alarmItems) {
+    private void setExpandedStateOfAlarmsToFalse(ArrayList<Alarm> alarmItems) {
         for (Alarm next : alarmItems) {
             next.setExpandedState(false);
         }
@@ -176,8 +183,15 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     @Override
     public void deleteThisAlarm(Alarm alarm) {
+
+        ContentResolver contentResolver = getActivity().getContentResolver();
+        contentResolver.delete(UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI,
+                UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?",
+                new String[]{String.valueOf(alarm.getId())});
+
         alarmItems.remove(alarm);
         adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
         setListAdapter(adapter);
+
     }
 }

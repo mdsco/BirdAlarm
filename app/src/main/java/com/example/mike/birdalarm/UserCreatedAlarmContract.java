@@ -19,6 +19,7 @@ public class UserCreatedAlarmContract {
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_ALARM).build();
 
         public final static String ALARM_TABLE_NAME = "user_alarm";
+        public final static String COLUMN_ALARM_ID = "alarm_id";
         public final static String COLUMN_ALARM_TIME = "alarm_time";
         public final static String COLUMN_REPEATING = "is_repeating";
         public final static String COLUMN_ACTIVE = "is_active";

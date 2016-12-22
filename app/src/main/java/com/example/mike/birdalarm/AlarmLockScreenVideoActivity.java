@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 public class AlarmLockScreenVideoActivity extends AppCompatActivity {
@@ -18,7 +19,11 @@ public class AlarmLockScreenVideoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_lock_screen_video);
 
-        videoView = (VideoView) findViewById(R.id.alarmVideoView);
+        String time = getIntent().getStringExtra("Time");
+        TextView alarmTimeTextView = (TextView) findViewById(R.id.alarm_time_text_view);
+        alarmTimeTextView.setText(time);
+
+        videoView = (VideoView) findViewById(R.id.alarm_video_view);
 
         try {
             videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.robin_chirping));

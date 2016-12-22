@@ -16,7 +16,7 @@ import java.util.Date;
 
 class Alarm implements Parcelable {
 
-    static int id = -1;
+    private int id;
 
     private boolean aMpM;
     private int hour;
@@ -28,6 +28,22 @@ class Alarm implements Parcelable {
 
     private AlarmManager alarmManager;
 
+    Alarm (Context context, int hour, int minute, int alarmId){
+
+        this.hour = getCorrectHour(hour);
+        this.minute = minute;
+        this.aMpM = true;
+
+        this.id = alarmId;
+
+        alarmIsRepeating = false;
+
+        isExpanded = true;
+
+        registerAlarm(context, hour, this.id);
+
+
+    }
 
     Alarm (Context context, int hour, int minute){
 
@@ -35,12 +51,14 @@ class Alarm implements Parcelable {
         this.minute = minute;
         this.aMpM = setAmPm(hour);
 
+        long currentTime = System.currentTimeMillis();
+        this.id = (int) currentTime;
+
         alarmIsRepeating = false;
 
         isExpanded = true;
 
-        id++;
-        registerAlarm(context, hour, Alarm.id);
+        registerAlarm(context, hour, this.id);
 
         ContentResolver contentResolver = context.getContentResolver();
 
@@ -54,6 +72,7 @@ class Alarm implements Parcelable {
 
         long timestamp = calendar.getTimeInMillis();
 
+        alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID, this.id);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TIME, timestamp);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE, 1);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING, 1);
@@ -61,18 +80,12 @@ class Alarm implements Parcelable {
 
         Uri uri = contentResolver.insert(UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI, alarmValues);
 
-        if(uri == null){
-            Log.v("I ", " guess this doesn't work");
-        }
-        Log.v("I ", " guess this does work");
-
     }
 
     private Alarm(Parcel in){
 
         hour = in.readInt();
         minute = in.readInt();
-
     }
 
     private void registerAlarm(Context context, int hour, int id) {
@@ -85,6 +98,7 @@ class Alarm implements Parcelable {
 
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+        alarmIntent.putExtra("Time", getCorrectHour(hour) + ":" + minute);
 
         PendingIntent pendingAlarmIntent =
                         PendingIntent.getBroadcast(context, id, alarmIntent, 0);
@@ -111,7 +125,6 @@ class Alarm implements Parcelable {
         day.alarmOn = !day.alarmOn;
     }
 
-
     public static final Parcelable.Creator<Alarm> CREATOR = new Parcelable.Creator<Alarm>(){
 
         @Override
@@ -137,6 +150,15 @@ class Alarm implements Parcelable {
         out.writeInt(hour);
         out.writeInt(minute);
 
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId(){
+
+        return this.id;
     }
 
     enum Days {

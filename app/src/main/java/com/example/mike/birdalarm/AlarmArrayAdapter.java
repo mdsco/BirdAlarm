@@ -44,7 +44,8 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
         final Alarm alarmItem = alarmList.get(position);
 
-        TextView alarmListItemTime = (TextView) convertView.findViewById(R.id.alarmTimeTextView);
+        TextView alarmListItemTime =
+                (TextView) convertView.findViewById(R.id.alarm_time_text_view);
 
         alarmListItemTime.setText(
                 +alarmItem.getHour() + ":"
@@ -52,7 +53,6 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
         TextView alarmAmPm = (TextView) convertView.findViewById(R.id.aMpMTextView);
         alarmAmPm.setText(alarmItem.getaMpM());
-
 
         final TextView placeholderView =
                 (TextView) convertView.findViewById(R.id.placeholdertextView);

@@ -17,7 +17,9 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        String time = intent.getStringExtra("Time");
         Intent alarmIntent = new Intent(context, AlarmLockScreenVideoActivity.class);
+        alarmIntent.putExtra("Time", time);
         alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         context.startActivity(alarmIntent);
 
