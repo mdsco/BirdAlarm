@@ -34,10 +34,12 @@
         android:layout_toRightOf="@id/alarm_time_text_view"/>
 
     <Switch
+        android:checked="true"
+        android:textColor="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="21dp"
-        android:id="@+id/switch1"
+        android:id="@+id/alarmActiveSwitch"
         android:layout_above="@+id/aMpMTextView"
         android:layout_alignParentEnd="true" />
 
@@ -48,7 +50,7 @@
         android:layout_below="@+id/alarm_time_text_view"
         android:textSize="35sp"
         android:id="@+id/placeholdertextView"
-        android:layout_toStartOf="@+id/switch1"
+        android:layout_toStartOf="@+id/alarmActiveSwitch"
         android:layout_alignParentEnd="true" />
 
     <Button
@@ -58,8 +60,8 @@
         android:id="@+id/collapseButton"
         android:stateListAnimator="@null"
         android:drawableLeft="@android:drawable/arrow_down_float"
-        android:layout_alignStart="@+id/switch1"
-        android:layout_alignEnd="@+id/switch1"
+        android:layout_alignStart="@+id/alarmActiveSwitch"
+        android:layout_alignEnd="@+id/alarmActiveSwitch"
         android:backgroundTint="@android:color/transparent" />
 
     <Button

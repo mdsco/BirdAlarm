@@ -12,7 +12,6 @@ public class UserCreatedAlarmContract {
 
     static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
-
     public static final class NewAlarmEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =

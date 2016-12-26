@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.List;
@@ -51,8 +52,17 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                 +alarmItem.getHour() + ":"
                         + String.format("%02d", alarmItem.getMinute()));
 
-        TextView alarmAmPm = (TextView) convertView.findViewById(R.id.aMpMTextView);
+        final TextView alarmAmPm = (TextView) convertView.findViewById(R.id.aMpMTextView);
         alarmAmPm.setText(alarmItem.getaMpM());
+
+        Switch alarmSwitch = (Switch) convertView.findViewById(R.id.alarmActiveSwitch);
+        alarmSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                alarmItem.set
+                alarmItem.cancelAlarm();
+            }
+        });
 
         final TextView placeholderView =
                 (TextView) convertView.findViewById(R.id.placeholdertextView);
@@ -60,7 +70,6 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         if (!alarmItem.isExpanded()) {
             collapseAlarmItem(placeholderView);
         }
-
 
         Button deleteButton = (Button) convertView.findViewById(R.id.deleteAlarmButton);
 

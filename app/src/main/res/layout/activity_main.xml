@@ -12,8 +12,7 @@
         android:name="com.example.mike.birdalarm.AlarmListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-
+    
     <ImageButton
         android:id="@+id/addAlarmButton"
         android:background="@drawable/add_alarm_button_shape"

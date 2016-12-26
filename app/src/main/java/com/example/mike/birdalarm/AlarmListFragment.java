@@ -75,11 +75,12 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
         if(cursor.moveToFirst()){
 
             do {
-                int alarmId =  cursor.getInt(0);
-                long timestamp = cursor.getLong(1);
-                int active = cursor.getInt(2);
-                int repeating = cursor.getInt(3);
-                String type = cursor.getString(4);
+
+                int alarmId =  cursor.getInt(COL_ALARM_ID);
+                long timestamp = cursor.getLong(COL_TIME);
+                int active = cursor.getInt(COL_ACTIVE);
+                int repeating = cursor.getInt(COL_REPEATING);
+                String type = cursor.getString(COL_TYPE);
 
                 Calendar calendar = Calendar.getInstance().getInstance();
                 calendar.setTime(new Date(timestamp));
@@ -91,7 +92,10 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                 alarmItems.add(new Alarm(getActivity(), hours, minutes, alarmId));
 
             } while(cursor.moveToNext());
+
         }
+
+        cursor.close();
 
     }
 

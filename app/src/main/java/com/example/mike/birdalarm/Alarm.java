@@ -27,6 +27,7 @@ class Alarm implements Parcelable {
     private boolean isExpanded;
 
     private AlarmManager alarmManager;
+    private PendingIntent pendingAlarmIntent;
 
     Alarm (Context context, int hour, int minute, int alarmId){
 
@@ -98,13 +99,20 @@ class Alarm implements Parcelable {
 
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-        alarmIntent.putExtra("Time", getCorrectHour(hour) + ":" + minute);
+        alarmIntent.putExtra("Time", getCorrectHour(hour) + ":" +
+                                        String.format("%02d", minute));
 
-        PendingIntent pendingAlarmIntent =
-                        PendingIntent.getBroadcast(context, id, alarmIntent, 0);
+        pendingAlarmIntent = PendingIntent.getBroadcast(context, id, alarmIntent, 0);
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP,
                     calendar.getTimeInMillis(), pendingAlarmIntent);
+
+    }
+
+    public void cancelAlarm(){
+
+        alarmManager.cancel(pendingAlarmIntent);
+
 
     }
 

@@ -1,15 +1,22 @@
 package com.example.mike.birdalarm;
 
+import android.app.Activity;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-public class AlarmLockScreenVideoActivity extends AppCompatActivity {
+public class AlarmLockScreenVideoActivity extends Activity {
 
     private VideoView videoView;
     int position = 0;
@@ -17,9 +24,16 @@ public class AlarmLockScreenVideoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
         setContentView(R.layout.activity_alarm_lock_screen_video);
 
         String time = getIntent().getStringExtra("Time");
+
         TextView alarmTimeTextView = (TextView) findViewById(R.id.alarm_time_text_view);
         alarmTimeTextView.setText(time);
 
