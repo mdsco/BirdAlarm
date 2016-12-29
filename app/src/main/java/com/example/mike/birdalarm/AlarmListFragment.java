@@ -28,7 +28,8 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TIME,
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE,
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING,
-            UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE
+            UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE,
+            UserCreatedAlarmContract.NewAlarmEntry.COLUMN_LABEL
     };
 
     private int COL_ALARM_ID = 0;
@@ -36,6 +37,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
     private int COL_ACTIVE = 2;
     private int COL_REPEATING = 3;
     private int COL_TYPE = 4;
+    private int COL_LABEL = 5;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,6 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
             fillAlarmItems(cursor);
             sortAlarms(alarmItems);
             setExpandedStateOfAlarmsToFalse(alarmItems);
-            Log.v("I guess: ", " the cursor has something in it.");
         }
 
         adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
@@ -129,9 +130,9 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     }
 
-    public void addAlarm(Context context, String hour, String minute) {
+    public void addAlarm(Context context, int hour, int minute) {
 
-        Alarm alarm = new Alarm(context, Integer.valueOf(hour), Integer.valueOf(minute));
+        Alarm alarm = new Alarm(context, hour, minute);
 
         setExpandedStateOfAlarmsToFalse(alarmItems);
 

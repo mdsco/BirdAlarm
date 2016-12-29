@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 public class Fx {
 
-    public static void toggleContents(Context context, TextView alarmListItemContents){
+    public static void toggleContents(Context context, View alarmListItemContents){
 
         if(alarmListItemContents.isShown()){
 

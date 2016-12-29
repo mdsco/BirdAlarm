@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
 
-        alarmListFragment.addAlarm(MainActivity.this, hour + "", minute + "");
+        alarmListFragment.addAlarm(MainActivity.this, hour, minute);
     }
 
 }

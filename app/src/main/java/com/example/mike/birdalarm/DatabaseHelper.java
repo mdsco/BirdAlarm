@@ -26,8 +26,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TIME + " INTEGER NOT NULL," +
                 UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE + " INTEGER NOT NULL," +
                 UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING + " INTEGER NOT NULL," +
-                UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE + " TEXT NOT NULL);";
-        Log.v("Apple", CREATE_USER_ALARM_TABLE);
+                UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE + " INTEGER NOT NULL," +
+                UserCreatedAlarmContract.NewAlarmEntry.COLUMN_LABEL + " TEXT NOT NULL);";
 
         sqLiteDatabase.execSQL(CREATE_USER_ALARM_TABLE);
 

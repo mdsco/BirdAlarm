@@ -5,9 +5,12 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class SettingsFragment extends PreferenceFragment
                 implements Preference.OnPreferenceChangeListener{
+
+    private String LOG_TAG = SettingsFragment.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,10 +34,15 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public boolean onPreferenceChange(Preference preference, Object value){
 
+
         String summaryValue = value.toString();
+        Log.v(LOG_TAG, " Preferenc: " + preference.toString());
+
+
 
         if(preference instanceof ListPreference){
 
+            Log.v(LOG_TAG, "In here");
             ListPreference listPreference = (ListPreference) preference;
             int preferenceIndex = listPreference.findIndexOfValue(summaryValue);
             preference.setSummary(preferenceIndex);

@@ -1,6 +1,7 @@
 package com.example.mike.birdalarm;
 
 import android.app.Activity;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,6 +16,14 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.VideoView;
+
+import java.io.File;
+import java.io.InputStream;
+
+
+/**
+ * REQUIRE VIDEOS TO BE IN 'raw' RESOURCE FOLDER!!!!!!!! (instead of 'assets' folder)
+ */
 
 public class AlarmLockScreenVideoActivity extends Activity {
 
@@ -40,6 +49,8 @@ public class AlarmLockScreenVideoActivity extends Activity {
         videoView = (VideoView) findViewById(R.id.alarm_video_view);
 
         try {
+
+
             videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.robin_chirping));
         } catch (Exception e) {
             Log.e("Error", e.getMessage());

@@ -43,26 +43,28 @@
         android:layout_above="@+id/aMpMTextView"
         android:layout_alignParentEnd="true" />
 
-    <TextView
-        android:text="PLACEHOLDERTEXT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/alarm_time_text_view"
-        android:textSize="35sp"
-        android:id="@+id/placeholdertextView"
-        android:layout_toStartOf="@+id/alarmActiveSwitch"
-        android:layout_alignParentEnd="true" />
 
-    <Button
-        android:layout_width="wrap_content"
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/placeholdertextView"
-        android:id="@+id/collapseButton"
-        android:stateListAnimator="@null"
-        android:drawableLeft="@android:drawable/arrow_down_float"
-        android:layout_alignStart="@+id/alarmActiveSwitch"
-        android:layout_alignEnd="@+id/alarmActiveSwitch"
-        android:backgroundTint="@android:color/transparent" />
+        android:id="@+id/options_layout"
+        android:layout_below="@+id/alarm_time_text_view"
+        android:layout_centerHorizontal="true">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/label_edit_text"
+            android:layout_marginStart="12dp"
+            android:hint="Label"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+
+    </RelativeLayout>
 
     <Button
         android:layout_width="wrap_content"
@@ -71,7 +73,18 @@
         android:stateListAnimator="@null"
         android:id="@+id/deleteAlarmButton"
         android:backgroundTint="@android:color/transparent"
-        android:layout_below="@+id/placeholdertextView"
+        android:layout_below="@+id/options_layout"
         android:layout_alignStart="@+id/alarm_time_text_view" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/collapseButton"
+        android:stateListAnimator="@null"
+        android:drawableLeft="@android:drawable/arrow_down_float"
+        android:backgroundTint="@android:color/transparent"
+        android:layout_alignTop="@+id/deleteAlarmButton"
+        android:layout_alignStart="@+id/alarmActiveSwitch" />
+
 
 </RelativeLayout>

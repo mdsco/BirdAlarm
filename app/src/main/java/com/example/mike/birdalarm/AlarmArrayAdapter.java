@@ -3,11 +3,16 @@ package com.example.mike.birdalarm;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -49,7 +54,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                 (TextView) convertView.findViewById(R.id.alarm_time_text_view);
 
         alarmListItemTime.setText(
-                +alarmItem.getHour() + ":"
+                alarmItem.getHour() + ":"
                         + String.format("%02d", alarmItem.getMinute()));
 
         final TextView alarmAmPm = (TextView) convertView.findViewById(R.id.aMpMTextView);
@@ -59,17 +64,14 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         alarmSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                alarmItem.set
-                alarmItem.cancelAlarm();
+                Switch alarmSwitch = (Switch) view;
+                if(!alarmSwitch.isChecked()){
+                    alarmItem.cancelAlarm();
+                } else if(alarmSwitch.isChecked()){
+                    alarmItem.registerAlarm();
+                }
             }
         });
-
-        final TextView placeholderView =
-                (TextView) convertView.findViewById(R.id.placeholdertextView);
-
-        if (!alarmItem.isExpanded()) {
-            collapseAlarmItem(placeholderView);
-        }
 
         Button deleteButton = (Button) convertView.findViewById(R.id.deleteAlarmButton);
 
@@ -81,6 +83,35 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             }
         });
 
+        final RelativeLayout optionsSection =
+                (RelativeLayout) convertView.findViewById(R.id.options_layout);
+
+        if(!alarmItem.isExpanded()){
+            optionsSection.setVisibility(View.GONE);
+        }
+
+        final TextView labelEditText = (EditText) convertView.findViewById(R.id.label_edit_text);
+        labelEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+
+                    String text = labelEditText.getText().toString();
+                    Log.v("Before Alarm cancel ", alarmItem.getLabel());
+
+                    alarmItem.cancelAlarm();
+                    alarmItem.setLabel(text);
+                    alarmItem.registerAlarm();
+
+                    Log.v("After alarm cancel", alarmItem.getLabel());
+
+                }
+
+                return true;
+            }
+        });
 
         Button collapseButton = (Button) convertView.findViewById(R.id.collapseButton);
 
@@ -89,30 +120,15 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             @Override
             public void onClick(View view) {
 
-                if (placeholderView.getVisibility() == View.VISIBLE) {
-                    collapseAlarmItem(placeholderView);
-                } else if (placeholderView.getVisibility() == View.GONE) {
-                    expandAlarmItem(placeholderView);
-                }
+            if (optionsSection.getVisibility() == View.VISIBLE) {
+                Fx.toggleContents(getContext(), optionsSection);
+            } else if (optionsSection.getVisibility() == View.GONE) {
+                Fx.toggleContents(getContext(), optionsSection);
+            }
             }
 
         });
 
         return convertView;
-
-    }
-
-    private static void collapseAlarmItem(View view) {
-
-        if (view.getVisibility() == View.VISIBLE) {
-            view.setVisibility(View.GONE);
-        }
-    }
-
-    private static void expandAlarmItem(View view) {
-
-        if (view.getVisibility() == View.GONE) {
-            view.setVisibility(View.VISIBLE);
-        }
     }
 }

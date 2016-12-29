@@ -13,11 +13,15 @@ import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 class Alarm implements Parcelable {
 
-    private int id;
+    private static final String LOG_TAG = Alarm.class.getSimpleName();
+    private Context context = null;
 
+    private long id;
+    private String label;
     private boolean aMpM;
     private int hour;
     private int minute;
@@ -29,11 +33,19 @@ class Alarm implements Parcelable {
     private AlarmManager alarmManager;
     private PendingIntent pendingAlarmIntent;
 
-    Alarm (Context context, int hour, int minute, int alarmId){
+    Alarm (Context context, int hour, int minute, long alarmId){
 
-        this.hour = getCorrectHour(hour);
+        this.context = context;
+
+        this.hour = Utility.getHourFor12HourClock(hour);
         this.minute = minute;
         this.aMpM = true;
+
+        Log.v("Hours2", hour + " or " + Utility.getHourFor12HourClock(hour));
+
+
+        //Needs to be set from the label in the database
+        this.label = "Alarm3";
 
         this.id = alarmId;
 
@@ -41,90 +53,72 @@ class Alarm implements Parcelable {
 
         isExpanded = true;
 
-        registerAlarm(context, hour, this.id);
-
+        registerAlarm();
 
     }
 
     Alarm (Context context, int hour, int minute){
 
-        this.hour = getCorrectHour(hour);
-        this.minute = minute;
+        this.context = context;
+
+        this.id = Utility.getTimeStampFromHourAndMinute(hour, minute);
+
+        this.hour = Utility.getHourFor12HourClock(Utility.getHourFromTimeStamp(id));
+        this.minute = Utility.getMinuteFromTimeStamp(id);
         this.aMpM = setAmPm(hour);
 
-        long currentTime = System.currentTimeMillis();
-        this.id = (int) currentTime;
+        this.label = "Alarm4";
 
         alarmIsRepeating = false;
 
         isExpanded = true;
 
-        registerAlarm(context, hour, this.id);
+        registerAlarm();
 
         ContentResolver contentResolver = context.getContentResolver();
 
         ContentValues alarmValues = new ContentValues();
 
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, this.minute);
-        calendar.set(Calendar.SECOND, 0);
-
-        long timestamp = calendar.getTimeInMillis();
-
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID, this.id);
-        alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TIME, timestamp);
+        alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TIME, this.id);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE, 1);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING, 1);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE, "robin");
+        alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_LABEL, this.label);
 
-        Uri uri = contentResolver.insert(UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI, alarmValues);
+        contentResolver.insert(UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI, alarmValues);
 
     }
 
     private Alarm(Parcel in){
 
+        id = in.readLong();
         hour = in.readInt();
         minute = in.readInt();
+        label = in.readString();
     }
 
-    private void registerAlarm(Context context, int hour, int id) {
+    public void registerAlarm() {
 
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, this.minute);
-        calendar.set(Calendar.SECOND, 0);
-
+        pendingAlarmIntent = null;
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-        alarmIntent.putExtra("Time", getCorrectHour(hour) + ":" +
-                                        String.format("%02d", minute));
 
-        pendingAlarmIntent = PendingIntent.getBroadcast(context, id, alarmIntent, 0);
+        alarmIntent.putExtra("alarmPassedInThroughIntent", this);
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                    calendar.getTimeInMillis(), pendingAlarmIntent);
+        pendingAlarmIntent = PendingIntent.getBroadcast(context, (int) id, alarmIntent, 0);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, id, pendingAlarmIntent);
+
+        Log.v(LOG_TAG, "Alarm registered " + getLabel());
 
     }
 
     public void cancelAlarm(){
 
         alarmManager.cancel(pendingAlarmIntent);
+        Log.v(LOG_TAG, "ALARM CANCELLED");
 
-
-    }
-
-    private int getCorrectHour(int hour){
-
-        if(hour == 0){
-            return 12;
-        } else if(hour > 12){
-            return hour - 12;
-        }
-
-        return hour;
     }
 
     private boolean setAmPm(int hour){ return hour < 12; }
@@ -155,8 +149,10 @@ class Alarm implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags) {
 
+        out.writeLong(id);
         out.writeInt(hour);
         out.writeInt(minute);
+        out.writeString(label);
 
     }
 
@@ -164,7 +160,7 @@ class Alarm implements Parcelable {
         this.id = id;
     }
 
-    public int getId(){
+    public long getId(){
 
         return this.id;
     }
@@ -212,6 +208,14 @@ class Alarm implements Parcelable {
 
     public void setExpandedState(boolean activeOrNot){
         isExpanded = activeOrNot;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
 }
