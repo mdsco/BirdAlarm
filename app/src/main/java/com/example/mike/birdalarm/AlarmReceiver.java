@@ -28,8 +28,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         alarmPassedInThroughIntent =
                 intent.getExtras().getParcelable("alarmPassedInThroughIntent");
 
-        Log.v(LOG_TAG, "Label: " + alarmPassedInThroughIntent.getLabel());
-
         KeyguardManager keyguardManager =
                 (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
         boolean locked = keyguardManager.inKeyguardRestrictedInputMode();

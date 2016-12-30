@@ -49,8 +49,6 @@ public class AlarmLockScreenVideoActivity extends Activity {
         videoView = (VideoView) findViewById(R.id.alarm_video_view);
 
         try {
-
-
             videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.robin_chirping));
         } catch (Exception e) {
             Log.e("Error", e.getMessage());

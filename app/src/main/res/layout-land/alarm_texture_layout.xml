@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:background="@color/colorDarkBackground">
 
-
     <TextureView
         android:id="@+id/textureView"
         android:layout_margin="16dp"
@@ -22,5 +21,46 @@
         android:layout_alignTop="@+id/textureView"
         android:layout_alignStart="@+id/textureView"
         android:layout_marginStart="16dp" />
+
+    <TextView
+        android:text="AM"
+        android:textColor="@color/colorWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/am_pm_textview"
+        android:layout_alignBaseline="@+id/alarmTimeTextView"
+        android:layout_alignBottom="@+id/alarmTimeTextView"
+        android:layout_toEndOf="@+id/alarmTimeTextView" />
+
+    <Button
+        android:text="Sleep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/cancelButton"
+        android:layout_toEndOf="@+id/cancelButton"
+        android:layout_marginStart="19dp"
+        android:id="@+id/sleep_button" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_textview"
+        android:textColor="@color/colorWhite"
+        android:text="Not Alarm Label"
+        android:textSize="24sp"
+        android:layout_alignBaseline="@+id/am_pm_textview"
+        android:layout_alignBottom="@+id/am_pm_textview"
+        android:layout_toEndOf="@+id/am_pm_textview"
+        android:layout_marginStart="46dp" />
+
+    <Button
+        android:text="Cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cancelButton"
+        android:layout_marginBottom="16dp"
+        android:layout_alignBottom="@+id/textureView"
+        android:layout_alignStart="@+id/alarmTimeTextView" />
+
 
 </RelativeLayout>

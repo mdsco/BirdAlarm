@@ -9,7 +9,6 @@ import android.content.res.AssetFileDescriptor;
 import android.graphics.SurfaceTexture;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -23,7 +22,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.util.Calendar;
 
 public class AlarmLockScreenTextureViewVideoActivity extends Activity
         implements TextureView.SurfaceTextureListener {
@@ -49,21 +47,18 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
         setContentView(R.layout.alarm_texture_layout);
 
         Intent intent = getIntent();
-        Alarm alarm = (Alarm) intent.getExtras().getParcelable("alarmPassedInThroughIntent");
+        Alarm alarm = intent.getExtras().getParcelable("alarmPassedInThroughIntent");
 
         String labelText = alarm.getLabel();
 
-        long timestamp = alarm.getId();
-        Log.v(LOG_TAG, "Words?: " + alarm.getHour()
-                        + ":" + alarm.getMinute() + "Label?: " + labelText);
+        long timestamp = alarm.getTimestamp();
 
         TextView timeTextView = (TextView) findViewById(R.id.alarmTimeTextView);
+        String formattedTime = Utility.getFormattedTime(timestamp);
+        timeTextView.setText(formattedTime);
 
-        String timeFromTimestamp =
-                Utility.getHourFromTimeStamp(timestamp)
-                + ":" + Utility.getMinuteFromTimeStamp(timestamp);
-
-        timeTextView.setText(timeFromTimestamp);
+        TextView amPmView = (TextView) findViewById(R.id.am_pm_textview);
+        amPmView.setText(Utility.determineIfAmOrPm(timestamp) ? "AM" : "PM" );
 
         TextView alarmLabel = (TextView) findViewById(R.id.label_textview);
         alarmLabel.setText(labelText);
@@ -74,7 +69,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
         Button sleepButton = (Button) findViewById(R.id.sleep_button);
         sleepButton.setOnClickListener(getSleepOnClickListener(alarm));
 
-        initView();
+        createAndStartTextureViewAnimation();
     }
 
     @NonNull
@@ -90,9 +85,11 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
 
                 int hour = alarm.getHour();
                 int minute = alarm.getMinute() + Integer.valueOf(snoozeInterval);
-                int id = (int) System.currentTimeMillis();
+                int id = alarm.getId() + 1;
+                long timestamp = Utility.getTimeStampFromHourAndMinute(hour, minute);
+                String label = alarm.getLabel();
 
-                Alarm pauseAlarm = new Alarm(getBaseContext(), hour, minute, id);
+                Alarm pauseAlarm = new Alarm(getBaseContext(), hour, minute, id, timestamp, label);
 
                 finish();
 
@@ -106,26 +103,21 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
 
         int hour = alarm.getHour() + 12;
         int minute = alarm.getMinute();
-        long id = alarm.getId();
+        int id = alarm.getId();
 
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
+        long timeStampFromHourAndMinute = Utility.getTimeStampFromHourAndMinute(hour, minute);
 
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
 
         alarmIntent.putExtra("alarmPassedInThroughIntent", alarm);
 
-        alarmIntent.putExtra("Time", hour + ":" +
-                String.format("%02d", minute));
+        alarmIntent.putExtra("Time", hour + ":" + String.format("%02d", minute));
 
-        pendingAlarmIntent = PendingIntent.getBroadcast(context, (int) id, alarmIntent, 0);
+        pendingAlarmIntent = PendingIntent.getBroadcast(context, id, alarmIntent, 0);
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                calendar.getTimeInMillis(), pendingAlarmIntent);
+                timeStampFromHourAndMinute, pendingAlarmIntent);
 
     }
 
@@ -139,11 +131,13 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
         };
     }
 
-    private void initView() {
+    private void createAndStartTextureViewAnimation() {
+
         TextureView textureView = (TextureView) findViewById(R.id.textureView);
         textureView.setSurfaceTextureListener(this);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         textureView.startAnimation(animation);
+
     }
 
     @Override
@@ -152,20 +146,22 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
     }
 
     @Override
-    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
+    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture,
+                                                int surfaceWidth, int surfaceHeight) {
 
         Surface surface = new Surface(surfaceTexture);
 
         try {
-            AssetFileDescriptor afd = getAssets().openFd(FILE_NAME);
+
+            AssetFileDescriptor birdFileDiscriptor = getAssets().openFd(FILE_NAME);
+
             mMediaPlayer = new MediaPlayer();
-            mMediaPlayer.setDataSource(afd.getFileDescriptor(),
-                                                afd.getStartOffset(), afd.getLength());
+            mMediaPlayer.setDataSource(birdFileDiscriptor.getFileDescriptor(),
+                    birdFileDiscriptor.getStartOffset(), birdFileDiscriptor.getLength());
             mMediaPlayer.setSurface(surface);
             mMediaPlayer.setLooping(true);
             mMediaPlayer.prepareAsync();
 
-            // Play video when the media source is ready for playback.
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
@@ -185,7 +181,8 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
     }
 
     @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i2) {
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture,
+                                                int surfaceWidth, int surfaceHeight) {
     }
 
     @Override

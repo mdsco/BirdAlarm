@@ -65,10 +65,11 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             @Override
             public void onClick(View view) {
                 Switch alarmSwitch = (Switch) view;
-                if(!alarmSwitch.isChecked()){
+                if (!alarmSwitch.isChecked()) {
                     alarmItem.cancelAlarm();
-                } else if(alarmSwitch.isChecked()){
-                    alarmItem.registerAlarm();
+                } else if (alarmSwitch.isChecked()) {
+
+//                    alarmItem.registerAlarm(alarmItem.getId());
                 }
             }
         });
@@ -86,7 +87,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         final RelativeLayout optionsSection =
                 (RelativeLayout) convertView.findViewById(R.id.options_layout);
 
-        if(!alarmItem.isExpanded()){
+        if (!alarmItem.isExpanded()) {
             optionsSection.setVisibility(View.GONE);
         }
 
@@ -96,16 +97,18 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
 
-                if(actionId == EditorInfo.IME_ACTION_DONE){
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
 
                     String text = labelEditText.getText().toString();
-                    Log.v("Before Alarm cancel ", alarmItem.getLabel());
+
+                    alarmItem.setLabel(text);
 
                     alarmItem.cancelAlarm();
-                    alarmItem.setLabel(text);
-                    alarmItem.registerAlarm();
 
-                    Log.v("After alarm cancel", alarmItem.getLabel());
+                    int id = alarmItem.getId();
+                    alarmItem.setId(id);
+
+//                    alarmItem.registerAlarm(alarmItem.getId());
 
                 }
 
@@ -120,11 +123,11 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             @Override
             public void onClick(View view) {
 
-            if (optionsSection.getVisibility() == View.VISIBLE) {
-                Fx.toggleContents(getContext(), optionsSection);
-            } else if (optionsSection.getVisibility() == View.GONE) {
-                Fx.toggleContents(getContext(), optionsSection);
-            }
+                if (optionsSection.getVisibility() == View.VISIBLE) {
+                    Fx.toggleContents(getContext(), optionsSection);
+                } else if (optionsSection.getVisibility() == View.GONE) {
+                    Fx.toggleContents(getContext(), optionsSection);
+                }
             }
 
         });

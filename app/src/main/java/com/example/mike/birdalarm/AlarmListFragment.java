@@ -65,6 +65,8 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
         adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
         setListAdapter(adapter);
 
+        cursor.close();
+
         return View;
 
     }
@@ -82,15 +84,14 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                 int active = cursor.getInt(COL_ACTIVE);
                 int repeating = cursor.getInt(COL_REPEATING);
                 String type = cursor.getString(COL_TYPE);
+                String label = cursor.getString(COL_LABEL);
 
                 Calendar calendar = Calendar.getInstance().getInstance();
                 calendar.setTime(new Date(timestamp));
                 int hours = calendar.get(Calendar.HOUR_OF_DAY);
                 int minutes = calendar.get(Calendar.MINUTE);
 
-                Log.v("", hours + " : " + minutes);
-
-                alarmItems.add(new Alarm(getActivity(), hours, minutes, alarmId));
+                alarmItems.add(new Alarm(getActivity(), hours, minutes, alarmId, timestamp, label));
 
             } while(cursor.moveToNext());
 
@@ -190,9 +191,10 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
     public void deleteThisAlarm(Alarm alarm) {
 
         ContentResolver contentResolver = getActivity().getContentResolver();
-        contentResolver.delete(UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI,
+
+        int deleted = contentResolver.delete(UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI,
                 UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?",
-                new String[]{String.valueOf(alarm.getId())});
+                new String[]{String.valueOf((int) alarm.getId())});
 
         alarmItems.remove(alarm);
         adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);

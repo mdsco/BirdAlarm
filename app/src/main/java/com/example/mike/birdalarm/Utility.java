@@ -26,6 +26,14 @@ public class Utility {
 
     }
 
+    public static long getTimeStampForAlarmSleep(long timestamp){
+
+        int hourFromTimeStamp = getHourFromTimeStamp(timestamp);
+        int minuteFromTimeStamp = getMinuteFromTimeStamp(timestamp);
+
+        return getTimeStampFromHourAndMinute(hourFromTimeStamp, minuteFromTimeStamp + 1);
+    }
+
     public static int getHourFromTimeStamp(long timestamp){
 
         Date date = new Date(timestamp);
@@ -51,6 +59,19 @@ public class Utility {
 
     }
 
+    public static String getFormattedTime(long timestamp){
+
+        Date date = new Date(timestamp);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm");
+        TimeZone timeZone = TimeZone.getDefault();
+        simpleDateFormat.setTimeZone(timeZone);
+        String formattedTime = simpleDateFormat.format(date);
+
+        return formattedTime;
+
+
+    }
+
     public static int getHourFor12HourClock(int hour){
 
         if(hour == 0){
@@ -73,18 +94,13 @@ public class Utility {
 
     public static boolean determineIfAmOrPm(long timestamp){
 
-
         Date date = new Date(timestamp);
         SimpleDateFormat sdf = new SimpleDateFormat("a");
         TimeZone timeZone = TimeZone.getDefault();
         sdf.setTimeZone(timeZone);
         String formattedDate = sdf.format(date);
 
-        if(formattedDate.equals("AM")){
-            return false;
-        } else {
-            return true;
-        }
-    }
+        return formattedDate.equals("AM");
 
+    }
 }

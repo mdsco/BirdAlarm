@@ -56,4 +56,14 @@
         android:layout_below="@+id/alarmTimeTextView"
         android:layout_alignStart="@+id/alarmTimeTextView" />
 
+    <TextView
+        android:text="AM"
+        android:textColor="@color/colorWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/label_textview"
+        android:layout_toEndOf="@+id/alarmTimeTextView"
+        android:layout_marginBottom="18dp"
+        android:id="@+id/am_pm_textview" />
+
 </RelativeLayout>
