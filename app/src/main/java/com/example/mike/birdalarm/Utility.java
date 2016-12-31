@@ -5,6 +5,7 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import java.security.Timestamp;
+import java.security.cert.CertPath;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,7 +32,21 @@ public class Utility {
         int hourFromTimeStamp = getHourFromTimeStamp(timestamp);
         int minuteFromTimeStamp = getMinuteFromTimeStamp(timestamp);
 
-        return getTimeStampFromHourAndMinute(hourFromTimeStamp, minuteFromTimeStamp + 1);
+        return getTimeStampFromHourAndMinute(hourFromTimeStamp, minuteFromTimeStamp + 2);
+    }
+
+    public static long getTimeStampForAlarmSleep(){
+
+        long timestamp = System.currentTimeMillis();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getDefault());
+        calendar.setTimeInMillis(timestamp);
+        int minutes = Utility.getMinuteFromTimeStamp(timestamp);
+        calendar.set(Calendar.MINUTE, minutes + 1);
+        calendar.set(Calendar.SECOND, 0);
+
+        return calendar.getTimeInMillis();
     }
 
     public static int getHourFromTimeStamp(long timestamp){

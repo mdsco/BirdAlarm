@@ -69,7 +69,6 @@ class Alarm implements Parcelable {
 
         isExpanded = true;
 
-        Log.v(LOG_TAG, this.toString());
         registerAlarm(this.id);
 
         ContentResolver contentResolver = context.getContentResolver();
