@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         alarmListFragment = (AlarmListFragment) getFragmentManager()
                                     .findFragmentById(R.id.alarmListFragment);
 
+
     }
 
     @Override

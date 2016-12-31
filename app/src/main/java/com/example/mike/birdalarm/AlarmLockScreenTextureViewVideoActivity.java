@@ -29,7 +29,8 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
     private static final String LOG_TAG =
                 AlarmLockScreenTextureViewVideoActivity.class.getName();
 
-    private static final String FILE_NAME = "bower_bird4.mp4";
+    private String FILE_NAME;
+//    private static final String FILE_NAME = "bower_bird4.mp4";
 
     private MediaPlayer mMediaPlayer;
     private AlarmManager alarmManager;
@@ -48,6 +49,8 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
 
         Intent intent = getIntent();
         Alarm alarm = intent.getExtras().getParcelable("alarmPassedInThroughIntent");
+
+        FILE_NAME = alarm.getAlarmType();
 
         String labelText = alarm.getLabel();
 
@@ -88,8 +91,9 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
                 int id = alarm.getId() + 1;
                 long timestamp = Utility.getTimeStampFromHourAndMinute(hour, minute);
                 String label = alarm.getLabel();
+                String alarmType = alarm.getAlarmType();
 
-                Alarm pauseAlarm = new Alarm(getBaseContext(), hour, minute, id, timestamp, label);
+                Alarm pauseAlarm = new Alarm(getBaseContext(), hour, minute, id, timestamp, label, alarmType);
 
                 finish();
 

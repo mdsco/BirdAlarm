@@ -29,7 +29,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         Alarm alarmPassedInThroughIntent =
                 intent.getExtras().getParcelable("alarmPassedInThroughIntent");
 
-
         if(alarmPassedInThroughIntent != null){
 
             long timestamp = alarmPassedInThroughIntent.getTimestamp();

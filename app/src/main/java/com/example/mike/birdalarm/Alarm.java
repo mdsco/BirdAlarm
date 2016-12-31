@@ -20,6 +20,9 @@ class Alarm implements Parcelable {
     private int id;
     private String label;
     private boolean aMpM;
+
+
+    private String alarmType;
     private int hour;
     private int minute;
     private boolean alarmIsRepeating;
@@ -30,7 +33,7 @@ class Alarm implements Parcelable {
     private AlarmManager alarmManager;
     private PendingIntent pendingAlarmIntent;
 
-    Alarm (Context context, int hour, int minute, int alarmId, long timestamp, String label){
+    Alarm (Context context, int hour, int minute, int alarmId, long timestamp, String label, String alarmType){
 
         this.context = context;
 
@@ -44,6 +47,8 @@ class Alarm implements Parcelable {
         this.aMpM = Utility.determineIfAmOrPm(this.timestamp);
 
         this.label = label;
+        this.alarmType = alarmType;
+
 
         alarmIsRepeating = false;
 
@@ -64,6 +69,7 @@ class Alarm implements Parcelable {
         this.aMpM = setAmPm(timestamp);
 
         this.label = context.getString(R.string.default_label_name);
+        this.alarmType = "robin_chirping.mp4";
 
         alarmIsRepeating = false;
 
@@ -79,7 +85,7 @@ class Alarm implements Parcelable {
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TIME, this.timestamp);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE, 1);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING, 1);
-        alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE, "robin");
+        alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE, this.alarmType);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_LABEL, this.label);
 
         contentResolver.insert(UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI, alarmValues);
@@ -93,6 +99,7 @@ class Alarm implements Parcelable {
         hour = in.readInt();
         minute = in.readInt();
         label = in.readString();
+        alarmType = in.readString();
     }
 
     public void registerAlarm(int id) {
@@ -145,6 +152,7 @@ class Alarm implements Parcelable {
         out.writeInt(hour);
         out.writeInt(minute);
         out.writeString(label);
+        out.writeString(alarmType);
 
     }
 
@@ -217,7 +225,14 @@ class Alarm implements Parcelable {
 
         this.label = label;
 
+    }
 
+    public String getAlarmType() {
+        return alarmType;
+    }
+
+    public void setAlarmType(String alarmType) {
+        this.alarmType = alarmType;
     }
 
 }

@@ -10,8 +10,8 @@
     android:layout_margin="10dp"
     android:elevation="10dp"
     android:translationZ="10dp"
+    android:background="@android:color/holo_orange_dark"
     android:padding="5dp">
-
 
     <TextView
         android:text="8:00"
@@ -28,7 +28,7 @@
         android:text="AM"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/aMpMTextView"
+        android:id="@+id/am_pm_text_view"
         android:layout_alignBaseline="@+id/alarm_time_text_view"
         android:layout_alignBottom="@+id/alarm_time_text_view"
         android:layout_toRightOf="@id/alarm_time_text_view"/>
@@ -39,11 +39,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="21dp"
-        android:id="@+id/alarmActiveSwitch"
-        android:layout_above="@+id/aMpMTextView"
+        android:id="@+id/alarm_active_switch"
+        android:layout_above="@+id/am_pm_text_view"
         android:layout_alignParentEnd="true" />
-
-
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -51,6 +49,17 @@
         android:id="@+id/options_layout"
         android:layout_below="@+id/alarm_time_text_view"
         android:layout_centerHorizontal="true">
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:stateListAnimator="@null"
+            android:id="@+id/change_alarm_button"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:drawableLeft="@android:drawable/ic_popup_reminder" />
 
         <EditText
             android:layout_width="match_parent"
@@ -60,8 +69,8 @@
             android:id="@+id/label_edit_text"
             android:layout_marginStart="12dp"
             android:hint="Label"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            android:layout_below="@+id/change_alarm_button"
+            android:layout_alignStart="@+id/change_alarm_button" />
 
 
     </RelativeLayout>
@@ -71,7 +80,7 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@android:drawable/ic_menu_delete"
         android:stateListAnimator="@null"
-        android:id="@+id/deleteAlarmButton"
+        android:id="@+id/delete_alarm_button"
         android:backgroundTint="@android:color/transparent"
         android:layout_below="@+id/options_layout"
         android:layout_alignStart="@+id/alarm_time_text_view" />
@@ -79,12 +88,11 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/collapseButton"
+        android:id="@+id/collapse_button"
         android:stateListAnimator="@null"
         android:drawableLeft="@android:drawable/arrow_down_float"
         android:backgroundTint="@android:color/transparent"
-        android:layout_alignTop="@+id/deleteAlarmButton"
-        android:layout_alignStart="@+id/alarmActiveSwitch" />
-
+        android:layout_alignTop="@+id/delete_alarm_button"
+        android:layout_alignStart="@+id/alarm_active_switch" />
 
 </RelativeLayout>

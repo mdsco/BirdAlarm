@@ -3,7 +3,9 @@ package com.example.mike.birdalarm;
 import android.app.ListFragment;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.database.CursorJoiner;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +18,9 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter.Deleter{
 
@@ -71,6 +76,23 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK){
+
+            for(Alarm alarm : alarmItems) {
+                if(resultCode == alarm.getId()) {
+                    alarm.setAlarmType(data.getStringExtra("NewBirdAlarm"));
+                }
+            }
+        } else if(resultCode == RESULT_CANCELED){
+            return;
+        }
+
+    }
+
     private void fillAlarmItems(Cursor cursor) {
 
         int count = cursor.getCount();
@@ -83,7 +105,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                 long timestamp = cursor.getLong(COL_TIME);
                 int active = cursor.getInt(COL_ACTIVE);
                 int repeating = cursor.getInt(COL_REPEATING);
-                String type = cursor.getString(COL_TYPE);
+                String alarmType = cursor.getString(COL_TYPE);
                 String label = cursor.getString(COL_LABEL);
 
                 Calendar calendar = Calendar.getInstance().getInstance();
@@ -91,7 +113,8 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                 int hours = calendar.get(Calendar.HOUR_OF_DAY);
                 int minutes = calendar.get(Calendar.MINUTE);
 
-                alarmItems.add(new Alarm(getActivity(), hours, minutes, alarmId, timestamp, label));
+                alarmItems.add(new Alarm(getActivity(), hours, minutes,
+                                        alarmId, timestamp, label, alarmType));
 
             } while(cursor.moveToNext());
 

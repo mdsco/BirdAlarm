@@ -19,6 +19,7 @@
         </activity>
         <activity android:name=".AlarmLockScreenVideoActivity" />
         <activity android:name=".AlarmLockScreenTextureViewVideoActivity" />
+        <activity android:name=".AlarmSelectionActivity"/>
         <activity android:name=".NotificationActivity"
             android:taskAffinity=""
             android:excludeFromRecents="true" />

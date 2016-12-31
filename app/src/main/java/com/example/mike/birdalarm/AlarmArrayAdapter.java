@@ -2,8 +2,8 @@ package com.example.mike.birdalarm;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,10 +57,10 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                 alarmItem.getHour() + ":"
                         + String.format("%02d", alarmItem.getMinute()));
 
-        final TextView alarmAmPm = (TextView) convertView.findViewById(R.id.aMpMTextView);
+        final TextView alarmAmPm = (TextView) convertView.findViewById(R.id.am_pm_text_view);
         alarmAmPm.setText(alarmItem.getaMpM());
 
-        Switch alarmSwitch = (Switch) convertView.findViewById(R.id.alarmActiveSwitch);
+        Switch alarmSwitch = (Switch) convertView.findViewById(R.id.alarm_active_switch);
         alarmSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,18 +69,8 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                     alarmItem.cancelAlarm();
                 } else if (alarmSwitch.isChecked()) {
 
-//                    alarmItem.registerAlarm(alarmItem.getId());
+                    alarmItem.registerAlarm(alarmItem.getId());
                 }
-            }
-        });
-
-        Button deleteButton = (Button) convertView.findViewById(R.id.deleteAlarmButton);
-
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Deleter fragment = AlarmArrayAdapter.this.fragment;
-                fragment.deleteThisAlarm(alarmItem);
             }
         });
 
@@ -90,6 +80,19 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         if (!alarmItem.isExpanded()) {
             optionsSection.setVisibility(View.GONE);
         }
+
+        View selectAlarmButton = convertView.findViewById(R.id.change_alarm_button);
+        selectAlarmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(context, AlarmSelectionActivity.class);
+//                ((Activity) context).startActivityForResult(intent, alarmItem.getId());
+                ((Activity) context).startActivity(intent);
+
+            }
+        });
+
 
         final TextView labelEditText = (EditText) convertView.findViewById(R.id.label_edit_text);
         labelEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -116,7 +119,17 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             }
         });
 
-        Button collapseButton = (Button) convertView.findViewById(R.id.collapseButton);
+        Button deleteButton = (Button) convertView.findViewById(R.id.delete_alarm_button);
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Deleter fragment = AlarmArrayAdapter.this.fragment;
+                fragment.deleteThisAlarm(alarmItem);
+            }
+        });
+
+        Button collapseButton = (Button) convertView.findViewById(R.id.collapse_button);
 
         collapseButton.setOnClickListener(new View.OnClickListener() {
 
