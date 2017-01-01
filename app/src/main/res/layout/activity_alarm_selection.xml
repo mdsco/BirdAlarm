@@ -4,8 +4,14 @@
     android:layout_height="match_parent">
 
     <fragment
+        android:id="@+id/alarm_selection_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.example.mike.birdalarm.AlarmTypeListFragment"/>
+        android:name="com.example.mike.birdalarm.AlarmTypeListFragment" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Woooooooords"/>
 
 </LinearLayout>

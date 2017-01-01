@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <ListView
-        android:id="@+id/alarm_type_list"
+        android:id="@+id/android:list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

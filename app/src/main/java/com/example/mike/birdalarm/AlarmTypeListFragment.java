@@ -8,21 +8,30 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class AlarmTypeListFragment extends ListFragment {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                                    ViewGroup container, Bundle savedInstanceState) {
+
+        View alarmTypeList = inflater.inflate(R.layout.fragment_alarm_type_list, container);
 
         String[] alarms =
                 new String[]{ "alarm one", "alarm two", "alarm three", "alarm four", "alarm five"};
 
-        ListView alarmTypeList = (ListView) inflater.inflate(R.layout.fragment_alarm_type_list, container);
+        ArrayList<String> alarmTypes = new ArrayList<>();
 
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(getActivity(), R.layout.alarm_type_item, alarms);
+        alarmTypes.addAll(Arrays.asList(alarms));
 
-        alarmTypeList.setAdapter(adapter);
+        AlarmTypeArrayAdapter adapter =
+                new AlarmTypeArrayAdapter(getActivity(), R.layout.alarm_type_item, alarmTypes);
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        setListAdapter(adapter);
+
+        return alarmTypeList;
     }
+
 }

@@ -54,7 +54,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View View = inflater.inflate(R.layout.alarm_list_fragment, container);
+        View view = inflater.inflate(R.layout.alarm_list_fragment, container);
 
         ContentResolver contentResolver = getActivity().getContentResolver();
         Cursor cursor = contentResolver.query(UserCreatedAlarmContract
@@ -72,7 +72,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
         cursor.close();
 
-        return View;
+        return view;
 
     }
 
