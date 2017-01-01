@@ -16,6 +16,8 @@ public class AlarmTypeArrayAdapter extends ArrayAdapter<String> {
 
     private final List<String> listItems;
     private final Context context;
+    public static final String LOG_TAG = AlarmTypeArrayAdapter.class.getSimpleName();
+
 
     public AlarmTypeArrayAdapter(Context context, int resource, List<String> listItems) {
         super(context, resource, listItems);
@@ -37,10 +39,14 @@ public class AlarmTypeArrayAdapter extends ArrayAdapter<String> {
 
         listItemTextView.setText(listItems.get(position));
         listItemTextView.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                
+
+                new VideoAlertDialog(AlarmTypeArrayAdapter.this.context);
+
             }
+
         });
 
         return convertView;
