@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 class Alarm implements Parcelable {
 
@@ -69,7 +68,7 @@ class Alarm implements Parcelable {
         this.aMpM = setAmPm(timestamp);
 
         this.label = context.getString(R.string.default_label_name);
-        this.alarmType = "robin_chirping.mp4";
+        this.alarmType = "cute_robin_chirping.mp4";
 
         alarmIsRepeating = false;
 
