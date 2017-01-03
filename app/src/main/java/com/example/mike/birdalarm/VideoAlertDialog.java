@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.SurfaceTexture;
 import android.media.MediaPlayer;
@@ -21,21 +22,25 @@ class VideoAlertDialog implements TextureView.SurfaceTextureListener {
 
     private static final String LOG_TAG = VideoAlertDialog.class.getSimpleName();
     private final Context context;
+    private final int position;
 
     private String fileName;
     private MediaPlayer mMediaPlayer;
     private AssetFileDescriptor birdFileDiscriptor;
+    private String title;
 
-    VideoAlertDialog(final Context context){
+    VideoAlertDialog(final Context context, int position){
 
         this.context = context;
         this.fileName = "bower_bird3.mp4";
+        this.position = position;
 
     }
 
     AlertDialog getAlertDialog() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.context);
-        alertDialogBuilder.setTitle(getTitle(fileName));
+        title = getTitle(fileName);
+        alertDialogBuilder.setTitle(title);
 
         alertDialogBuilder.setNegativeButton("Nope",
                 new DialogInterface.OnClickListener() {
@@ -53,9 +58,19 @@ class VideoAlertDialog implements TextureView.SurfaceTextureListener {
                 Activity context = (Activity) VideoAlertDialog.this.context;
                 ListFragment fragment = (ListFragment) context.getFragmentManager()
                                             .findFragmentById(R.id.alarm_selection_list);
+
+
                 ListAdapter listAdapter = fragment.getListAdapter();
 
-                ((VideoAlertDialogFragment.VideoAlertDialogListener) listAdapter).onDialogPositiveClick();
+                ((VideoAlertDialogFragment.VideoAlertDialogListener) listAdapter)
+                                                                .onDialogPositiveClick();
+
+                Intent intent = new Intent();
+                intent.putExtra("alarmName", title);
+                intent.putExtra("viewPosition", position);
+
+                context.setResult(Activity.RESULT_OK, intent);
+
                 context.finish();
 
             }

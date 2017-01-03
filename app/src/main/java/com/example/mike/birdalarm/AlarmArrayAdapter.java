@@ -20,6 +20,8 @@ import java.util.List;
 
 class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
+    private View currentView;
+
     interface Deleter {
 
         void deleteThisAlarm(Alarm alarm);
@@ -41,7 +43,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
@@ -82,17 +84,10 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         }
 
         View selectAlarmButton = convertView.findViewById(R.id.change_alarm_button);
-        selectAlarmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        View selectAlarmLayout = convertView.findViewById(R.id.alarm_type_layout);
 
-                Intent intent = new Intent(context, AlarmSelectionActivity.class);
-//                ((Activity) context).startActivityForResult(intent, alarmItem.getId());
-                ((Activity) context).startActivity(intent);
-
-            }
-        });
-
+        selectAlarmButton.setOnClickListener(getAlarmTypeSelection(position));
+        selectAlarmLayout.setOnClickListener(getAlarmTypeSelection(position));
 
         final TextView labelEditText = (EditText) convertView.findViewById(R.id.label_edit_text);
         labelEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -146,5 +141,21 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         });
 
         return convertView;
+    }
+
+    @NonNull
+    private View.OnClickListener getAlarmTypeSelection(final int position) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(context, AlarmSelectionActivity.class);
+                intent.putExtra("viewPosition", position);
+                AlarmArrayAdapter.this.currentView = view;
+
+                ((Activity) context).startActivityForResult(intent, 0);
+
+            }
+        };
     }
 }

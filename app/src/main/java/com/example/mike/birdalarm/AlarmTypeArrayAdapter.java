@@ -55,9 +55,11 @@ class AlarmTypeArrayAdapter extends ArrayAdapter<String>
                 Bundle bundle = new Bundle();
                 bundle.putString("filename", fileName);
 
-                VideoAlertDialogFragment videoAlertDialogFragment = new VideoAlertDialogFragment();
+                VideoAlertDialogFragment videoAlertDialogFragment =
+                                                new VideoAlertDialogFragment();
                 videoAlertDialogFragment.setArguments(bundle);
-                videoAlertDialogFragment.show(((Activity)getContext()).getFragmentManager(), "alarmTypeDialog");
+                videoAlertDialogFragment.show(((Activity)getContext())
+                                            .getFragmentManager(), "alarmTypeDialog");
 
             }
 
