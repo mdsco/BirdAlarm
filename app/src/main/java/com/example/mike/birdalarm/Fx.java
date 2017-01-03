@@ -14,17 +14,17 @@ public class Fx {
         if(alarmListItemContents.isShown()){
 
             slide_up(context, alarmListItemContents);
-            alarmListItemContents.setVisibility(View.GONE);
+//            alarmListItemContents.setVisibility(View.GONE);
 
         } else {
 
-            alarmListItemContents.setVisibility(View.VISIBLE);
+//            alarmListItemContents.setVisibility(View.VISIBLE);
             slide_down(context, alarmListItemContents);
 
         }
     }
 
-    public static void slide_down(Context ctx, View v){
+    public static void slide_down(Context ctx, final View v){
 
         Animation a = AnimationUtils.loadAnimation(ctx, R.anim.slide_down);
 
@@ -33,11 +33,17 @@ public class Fx {
             if(v != null){
                 v.clearAnimation();
                 v.startAnimation(a);
+                v.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        v.setVisibility(View.VISIBLE);
+                    }
+                });
             }
         }
     }
 
-    public static void slide_up(Context ctx, View v){
+    public static void slide_up(Context ctx, final View v){
 
         Animation a = AnimationUtils.loadAnimation(ctx, R.anim.slide_up);
 
@@ -46,6 +52,12 @@ public class Fx {
             if(v != null){
                 v.clearAnimation();
                 v.startAnimation(a);
+                v.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        v.setVisibility(View.GONE);
+                    }
+                });
             }
         }
     }

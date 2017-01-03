@@ -83,11 +83,15 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             optionsSection.setVisibility(View.GONE);
         }
 
-        View selectAlarmButton = convertView.findViewById(R.id.change_alarm_button);
         View selectAlarmLayout = convertView.findViewById(R.id.alarm_type_layout);
-
-        selectAlarmButton.setOnClickListener(getAlarmTypeSelection(position));
         selectAlarmLayout.setOnClickListener(getAlarmTypeSelection(position));
+
+        View selectAlarmButton = convertView.findViewById(R.id.change_alarm_button);
+        selectAlarmButton.setOnClickListener(getAlarmTypeSelection(position));
+
+        TextView alarmTypeTextView =
+                        (TextView) convertView.findViewById(R.id.alarm_type_textview);
+        alarmTypeTextView.setText(Defaults.DEFAULT_ALARM_TYPE_NAME);
 
         final TextView labelEditText = (EditText) convertView.findViewById(R.id.label_edit_text);
         labelEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {

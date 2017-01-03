@@ -68,7 +68,7 @@ class Alarm implements Parcelable {
         this.aMpM = setAmPm(timestamp);
 
         this.label = context.getString(R.string.default_label_name);
-        this.alarmType = "cute_robin_chirping.mp4";
+        this.alarmType = Defaults.DEFAULT_ALARM_TYPE;
 
         alarmIsRepeating = false;
 
