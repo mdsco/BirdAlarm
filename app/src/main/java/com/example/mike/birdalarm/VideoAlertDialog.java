@@ -69,6 +69,8 @@ class VideoAlertDialog implements TextureView.SurfaceTextureListener {
                 intent.putExtra("alarmName", title);
                 intent.putExtra("viewPosition", position);
 
+                Log.v("VideoAlertDialog", "position " + position);
+
                 context.setResult(Activity.RESULT_OK, intent);
 
                 context.finish();

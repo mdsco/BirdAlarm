@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,19 +74,20 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                 Switch alarmSwitch = (Switch) view;
                 if (!alarmSwitch.isChecked()) {
 
-                    updateAlarmActiveStatus(false);
+                    updateAlarmActiveStatus(alarmItem, false);
                     alarmItem.cancelAlarm();
 
                 } else if (alarmSwitch.isChecked()) {
 
-                    updateAlarmActiveStatus(true);
+                    updateAlarmActiveStatus(alarmItem, true);
                     alarmItem.registerAlarm(alarmItem.getId());
                 }
             }
 
-            private void updateAlarmActiveStatus(boolean isActive) {
+            private void updateAlarmActiveStatus(Alarm alarm, boolean isActive) {
 
                 int value = isActive ? 1 : 0;
+                alarm.setIsActive(value);
 
                 ContentValues values = new ContentValues();
                 values.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE, value);
@@ -94,7 +96,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                         UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
                 String[] selectionArgs = {String.valueOf((int) alarmItem.getId())};
 
-                alarmItem.updateAlarmInDatabase(values, selection, selectionArgs, value);
+                alarmItem.updateAlarmInDatabase(values, selection, selectionArgs);
             }
         });
 
@@ -113,7 +115,10 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
         TextView alarmTypeTextView =
                         (TextView) convertView.findViewById(R.id.alarm_type_textview);
-        alarmTypeTextView.setText(Defaults.DEFAULT_ALARM_TYPE_NAME);
+        String alarmType = alarmItem.getAlarmType();
+
+        String formattedName = Utility.getFormattedName(alarmItem.getAlarmType());
+        alarmTypeTextView.setText(formattedName);
 
         final TextView labelEditText = (EditText) convertView.findViewById(R.id.label_edit_text);
         labelEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -179,6 +184,9 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                 intent.putExtra("viewPosition", position);
                 intent.putExtra("alarmType", alarm.getAlarmType());
                 AlarmArrayAdapter.this.currentView = view;
+
+                alarm.cancelAlarm();
+                alarm.registerAlarm(alarm.getId() + 1);
 
                 ((Activity) context).startActivityForResult(intent, 0);
 

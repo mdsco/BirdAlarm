@@ -112,9 +112,7 @@ class Alarm implements Parcelable {
 
     }
 
-    public int updateAlarmInDatabase(ContentValues values, String selection, String[] selectionArgs, int isActive){
-
-        setIsActive(isActive);
+    public int updateAlarmInDatabase(ContentValues values, String selection, String[] selectionArgs){
 
         ContentResolver contentResolver = context.getContentResolver();
         Uri contentUri = UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI;

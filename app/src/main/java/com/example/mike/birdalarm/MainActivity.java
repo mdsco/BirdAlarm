@@ -3,6 +3,7 @@ package com.example.mike.birdalarm;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -80,17 +81,37 @@ public class MainActivity extends AppCompatActivity
 
         if(resultCode == RESULT_OK) {
 
+            String alarmName1 = (String) data.getExtras().get("alarmName");
+            Log.v("Got", "here " +  getFileName(alarmName1));
+
+
             String alarmName = data.getStringExtra("alarmName");
             int viewPosition = data.getIntExtra("viewPosition", -1);
 
             if(viewPosition != -1){
 
+                //get Alarm to be updated
                 AlarmListFragment fragment = (AlarmListFragment) getFragmentManager()
                                 .findFragmentById(R.id.alarmListFragment);
 
                 ArrayList<Alarm> alarmItems = fragment.getAlarmItems();
-                alarmItems.get(viewPosition).setAlarmType(getFileName(alarmName));
+                Alarm alarm = alarmItems.get(viewPosition);
 
+                //get filename from name
+                String fileName = getFileName(alarmName);
+                alarm.setAlarmType(fileName);
+
+                Log.v("MainActivity", fileName);
+
+                //update alarm type in database
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE, fileName);
+                String selection = UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
+                String[] selectionArgs = {String.valueOf(alarm.getId())};
+
+                alarm.updateAlarmInDatabase(contentValues, selection, selectionArgs);
+
+                //!!! A method in AlarmListFragment to reload the list might nice (to be called here)
                 ListView listView =
                             (ListView) fragment.getView().findViewById(android.R.id.list);
                 TextView textView = (TextView) listView.getChildAt(viewPosition)
@@ -108,6 +129,12 @@ public class MainActivity extends AppCompatActivity
 
             case "cute robin chirping":
                 return "cute_robin_chirping.mp4";
+            case "bower bird":
+                return "bower_bird.mp4";
+            case "bower bird3":
+                return "bower_bird3.mp4";
+            case "bower bird4":
+                return "bower_bird4.mp4";
             default:
                 return  "";
         }

@@ -123,4 +123,9 @@ public class Utility {
 
         return "PM";
     }
+
+    public static String getFormattedName(String fileName) {
+        String strings = fileName.substring(0,fileName.indexOf('.'));
+        return strings.replace('_',  ' ');
+    }
 }
