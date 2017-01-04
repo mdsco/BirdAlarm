@@ -1,6 +1,7 @@
 package com.example.mike.birdalarm;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -23,9 +24,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
     private View currentView;
 
     interface Deleter {
-
         void deleteThisAlarm(Alarm alarm);
-
     }
 
     private Context context;
@@ -63,16 +62,39 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         alarmAmPm.setText(alarmItem.getaMpM());
 
         Switch alarmSwitch = (Switch) convertView.findViewById(R.id.alarm_active_switch);
+
+        boolean isActive = false;
+        if(alarmItem.getIsActive() == 1){ isActive = true; }
+
+        alarmSwitch.setChecked(isActive);
         alarmSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Switch alarmSwitch = (Switch) view;
                 if (!alarmSwitch.isChecked()) {
+
+                    updateAlarmActiveStatus(false);
                     alarmItem.cancelAlarm();
+
                 } else if (alarmSwitch.isChecked()) {
 
+                    updateAlarmActiveStatus(true);
                     alarmItem.registerAlarm(alarmItem.getId());
                 }
+            }
+
+            private void updateAlarmActiveStatus(boolean isActive) {
+
+                int value = isActive ? 1 : 0;
+
+                ContentValues values = new ContentValues();
+                values.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE, value);
+
+                String selection =
+                        UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
+                String[] selectionArgs = {String.valueOf((int) alarmItem.getId())};
+
+                alarmItem.updateAlarmInDatabase(values, selection, selectionArgs, value);
             }
         });
 
@@ -84,10 +106,10 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         }
 
         View selectAlarmLayout = convertView.findViewById(R.id.alarm_type_layout);
-        selectAlarmLayout.setOnClickListener(getAlarmTypeSelection(position));
+        selectAlarmLayout.setOnClickListener(getAlarmTypeSelection(position, alarmItem));
 
         View selectAlarmButton = convertView.findViewById(R.id.change_alarm_button);
-        selectAlarmButton.setOnClickListener(getAlarmTypeSelection(position));
+        selectAlarmButton.setOnClickListener(getAlarmTypeSelection(position, alarmItem));
 
         TextView alarmTypeTextView =
                         (TextView) convertView.findViewById(R.id.alarm_type_textview);
@@ -110,7 +132,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                     int id = alarmItem.getId();
                     alarmItem.setId(id);
 
-//                    alarmItem.registerAlarm(alarmItem.getId());
+                    alarmItem.registerAlarm(alarmItem.getId());
 
                 }
 
@@ -118,9 +140,9 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             }
         });
 
-        Button deleteButton = (Button) convertView.findViewById(R.id.delete_alarm_button);
+        Button deleteAlarmButton = (Button) convertView.findViewById(R.id.delete_alarm_button);
 
-        deleteButton.setOnClickListener(new View.OnClickListener() {
+        deleteAlarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Deleter fragment = AlarmArrayAdapter.this.fragment;
@@ -148,13 +170,14 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
     }
 
     @NonNull
-    private View.OnClickListener getAlarmTypeSelection(final int position) {
+    private View.OnClickListener getAlarmTypeSelection(final int position, final Alarm alarm) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Intent intent = new Intent(context, AlarmSelectionActivity.class);
                 intent.putExtra("viewPosition", position);
+                intent.putExtra("alarmType", alarm.getAlarmType());
                 AlarmArrayAdapter.this.currentView = view;
 
                 ((Activity) context).startActivityForResult(intent, 0);

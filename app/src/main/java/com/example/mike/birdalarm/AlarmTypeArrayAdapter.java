@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ class AlarmTypeArrayAdapter extends ArrayAdapter<String>
     private final List<String> listItems;
     private final Context context;
     public static final String LOG_TAG = AlarmTypeArrayAdapter.class.getSimpleName();
+    private final String alarmTypeFromAlarm;
     private ViewParent currentView;
 
 
@@ -30,6 +32,8 @@ class AlarmTypeArrayAdapter extends ArrayAdapter<String>
 
         this.context = context;
         this.listItems = listItems;
+        this.alarmTypeFromAlarm
+                = getTitle(((Activity) this.context).getIntent().getStringExtra("alarmType"));
     }
 
     @NonNull
@@ -41,10 +45,14 @@ class AlarmTypeArrayAdapter extends ArrayAdapter<String>
             convertView = layoutInflater.inflate(R.layout.alarm_type_item, parent, false);
         }
 
+        CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.alarm_type_checkbox);
+
+
         TextView listItemTextView = (TextView) convertView.findViewById(R.id.alarm_type_textview);
 
         final String fileName = listItems.get(position);
-        listItemTextView.setText(getTitle(fileName));
+        String alarmName = getTitle(fileName);
+        listItemTextView.setText(alarmName);
         listItemTextView.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -64,6 +72,10 @@ class AlarmTypeArrayAdapter extends ArrayAdapter<String>
             }
 
         });
+
+        if(alarmName.equals(this.alarmTypeFromAlarm)){
+            checkBox.setChecked(true);
+        }
 
         return convertView;
     }

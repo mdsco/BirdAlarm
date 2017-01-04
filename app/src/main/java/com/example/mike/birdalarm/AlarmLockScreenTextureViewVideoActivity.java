@@ -90,10 +90,12 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
                 int minute = alarm.getMinute() + Integer.valueOf(snoozeInterval);
                 int id = alarm.getId() + 1;
                 long timestamp = Utility.getTimeStampFromHourAndMinute(hour, minute);
+                int isActive = alarm.getIsActive();
                 String label = alarm.getLabel();
                 String alarmType = alarm.getAlarmType();
 
-                Alarm pauseAlarm = new Alarm(getBaseContext(), hour, minute, id, timestamp, label, alarmType);
+                Alarm pauseAlarm = new Alarm(getBaseContext(), hour, minute,
+                                                id, timestamp, isActive, label, alarmType);
 
                 finish();
 

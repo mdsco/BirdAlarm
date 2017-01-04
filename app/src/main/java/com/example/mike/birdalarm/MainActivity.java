@@ -16,6 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity
                 implements TimePickerDialog.OnTimeSetListener {
 
@@ -29,7 +31,6 @@ public class MainActivity extends AppCompatActivity
 
         alarmListFragment = (AlarmListFragment) getFragmentManager()
                                     .findFragmentById(R.id.alarmListFragment);
-
 
     }
 
@@ -84,8 +85,12 @@ public class MainActivity extends AppCompatActivity
 
             if(viewPosition != -1){
 
-                Fragment fragment = getFragmentManager()
+                AlarmListFragment fragment = (AlarmListFragment) getFragmentManager()
                                 .findFragmentById(R.id.alarmListFragment);
+
+                ArrayList<Alarm> alarmItems = fragment.getAlarmItems();
+                alarmItems.get(viewPosition).setAlarmType(getFileName(alarmName));
+
                 ListView listView =
                             (ListView) fragment.getView().findViewById(android.R.id.list);
                 TextView textView = (TextView) listView.getChildAt(viewPosition)
@@ -94,9 +99,18 @@ public class MainActivity extends AppCompatActivity
 
             }
 
-            Log.v("MAinActivity", alarmName);
+        }
+    }
+
+    private String getFileName(String name){
+
+        switch(name){
+
+            case "cute robin chirping":
+                return "cute_robin_chirping.mp4";
+            default:
+                return  "";
         }
 
     }
-
 }

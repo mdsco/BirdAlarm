@@ -1,16 +1,8 @@
 package com.example.mike.birdalarm;
 
-
-import android.os.SystemClock;
-import android.util.Log;
-
-import java.security.Timestamp;
-import java.security.cert.CertPath;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 public class Utility {
@@ -35,7 +27,11 @@ public class Utility {
         return getTimeStampFromHourAndMinute(hourFromTimeStamp, minuteFromTimeStamp + 2);
     }
 
+
+    //Need to get the sleep interval pref from storedPrefs
     public static long getTimeStampForAlarmSleep(){
+
+        int sleepInterval = 1;//replace with storedpref
 
         long timestamp = System.currentTimeMillis();
 
@@ -43,7 +39,7 @@ public class Utility {
         calendar.setTimeZone(TimeZone.getDefault());
         calendar.setTimeInMillis(timestamp);
         int minutes = Utility.getMinuteFromTimeStamp(timestamp);
-        calendar.set(Calendar.MINUTE, minutes + 1);
+        calendar.set(Calendar.MINUTE, minutes + sleepInterval);
         calendar.set(Calendar.SECOND, 0);
 
         return calendar.getTimeInMillis();
@@ -84,7 +80,6 @@ public class Utility {
 
         return formattedTime;
 
-
     }
 
     public static int getHourFor12HourClock(int hour){
@@ -98,9 +93,10 @@ public class Utility {
         return hour;
     }
 
+    //boolean is true if pm
     public static int getHourFor24HourClock(int hour, boolean amPm){
 
-        if(amPm){
+        if(!amPm){
             return hour + 12;
         }
 
@@ -110,12 +106,21 @@ public class Utility {
     public static boolean determineIfAmOrPm(long timestamp){
 
         Date date = new Date(timestamp);
-        SimpleDateFormat sdf = new SimpleDateFormat("a");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("a");
         TimeZone timeZone = TimeZone.getDefault();
-        sdf.setTimeZone(timeZone);
-        String formattedDate = sdf.format(date);
+        simpleDateFormat.setTimeZone(timeZone);
+        String formattedDate = simpleDateFormat.format(date);
 
         return formattedDate.equals("AM");
 
+    }
+
+    public static String getAmOrPm(long timestamp){
+
+        if(determineIfAmOrPm(timestamp)){
+            return "AM";
+        }
+
+        return "PM";
     }
 }

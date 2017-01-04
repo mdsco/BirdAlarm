@@ -5,13 +5,12 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.CursorJoiner;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,6 +22,14 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter.Deleter{
+
+    public ArrayList<Alarm> getAlarmItems() {
+        return alarmItems;
+    }
+
+    public void setAlarmItems(ArrayList<Alarm> alarmItems) {
+        this.alarmItems = alarmItems;
+    }
 
     ArrayList<Alarm> alarmItems = new ArrayList<>();
     AlarmArrayAdapter adapter;
@@ -114,7 +121,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                 int minutes = calendar.get(Calendar.MINUTE);
 
                 alarmItems.add(new Alarm(getActivity(), hours, minutes,
-                                        alarmId, timestamp, label, alarmType));
+                                        alarmId, timestamp, active, label, alarmType));
 
             } while(cursor.moveToNext());
 
@@ -213,15 +220,25 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
     @Override
     public void deleteThisAlarm(Alarm alarm) {
 
-        ContentResolver contentResolver = getActivity().getContentResolver();
+        //!!!determine if vertical offset needs to exist, toast currently overlaps add alarm button
+        float toastVerticalOffset = 0.05f;
 
-        int deleted = contentResolver.delete(UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI,
-                UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?",
-                new String[]{String.valueOf((int) alarm.getId())});
 
+        alarm.cancelAlarm();
+        //remove alarm from database
+        alarm.deleteAlarmFromDatabase(alarm);
+        //remove from list of alarms to be added to listview
         alarmItems.remove(alarm);
+
+        //reload list view
         adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
         setListAdapter(adapter);
+
+        Toast toast = Toast.makeText(getActivity(), Utility.getFormattedTime(alarm.getTimestamp())
+                + Utility.getAmOrPm(alarm.getTimestamp()).toLowerCase()
+                + " Alarm Removed", Toast.LENGTH_SHORT);
+        toast.setMargin(toast.getHorizontalMargin(), toast.getVerticalMargin() + toastVerticalOffset);
+        toast.show();
 
     }
 }

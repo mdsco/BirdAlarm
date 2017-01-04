@@ -3,12 +3,14 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
+    android:padding="@dimen/activity_horizontal_margin"
     android:id="@+id/video_dialog_frame_layout">
 
     <TextureView
         android:id="@+id/video_texture_view"
         android:layout_width="350dp"
         android:layout_height="200dp"
+        android:layout_gravity="center_horizontal"
         android:layout_centerInParent="true"/>
 
 </FrameLayout>
