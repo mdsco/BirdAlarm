@@ -8,13 +8,13 @@
     tools:context="com.example.mike.birdalarm.MainActivity">
 
     <fragment
-        android:id="@+id/alarmListFragment"
+        android:id="@+id/alarm_list_fragment"
         android:name="com.example.mike.birdalarm.AlarmListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     
     <ImageButton
-        android:id="@+id/addAlarmButton"
+        android:id="@+id/add_alarm_button"
         android:background="@drawable/add_alarm_button_shape"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_width="wrap_content"

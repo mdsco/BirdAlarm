@@ -1,13 +1,10 @@
 package com.example.mike.birdalarm;
 
-import android.app.Dialog;
-import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -31,7 +28,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         alarmListFragment = (AlarmListFragment) getFragmentManager()
-                                    .findFragmentById(R.id.alarmListFragment);
+                                    .findFragmentById(R.id.alarm_list_fragment);
 
     }
 
@@ -77,13 +74,7 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.v("MainActivity", "Result Code: " + resultCode);
-
         if(resultCode == RESULT_OK) {
-
-            String alarmName1 = (String) data.getExtras().get("alarmName");
-            Log.v("Got", "here " +  getFileName(alarmName1));
-
 
             String alarmName = data.getStringExtra("alarmName");
             int viewPosition = data.getIntExtra("viewPosition", -1);
@@ -92,9 +83,14 @@ public class MainActivity extends AppCompatActivity
 
                 //get Alarm to be updated
                 AlarmListFragment fragment = (AlarmListFragment) getFragmentManager()
-                                .findFragmentById(R.id.alarmListFragment);
+                                .findFragmentById(R.id.alarm_list_fragment);
+
+                Log.v("MainActiviy", fragment.toString());
 
                 ArrayList<Alarm> alarmItems = fragment.getAlarmItems();
+
+                Log.v("MainActivity", "Alarm items cunt: " + alarmItems.size());
+
                 Alarm alarm = alarmItems.get(viewPosition);
 
                 //get filename from name
@@ -110,6 +106,9 @@ public class MainActivity extends AppCompatActivity
                 String[] selectionArgs = {String.valueOf(alarm.getId())};
 
                 alarm.updateAlarmInDatabase(contentValues, selection, selectionArgs);
+
+                alarm.cancelAlarm();
+                alarm.registerAlarm(alarm.getId() + 1);
 
                 //!!! A method in AlarmListFragment to reload the list might nice (to be called here)
                 ListView listView =

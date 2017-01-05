@@ -23,14 +23,6 @@ import static android.app.Activity.RESULT_OK;
 
 public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter.Deleter{
 
-    public ArrayList<Alarm> getAlarmItems() {
-        return alarmItems;
-    }
-
-    public void setAlarmItems(ArrayList<Alarm> alarmItems) {
-        this.alarmItems = alarmItems;
-    }
-
     ArrayList<Alarm> alarmItems = new ArrayList<>();
     AlarmArrayAdapter adapter;
 
@@ -67,7 +59,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
         Cursor cursor = contentResolver.query(UserCreatedAlarmContract
                 .NewAlarmEntry.CONTENT_URI, projection, null, null, null);
 
-        if(cursor.getCount() > 0){
+        if(cursor != null && cursor.getCount() > 0){
 
             fillAlarmItems(cursor);
             sortAlarms(alarmItems);
@@ -102,8 +94,6 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     private void fillAlarmItems(Cursor cursor) {
 
-        int count = cursor.getCount();
-
         if(cursor.moveToFirst()){
 
             do {
@@ -115,7 +105,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                 String alarmType = cursor.getString(COL_TYPE);
                 String label = cursor.getString(COL_LABEL);
 
-                Calendar calendar = Calendar.getInstance().getInstance();
+                Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new Date(timestamp));
                 int hours = calendar.get(Calendar.HOUR_OF_DAY);
                 int minutes = calendar.get(Calendar.MINUTE);
@@ -240,5 +230,13 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
         toast.setMargin(toast.getHorizontalMargin(), toast.getVerticalMargin() + toastVerticalOffset);
         toast.show();
 
+    }
+
+    public ArrayList<Alarm> getAlarmItems() {
+        return alarmItems;
+    }
+
+    public void setAlarmItems(ArrayList<Alarm> alarmItems) {
+        this.alarmItems = alarmItems;
     }
 }

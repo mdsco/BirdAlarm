@@ -196,6 +196,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
 
         if (mMediaPlayer != null) {
             mMediaPlayer.stop();
+            mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
         }

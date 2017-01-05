@@ -94,7 +94,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
                 String selection =
                         UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
-                String[] selectionArgs = {String.valueOf((int) alarmItem.getId())};
+                String[] selectionArgs = {String.valueOf(alarmItem.getId())};
 
                 alarmItem.updateAlarmInDatabase(values, selection, selectionArgs);
             }
@@ -117,7 +117,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                         (TextView) convertView.findViewById(R.id.alarm_type_textview);
         String alarmType = alarmItem.getAlarmType();
 
-        String formattedName = Utility.getFormattedName(alarmItem.getAlarmType());
+        String formattedName = Utility.getFormattedName(alarmType);
         alarmTypeTextView.setText(formattedName);
 
         final TextView labelEditText = (EditText) convertView.findViewById(R.id.label_edit_text);
@@ -181,12 +181,10 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             public void onClick(View view) {
 
                 Intent intent = new Intent(context, AlarmSelectionActivity.class);
+
                 intent.putExtra("viewPosition", position);
                 intent.putExtra("alarmType", alarm.getAlarmType());
                 AlarmArrayAdapter.this.currentView = view;
-
-                alarm.cancelAlarm();
-                alarm.registerAlarm(alarm.getId() + 1);
 
                 ((Activity) context).startActivityForResult(intent, 0);
 

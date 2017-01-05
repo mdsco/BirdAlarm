@@ -21,7 +21,6 @@ public class VideoAlertDialogFragment extends DialogFragment {
         int viewPosition = getActivity().getIntent().getIntExtra("viewPosition", -1);
         videoAlertDialog = new VideoAlertDialog(activity, viewPosition);
 
-
         String filename = getArguments().getString("filename");
         videoAlertDialog.setFileName(filename);
         return videoAlertDialog.getAlertDialog();

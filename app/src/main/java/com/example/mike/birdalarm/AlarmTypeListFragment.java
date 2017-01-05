@@ -28,6 +28,7 @@ public class AlarmTypeListFragment extends ListFragment {
                 new AlarmTypeArrayAdapter(getActivity(), R.layout.alarm_type_item, alarmTypes);
 
         setListAdapter(adapter);
+        adapter.setList(this);
 
         return alarmTypeList;
     }
