@@ -13,6 +13,13 @@
     android:translationZ="10dp"
     tools:context="com.example.mike.birdalarm.MainActivity">
 
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"/>
+
     <TextView
         android:id="@+id/alarm_time_text_view"
         android:layout_width="wrap_content"
@@ -84,8 +91,12 @@
             android:id="@+id/label_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:ems="10"
             android:hint="Label"
+            android:imeOptions="actionDone"
             android:inputType="textPersonName"
             android:layout_below="@+id/alarm_type_layout"
             android:layout_alignStart="@+id/alarm_type_layout" />

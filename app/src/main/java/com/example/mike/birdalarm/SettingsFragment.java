@@ -8,49 +8,43 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class SettingsFragment extends PreferenceFragment
-                implements Preference.OnPreferenceChangeListener{
+        implements Preference.OnPreferenceChangeListener {
 
     private String LOG_TAG = SettingsFragment.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         addPreferencesFromResource(R.xml.pref_general);
 
-        bindPreferenceSummaryToValue(getPreferenceManager()
-                .findPreference(getString(R.string.pref_snooze_key)));
+        bindPreferenceSummaryToValue(getPreferenceManager().findPreference(getString(R.string.pref_snooze_key)));
     }
 
-    private void bindPreferenceSummaryToValue(Preference preference){
+    private void bindPreferenceSummaryToValue(Preference preference) {
 
         preference.setOnPreferenceChangeListener(this);
 
+        String key = preference.getKey();
+
+        Log.v("SettingsFragment", "Sleep interval: " + key);
+
         onPreferenceChange(preference, PreferenceManager
                 .getDefaultSharedPreferences(preference.getContext())
-                .getString(preference.getKey(), getString(R.string.pref_snooze_default)));
+                .getString(key, getString(R.string.pref_snooze_default)));
+
+//
+//        onPreferenceChange(preference, PreferenceManager
+//                .getDefaultSharedPreferences(preference.getContext())
+//                .getString(preference.getKey(), ""));
+//
 
     }
 
     @Override
-    public boolean onPreferenceChange(Preference preference, Object value){
-
-
-        String summaryValue = value.toString();
-        Log.v(LOG_TAG, " Preferenc: " + preference.toString());
-
-
-
-        if(preference instanceof ListPreference){
-
-            Log.v(LOG_TAG, "In here");
-            ListPreference listPreference = (ListPreference) preference;
-            int preferenceIndex = listPreference.findIndexOfValue(summaryValue);
-            preference.setSummary(preferenceIndex);
-
-        } else {
-            preference.setSummary(summaryValue);
-        }
-
-        return false;
+    public boolean onPreferenceChange(Preference preference, Object value) {
+        return true;
     }
+
+
 }

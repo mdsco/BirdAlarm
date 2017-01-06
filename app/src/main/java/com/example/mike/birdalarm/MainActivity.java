@@ -85,19 +85,13 @@ public class MainActivity extends AppCompatActivity
                 AlarmListFragment fragment = (AlarmListFragment) getFragmentManager()
                                 .findFragmentById(R.id.alarm_list_fragment);
 
-                Log.v("MainActiviy", fragment.toString());
-
                 ArrayList<Alarm> alarmItems = fragment.getAlarmItems();
-
-                Log.v("MainActivity", "Alarm items cunt: " + alarmItems.size());
 
                 Alarm alarm = alarmItems.get(viewPosition);
 
                 //get filename from name
                 String fileName = getFileName(alarmName);
                 alarm.setAlarmType(fileName);
-
-                Log.v("MainActivity", fileName);
 
                 //update alarm type in database
                 ContentValues contentValues = new ContentValues();
@@ -107,8 +101,7 @@ public class MainActivity extends AppCompatActivity
 
                 alarm.updateAlarmInDatabase(contentValues, selection, selectionArgs);
 
-                alarm.cancelAlarm();
-                alarm.registerAlarm(alarm.getId() + 1);
+                alarm.reregisterAlarm();
 
                 //!!! A method in AlarmListFragment to reload the list might nice (to be called here)
                 ListView listView =

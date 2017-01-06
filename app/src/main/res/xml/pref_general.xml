@@ -3,8 +3,9 @@
 
     <EditTextPreference
 
+        android:title="@string/pref_snooze_label"
         android:key="@string/pref_snooze_key"
-        android:title="@string/snooze_option"
+        android:defaultValue="@string/pref_snooze_default"
         android:inputType="text"
         android:singleLine="true">
 

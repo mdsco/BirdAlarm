@@ -42,7 +42,7 @@ public class NotificationActivity extends Activity {
 
     public static PendingIntent getSleepIntent(Context context, int notificationId, String label){
 
-        return getPendingIntent(true, context,notificationId, label);
+        return getPendingIntent(true, context, notificationId, label);
     }
 
     private static PendingIntent getPendingIntent(boolean isSleepIntent, Context context, int id, String label){

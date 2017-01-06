@@ -64,7 +64,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
             } else {
 
                 createPopUpNotification(context, time, label);
-                playAlarmSound(context);
+//                playAlarmSound(context);
 
             }
         } else {

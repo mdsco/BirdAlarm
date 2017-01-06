@@ -128,4 +128,30 @@ public class Utility {
         String strings = fileName.substring(0,fileName.indexOf('.'));
         return strings.replace('_',  ' ');
     }
+
+
+
+/*
+    This might be useful as a way to format time strings
+
+    Scanner in = new Scanner(System.in);
+    String time = in.next();
+    in.close();
+
+    DateFormat parseFormat = new SimpleDateFormat("h:mm:ssa");
+    DateFormat displayFormat = new SimpleDateFormat("H:mm:ssa");
+
+    try {
+
+        Date date = parseFormat.parse(time);
+        String timeIn24HourFormat = displayFormat.format(date);
+        System.out.println(timeIn24HourFormat);
+
+    } catch (ParseException e) {
+        e.printStackTrace();
+    }
+*/
+
+
+
 }

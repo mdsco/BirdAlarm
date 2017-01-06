@@ -72,7 +72,7 @@ class Alarm implements Parcelable {
         this.aMpM = setAmPm(timestamp);
 
         this.isActive = 1;
-        this.label = context.getString(R.string.default_label_name);
+        this.label = "";
         this.alarmType = Defaults.DEFAULT_ALARM_TYPE;
 
         alarmIsRepeating = false;
@@ -151,6 +151,17 @@ class Alarm implements Parcelable {
         alarmManager.cancel(pendingAlarmIntent);
 
     }
+
+    public void reregisterAlarm(){
+
+        cancelAlarm();
+        deleteAlarmFromDatabase(this);
+        setId(getId()+1);
+        registerAlarm(getId());
+        addAlarmToDatabase();
+
+    }
+
 
     private boolean setAmPm(long timestamp){
 

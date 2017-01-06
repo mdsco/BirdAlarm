@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -80,7 +81,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                 } else if (alarmSwitch.isChecked()) {
 
                     updateAlarmActiveStatus(alarmItem, true);
-                    alarmItem.registerAlarm(alarmItem.getId());
+                    alarmItem.reregisterAlarm();
                 }
             }
 
@@ -120,7 +121,13 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         String formattedName = Utility.getFormattedName(alarmType);
         alarmTypeTextView.setText(formattedName);
 
+        String label = alarmItem.getLabel();
+
+        Log.v("AlarmArrayAdapter", label);
         final TextView labelEditText = (EditText) convertView.findViewById(R.id.label_edit_text);
+        labelEditText.setText(label);
+
+
         labelEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
@@ -128,16 +135,26 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
 
+                    InputMethodManager inputMethodManager =
+                            (InputMethodManager)
+                                    context.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                    inputMethodManager.hideSoftInputFromWindow(labelEditText.getWindowToken(), 0);
+
+                    labelEditText.clearFocus();
+
                     String text = labelEditText.getText().toString();
 
                     alarmItem.setLabel(text);
 
-                    alarmItem.cancelAlarm();
+                    alarmItem.reregisterAlarm();
 
-                    int id = alarmItem.getId();
-                    alarmItem.setId(id);
-
-                    alarmItem.registerAlarm(alarmItem.getId());
+//                    alarmItem.cancelAlarm();
+//
+//                    int id = alarmItem.getId();
+//                    alarmItem.setId(id);
+//
+//                    alarmItem.registerAlarm(alarmItem.getId());
 
                 }
 
