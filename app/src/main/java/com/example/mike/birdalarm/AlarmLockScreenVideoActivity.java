@@ -27,7 +27,11 @@ import java.io.InputStream;
 
 public class AlarmLockScreenVideoActivity extends Activity {
 
+
+    private String LOG_TAG = AlarmLockScreenVideoActivity.class.getSimpleName();
+
     private VideoView videoView;
+
     int position = 0;
 
     @Override

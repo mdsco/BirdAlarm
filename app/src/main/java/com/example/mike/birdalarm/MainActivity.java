@@ -19,6 +19,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
                 implements TimePickerDialog.OnTimeSetListener {
 
+
+    private String LOG_TAG = MainActivity.class.getSimpleName();
+
     AlarmListFragment alarmListFragment;
 
     @Override

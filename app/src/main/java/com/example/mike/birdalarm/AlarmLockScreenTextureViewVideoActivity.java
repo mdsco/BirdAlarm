@@ -30,7 +30,6 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
                 AlarmLockScreenTextureViewVideoActivity.class.getName();
 
     private String FILE_NAME;
-//    private static final String FILE_NAME = "bower_bird4.mp4";
 
     private MediaPlayer mMediaPlayer;
     private AlarmManager alarmManager;
@@ -86,15 +85,18 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
                         .getString(getString(R.string.pref_snooze_key),
                                 getString(R.string.pref_snooze_default));
 
-                int hour = alarm.getHour();
-                int minute = alarm.getMinute() + Integer.valueOf(snoozeInterval);
+
+//                int hour = alarm.getHour();
+//                int minute = alarm.getMinute() + Integer.valueOf(snoozeInterval);
                 int id = alarm.getId() + 1;
-                long timestamp = Utility.getTimeStampFromHourAndMinute(hour, minute);
+                long timestamp = alarm.getTimestamp();
                 int isActive = alarm.getIsActive();
                 String label = alarm.getLabel();
                 String alarmType = alarm.getAlarmType();
 
-                Alarm pauseAlarm = new Alarm(getBaseContext(), hour, minute,
+//                Alarm pauseAlarm = new Alarm(getBaseContext(), hour, minute,
+//                                                id, timestamp, isActive, label, alarmType);
+                Alarm pauseAlarm = new Alarm(getBaseContext(),
                                                 id, timestamp, isActive, label, alarmType);
 
                 finish();
@@ -107,18 +109,24 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
 
     private void registerAlarm(Context context, Alarm alarm) {
 
-        int hour = alarm.getHour() + 12;
-        int minute = alarm.getMinute();
+//        int hour = alarm.getHour() + 12;
+//        int minute = alarm.getMinute();
         int id = alarm.getId();
 
-        long timeStampFromHourAndMinute = Utility.getTimeStampFromHourAndMinute(hour, minute);
+//        long timeStampFromHourAndMinute = Utility.getTimeStampFromHourAndMinute(hour, minute);
+        long timeStampFromHourAndMinute = alarm.getTimestamp();
+
+
 
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
 
         alarmIntent.putExtra("alarmPassedInThroughIntent", alarm);
 
-        alarmIntent.putExtra("Time", hour + ":" + String.format("%02d", minute));
+//        String value = hour + ":" + String.format("%02d", minute);
+        String value = Utility.getFormattedTime(timeStampFromHourAndMinute);
+
+        alarmIntent.putExtra("Time", value);
 
         pendingAlarmIntent = PendingIntent.getBroadcast(context, id, alarmIntent, 0);
 

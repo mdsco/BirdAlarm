@@ -10,6 +10,9 @@ import java.util.Calendar;
 
 public class TimePickerDialogFragment extends DialogFragment {
 
+
+    private String LOG_TAG = TimePickerDialogFragment.class.getSimpleName();
+
     TimePickerDialog.OnTimeSetListener mCallback;
 
     @Override

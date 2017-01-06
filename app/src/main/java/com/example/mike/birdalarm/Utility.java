@@ -7,6 +7,9 @@ import java.util.TimeZone;
 
 public class Utility {
 
+
+    private String LOG_TAG = Utility.class.getSimpleName();
+
     public static long getTimeStampFromHourAndMinute(int hour, int minute){
 
         Calendar calendar = Calendar.getInstance();

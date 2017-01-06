@@ -10,6 +10,9 @@ import android.view.View;
 
 public class AlarmSelectionActivity extends AppCompatActivity {
 
+
+    private String LOG_TAG = AlarmSelectionActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

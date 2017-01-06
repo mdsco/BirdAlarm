@@ -14,6 +14,9 @@ import java.util.List;
 
 public class AlarmTypeListFragment extends ListFragment {
 
+
+    private String LOG_TAG = AlarmTypeListFragment.class.getSimpleName();
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                                     ViewGroup container, Bundle savedInstanceState) {

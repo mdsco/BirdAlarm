@@ -7,6 +7,9 @@ import android.provider.BaseColumns;
 
 public class UserCreatedAlarmContract {
 
+
+    private String LOG_TAG = UserCreatedAlarmContract.class.getSimpleName();
+
     private static final String AUTHORITY = "com.example.mike.birdalarm";
     private static final String PATH_ALARM = "alarms";
 

@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 public class Fx {
 
+
+    private String LOG_TAG = Fx.class.getSimpleName();
+
     public static void toggleContents(Context context, View alarmListItemContents){
 
         if(alarmListItemContents.isShown()){

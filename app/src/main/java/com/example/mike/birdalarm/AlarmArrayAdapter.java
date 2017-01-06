@@ -23,6 +23,8 @@ import java.util.List;
 
 class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
+
+    private String LOG_TAG = AlarmArrayAdapter.class.getSimpleName();
     private View currentView;
 
     interface Deleter {
@@ -56,12 +58,14 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         TextView alarmListItemTime =
                 (TextView) convertView.findViewById(R.id.alarm_time_text_view);
 
+        long timestamp = alarmItem.getTimestamp();
         alarmListItemTime.setText(
-                alarmItem.getHour() + ":"
-                        + String.format("%02d", alarmItem.getMinute()));
+                Utility.getHourFromTimeStamp(timestamp) + ":"
+                        + String.format("%02d",
+                                Utility.getMinuteFromTimeStamp(timestamp)));
 
         final TextView alarmAmPm = (TextView) convertView.findViewById(R.id.am_pm_text_view);
-        alarmAmPm.setText(alarmItem.getaMpM());
+        alarmAmPm.setText(Utility.getAmOrPm(timestamp));
 
         Switch alarmSwitch = (Switch) convertView.findViewById(R.id.alarm_active_switch);
 
@@ -123,10 +127,13 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
         String label = alarmItem.getLabel();
 
-        Log.v("AlarmArrayAdapter", label);
         final TextView labelEditText = (EditText) convertView.findViewById(R.id.label_edit_text);
-        labelEditText.setText(label);
 
+        String defaultLabel = context.getString(R.string.default_label_name);
+        Log.v("AlarmArrayAdapter", "not default: " + label + " default: " + defaultLabel);
+        if(!label.equals(defaultLabel)) {
+            labelEditText.setText(label);
+        }
 
         labelEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
@@ -148,13 +155,6 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                     alarmItem.setLabel(text);
 
                     alarmItem.reregisterAlarm();
-
-//                    alarmItem.cancelAlarm();
-//
-//                    int id = alarmItem.getId();
-//                    alarmItem.setId(id);
-//
-//                    alarmItem.registerAlarm(alarmItem.getId());
 
                 }
 

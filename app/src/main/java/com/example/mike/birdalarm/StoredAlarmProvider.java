@@ -10,6 +10,9 @@ import android.support.annotation.Nullable;
 
 public class StoredAlarmProvider extends ContentProvider {
 
+
+    private String LOG_TAG = StoredAlarmProvider.class.getSimpleName();
+
     DatabaseHelper alarmDBHelper;
 
     @Override

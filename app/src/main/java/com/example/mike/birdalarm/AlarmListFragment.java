@@ -23,6 +23,9 @@ import static android.app.Activity.RESULT_OK;
 
 public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter.Deleter{
 
+
+    private String LOG_TAG = AlarmListFragment.class.getSimpleName();
+
     ArrayList<Alarm> alarmItems = new ArrayList<>();
     AlarmArrayAdapter adapter;
 
@@ -110,8 +113,12 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                 int hours = calendar.get(Calendar.HOUR_OF_DAY);
                 int minutes = calendar.get(Calendar.MINUTE);
 
-                alarmItems.add(new Alarm(getActivity(), hours, minutes,
-                                        alarmId, timestamp, active, label, alarmType));
+//                alarmItems.add(new Alarm(getActivity(), hours, minutes,
+//                                        alarmId, timestamp, active, label, alarmType));
+                alarmItems.add(new Alarm(getActivity(),
+                                            alarmId, timestamp, active, label, alarmType));
+
+
 
             } while(cursor.moveToNext());
 
@@ -179,18 +186,51 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     }
 
+//    private void sortAlarms(ArrayList<Alarm> alarmItems) {
+//
+//        Collections.sort(alarmItems, new Comparator<Alarm>() {
+//            @Override
+//            public int compare(Alarm alarmOne, Alarm alarmTwo) {
+//
+//                if(alarmOne.getHour() < alarmTwo.getHour()){
+//                    return -1;
+//                }
+//
+//                if(alarmOne.getHour() == alarmTwo.getHour()){
+//                    if(alarmOne.getMinute() < alarmTwo.getMinute()){
+//                        return -1;
+//                    }
+//                }
+//
+//                return 1;
+//            }
+//        });
+//
+//    }
+
+
     private void sortAlarms(ArrayList<Alarm> alarmItems) {
 
         Collections.sort(alarmItems, new Comparator<Alarm>() {
             @Override
             public int compare(Alarm alarmOne, Alarm alarmTwo) {
 
-                if(alarmOne.getHour() < alarmTwo.getHour()){
+                long alarmOneTimestamp = alarmOne.getTimestamp();
+                long alarmTwoTimestamp = alarmTwo.getTimestamp();
+
+                int alarmOneHourFromTimeStamp = Utility.getHourFromTimeStamp(alarmOneTimestamp);
+                int alarmTwoHourFromTimeStamp = Utility.getHourFromTimeStamp(alarmTwoTimestamp);
+
+                int alarmOneMinuteFromTimeStamp = Utility.getMinuteFromTimeStamp(alarmOneTimestamp);
+                int alarmTwoMinuteFromTimeStamp = Utility.getMinuteFromTimeStamp(alarmTwoTimestamp);
+
+
+                if(alarmOneHourFromTimeStamp < alarmTwoHourFromTimeStamp){
                     return -1;
                 }
 
-                if(alarmOne.getHour() == alarmTwo.getHour()){
-                    if(alarmOne.getMinute() < alarmTwo.getMinute()){
+                if(alarmOneHourFromTimeStamp == alarmTwoHourFromTimeStamp){
+                    if(alarmOneMinuteFromTimeStamp < alarmTwoMinuteFromTimeStamp){
                         return -1;
                     }
                 }

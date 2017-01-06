@@ -20,7 +20,6 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class AlarmReceiver extends WakefulBroadcastReceiver {
 
-//    Alarm alarmPassedInThroughIntent;
     private String LOG_TAG = AlarmReceiver.class.getSimpleName();
 
     @Override
@@ -33,6 +32,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
             long timestamp = alarmPassedInThroughIntent.getTimestamp();
             String time = Utility.getFormattedTime(timestamp);
+            Log.v(LOG_TAG, time);
 
             String label = alarmPassedInThroughIntent.getLabel();
 
@@ -92,7 +92,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle(label)
                         .setContentText(time)
-                        .setDefaults(Notification.DEFAULT_ALL)
+//                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
                         .setPriority(Notification.PRIORITY_HIGH)
                         .addAction(0, "Cancel", dismissIntent)
                         .addAction(0, "Sleep", sleepIntent);

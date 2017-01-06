@@ -8,6 +8,9 @@ import android.os.Bundle;
 
 public class VideoAlertDialogFragment extends DialogFragment {
 
+
+    private String LOG_TAG = VideoAlertDialogFragment.class.getSimpleName();
+
     VideoAlertDialog videoAlertDialog;
 
     public interface VideoAlertDialogListener {

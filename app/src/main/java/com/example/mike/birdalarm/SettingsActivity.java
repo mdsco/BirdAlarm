@@ -12,6 +12,10 @@ import android.preference.PreferenceFragment;
 
 
 public class SettingsActivity extends Activity {
+
+
+    private String LOG_TAG = SettingsActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

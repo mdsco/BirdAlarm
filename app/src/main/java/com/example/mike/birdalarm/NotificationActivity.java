@@ -11,6 +11,9 @@ import android.util.Log;
 
 public class NotificationActivity extends Activity {
 
+
+    private String LOG_TAG = NotificationActivity.class.getSimpleName();
+
     public static final String NOTIFICATION_ID = "NotificationId";
     public static final String IS_SLEEPING = "IsSleeping";
 

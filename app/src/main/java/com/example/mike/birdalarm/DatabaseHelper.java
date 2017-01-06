@@ -8,6 +8,9 @@ import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
+
+    private String LOG_TAG = DatabaseHelper.class.getSimpleName();
+
     private static final int databaseVersion = 1;
 
     private static final String ALARM_DATABASE = "alarms.db";
