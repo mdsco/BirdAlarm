@@ -123,6 +123,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         String alarmType = alarmItem.getAlarmType();
 
         String formattedName = Utility.getFormattedName(alarmType);
+
         alarmTypeTextView.setText(formattedName);
 
         String label = alarmItem.getLabel();
@@ -130,7 +131,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         final TextView labelEditText = (EditText) convertView.findViewById(R.id.label_edit_text);
 
         String defaultLabel = context.getString(R.string.default_label_name);
-        Log.v("AlarmArrayAdapter", "not default: " + label + " default: " + defaultLabel);
+
         if(!label.equals(defaultLabel)) {
             labelEditText.setText(label);
         }

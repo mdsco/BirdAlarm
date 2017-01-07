@@ -51,8 +51,6 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
 
         FILE_NAME = alarm.getAlarmType();
 
-        String labelText = alarm.getLabel();
-
         long timestamp = alarm.getTimestamp();
 
         TextView timeTextView = (TextView) findViewById(R.id.alarmTimeTextView);
@@ -60,9 +58,10 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
         timeTextView.setText(formattedTime);
 
         TextView amPmView = (TextView) findViewById(R.id.am_pm_textview);
-        amPmView.setText(Utility.determineIfAmOrPm(timestamp) ? "AM" : "PM" );
+        amPmView.setText(Utility.getAmOrPm(timestamp));
 
         TextView alarmLabel = (TextView) findViewById(R.id.label_textview);
+        String labelText = alarm.getLabel();
         alarmLabel.setText(labelText);
 
         Button cancelButton = (Button) findViewById(R.id.cancelButton);
@@ -80,26 +79,22 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
             @Override
             public void onClick(View view) {
 
-                String snoozeInterval =
-                        PreferenceManager.getDefaultSharedPreferences(getBaseContext())
-                        .getString(getString(R.string.pref_snooze_key),
-                                getString(R.string.pref_snooze_default));
-
-
 //                int hour = alarm.getHour();
 //                int minute = alarm.getMinute() + Integer.valueOf(snoozeInterval);
                 int id = alarm.getId() + 1;
                 long timestamp = alarm.getTimestamp();
+                long snoozeTimestamp = Utility.getTimeStampForAlarmSleep(getBaseContext());
+
                 int isActive = alarm.getIsActive();
                 String label = alarm.getLabel();
                 String alarmType = alarm.getAlarmType();
 
 //                Alarm pauseAlarm = new Alarm(getBaseContext(), hour, minute,
 //                                                id, timestamp, isActive, label, alarmType);
-                Alarm pauseAlarm = new Alarm(getBaseContext(),
-                                                id, timestamp, isActive, label, alarmType);
-
                 finish();
+                Alarm pauseAlarm = new Alarm(getBaseContext(),
+                                                id, snoozeTimestamp, isActive, label, alarmType);
+//                alarm.cancelAlarm();
 
                 registerAlarm(getBaseContext(), pauseAlarm);
 
@@ -114,9 +109,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
         int id = alarm.getId();
 
 //        long timeStampFromHourAndMinute = Utility.getTimeStampFromHourAndMinute(hour, minute);
-        long timeStampFromHourAndMinute = alarm.getTimestamp();
-
-
+        long timestamp = alarm.getTimestamp();
 
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
@@ -124,14 +117,13 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
         alarmIntent.putExtra("alarmPassedInThroughIntent", alarm);
 
 //        String value = hour + ":" + String.format("%02d", minute);
-        String value = Utility.getFormattedTime(timeStampFromHourAndMinute);
+        String value = Utility.getFormattedTime(timestamp);
 
         alarmIntent.putExtra("Time", value);
 
         pendingAlarmIntent = PendingIntent.getBroadcast(context, id, alarmIntent, 0);
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                timeStampFromHourAndMinute, pendingAlarmIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, timestamp, pendingAlarmIntent);
 
     }
 

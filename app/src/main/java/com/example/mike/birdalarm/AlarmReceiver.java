@@ -32,7 +32,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
             long timestamp = alarmPassedInThroughIntent.getTimestamp();
             String time = Utility.getFormattedTime(timestamp);
-            Log.v(LOG_TAG, time);
 
             String label = alarmPassedInThroughIntent.getLabel();
 

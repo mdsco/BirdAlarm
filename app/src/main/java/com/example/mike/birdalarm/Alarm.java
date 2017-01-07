@@ -78,7 +78,6 @@ class Alarm implements Parcelable {
 
         this.alarmType = Defaults.DEFAULT_ALARM_TYPE;
         this.label = context.getString(R.string.default_label_name);
-        Log.v(LOG_TAG, label);
 
         alarmIsRepeating = false;
 
@@ -162,8 +161,6 @@ class Alarm implements Parcelable {
         pendingAlarmIntent = PendingIntent.getBroadcast(context, id, alarmIntent, 0);
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, this.timestamp, pendingAlarmIntent);
-
-        Log.v(LOG_TAG, Utility.getFormattedTime(timestamp));
     }
 
     public void cancelAlarm(){ alarmManager.cancel(pendingAlarmIntent); }
