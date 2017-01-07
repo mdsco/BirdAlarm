@@ -1,5 +1,9 @@
 package com.example.mike.birdalarm;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,10 +35,16 @@ public class Utility {
     }
 
 
-    //Need to get the sleep interval pref from storedPrefs
-    public static long getTimeStampForAlarmSleep(){
+    public static long getTimeStampForAlarmSleep(Context context){
 
-        int sleepInterval = 1;//replace with storedpref
+        SharedPreferences defaultSharedPreferences =
+                        PreferenceManager.getDefaultSharedPreferences(context);
+
+        final String snoozePreference = defaultSharedPreferences.getString(
+                context.getString(R.string.pref_snooze_key),
+                context.getString(R.string.pref_snooze_default));
+
+        Integer snoozeInterval = Integer.valueOf(snoozePreference);
 
         long timestamp = System.currentTimeMillis();
 
@@ -42,7 +52,7 @@ public class Utility {
         calendar.setTimeZone(TimeZone.getDefault());
         calendar.setTimeInMillis(timestamp);
         int minutes = Utility.getMinuteFromTimeStamp(timestamp);
-        calendar.set(Calendar.MINUTE, minutes + sleepInterval);
+        calendar.set(Calendar.MINUTE, minutes + snoozeInterval);
         calendar.set(Calendar.SECOND, 0);
 
         return calendar.getTimeInMillis();

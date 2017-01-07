@@ -67,9 +67,9 @@ public class NotificationActivity extends Activity {
 
     public void registerAlarm() {
 
-        long timeStampForAlarmSleep = Utility.getTimeStampForAlarmSleep();
 
         Context context = getBaseContext();
+        long timeStampForAlarmSleep = Utility.getTimeStampForAlarmSleep(context);
 
         AlarmManager alarmManager =
                     (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

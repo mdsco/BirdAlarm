@@ -67,8 +67,8 @@ class Alarm implements Parcelable {
 
         this.context = context;
 
-        this.id = (int) this.timestamp;
         this.timestamp = Utility.getTimeStampFromHourAndMinute(hour, minute);
+        this.id = (int) this.timestamp;
 
 //        this.hour = Utility.getHourFor12HourClock(Utility.getHourFromTimeStamp(timestamp));
 //        this.minute = Utility.getMinuteFromTimeStamp(timestamp);

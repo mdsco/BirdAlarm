@@ -10,6 +10,8 @@ import android.util.Log;
 public class SettingsFragment extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener {
 
+    private final String PREFS_FILE = "UserPreferences";
+
     private String LOG_TAG = SettingsFragment.class.getSimpleName();
 
     @Override
@@ -27,17 +29,9 @@ public class SettingsFragment extends PreferenceFragment
 
         String key = preference.getKey();
 
-        Log.v("SettingsFragment", "Sleep interval: " + key);
-
         onPreferenceChange(preference, PreferenceManager
                 .getDefaultSharedPreferences(preference.getContext())
                 .getString(key, getString(R.string.pref_snooze_default)));
-
-//
-//        onPreferenceChange(preference, PreferenceManager
-//                .getDefaultSharedPreferences(preference.getContext())
-//                .getString(preference.getKey(), ""));
-//
 
     }
 
