@@ -26,7 +26,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     private String LOG_TAG = AlarmListFragment.class.getSimpleName();
 
-    ArrayList<Alarm> alarmItems = new ArrayList<>();
+    private ArrayList<Alarm> alarmItems = new ArrayList<>();
     AlarmArrayAdapter adapter;
 
     String[] projection = {
@@ -110,11 +110,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new Date(timestamp));
-                int hours = calendar.get(Calendar.HOUR_OF_DAY);
-                int minutes = calendar.get(Calendar.MINUTE);
 
-//                alarmItems.add(new Alarm(getActivity(), hours, minutes,
-//                                        alarmId, timestamp, active, label, alarmType));
                 alarmItems.add(new Alarm(getActivity(),
                                             alarmId, timestamp, active, label, alarmType));
 
@@ -166,6 +162,9 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
         alarmItems.add(alarm);
 
+        GlobalState applicationContext = (GlobalState) context.getApplicationContext();
+        applicationContext.setAlarmList(alarmItems);
+
         sortAlarms(alarmItems);
 
         final int alarmPosition = alarmItems.indexOf(alarm);
@@ -185,29 +184,6 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
         });
 
     }
-
-//    private void sortAlarms(ArrayList<Alarm> alarmItems) {
-//
-//        Collections.sort(alarmItems, new Comparator<Alarm>() {
-//            @Override
-//            public int compare(Alarm alarmOne, Alarm alarmTwo) {
-//
-//                if(alarmOne.getHour() < alarmTwo.getHour()){
-//                    return -1;
-//                }
-//
-//                if(alarmOne.getHour() == alarmTwo.getHour()){
-//                    if(alarmOne.getMinute() < alarmTwo.getMinute()){
-//                        return -1;
-//                    }
-//                }
-//
-//                return 1;
-//            }
-//        });
-//
-//    }
-
 
     private void sortAlarms(ArrayList<Alarm> alarmItems) {
 
@@ -256,9 +232,12 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
         alarm.cancelAlarm();
         //remove alarm from database
+        alarm.notifyObservers();
         alarm.deleteAlarmFromDatabase(alarm);
         //remove from list of alarms to be added to listview
         alarmItems.remove(alarm);
+        GlobalState applicationContext = (GlobalState) getActivity().getApplicationContext();
+        applicationContext.setAlarmList(alarmItems);
 
         //reload list view
         adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);

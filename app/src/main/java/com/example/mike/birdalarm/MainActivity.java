@@ -1,10 +1,14 @@
 package com.example.mike.birdalarm;
 
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -17,12 +21,15 @@ import android.widget.TimePicker;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-                implements TimePickerDialog.OnTimeSetListener {
-
+        implements TimePickerDialog.OnTimeSetListener {
 
     private String LOG_TAG = MainActivity.class.getSimpleName();
 
-    AlarmListFragment alarmListFragment;
+    public AlarmListFragment getAlarmListFragment() {
+        return alarmListFragment;
+    }
+
+    private AlarmListFragment alarmListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +38,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         alarmListFragment = (AlarmListFragment) getFragmentManager()
-                                    .findFragmentById(R.id.alarm_list_fragment);
-
+                .findFragmentById(R.id.alarm_list_fragment);
     }
 
     @Override
@@ -47,7 +53,7 @@ public class MainActivity extends AppCompatActivity
 
         int id = item.getItemId();
 
-        if(id == R.id.settings_item){
+        if (id == R.id.settings_item) {
             Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsActivityIntent);
         }
@@ -55,7 +61,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public void showTimePickerDialog(View view){
+    public void showTimePickerDialog(View view) {
 
         DialogFragment timePickerDialogFragment = new TimePickerDialogFragment();
 
@@ -73,20 +79,21 @@ public class MainActivity extends AppCompatActivity
         alarmListFragment.addAlarm(MainActivity.this, hour, minute);
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
 
             String alarmName = data.getStringExtra("alarmName");
             int viewPosition = data.getIntExtra("viewPosition", -1);
 
-            if(viewPosition != -1){
+            if (viewPosition != -1) {
 
                 //get Alarm to be updated
                 AlarmListFragment fragment = (AlarmListFragment) getFragmentManager()
-                                .findFragmentById(R.id.alarm_list_fragment);
+                        .findFragmentById(R.id.alarm_list_fragment);
 
                 ArrayList<Alarm> alarmItems = fragment.getAlarmItems();
 
@@ -108,9 +115,9 @@ public class MainActivity extends AppCompatActivity
 
                 //!!! A method in AlarmListFragment to reload the list might nice (to be called here)
                 ListView listView =
-                            (ListView) fragment.getView().findViewById(android.R.id.list);
+                        (ListView) fragment.getView().findViewById(android.R.id.list);
                 TextView textView = (TextView) listView.getChildAt(viewPosition)
-                                       .findViewById(R.id.alarm_type_textview);
+                        .findViewById(R.id.alarm_type_textview);
                 textView.setText(alarmName);
 
             }
@@ -118,9 +125,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private String getFileName(String name){
+    private String getFileName(String name) {
 
-        switch(name){
+        switch (name) {
 
             case "cute robin chirping":
                 return "cute_robin_chirping.mp4";
@@ -131,7 +138,7 @@ public class MainActivity extends AppCompatActivity
             case "bower bird4":
                 return "bower_bird4.mp4";
             default:
-                return  "";
+                return "";
         }
 
     }

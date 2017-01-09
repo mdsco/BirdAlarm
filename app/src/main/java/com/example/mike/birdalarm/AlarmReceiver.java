@@ -28,7 +28,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         Alarm alarmPassedInThroughIntent =
                 intent.getExtras().getParcelable("alarmPassedInThroughIntent");
 
-        if(alarmPassedInThroughIntent != null){
+        if (alarmPassedInThroughIntent != null) {
 
             long timestamp = alarmPassedInThroughIntent.getTimestamp();
             String time = Utility.getFormattedTime(timestamp);
@@ -44,13 +44,13 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
             boolean screenOn;
 
-            if(Build.VERSION.SDK_INT >= 20){
+            if (Build.VERSION.SDK_INT >= 20) {
                 screenOn = powerManager.isInteractive();
             } else {
                 screenOn = powerManager.isScreenOn();
             }
 
-            if(locked || !screenOn) {
+            if (locked || !screenOn) {
 
                 Intent alarmIntent =
                         new Intent(context, AlarmLockScreenTextureViewVideoActivity.class);
@@ -81,10 +81,10 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         final int mNotificationId = (int) System.currentTimeMillis();
 
         PendingIntent dismissIntent =
-                         NotificationActivity.getDismissIntent(mNotificationId, context, label);
+                NotificationActivity.getDismissIntent(mNotificationId, context, label);
 
         PendingIntent sleepIntent =
-                        NotificationActivity.getSleepIntent(context, mNotificationId, label);
+                NotificationActivity.getSleepIntent(context, mNotificationId, label);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)

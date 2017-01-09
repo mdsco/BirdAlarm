@@ -11,7 +11,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-class Alarm implements Parcelable {
+import java.util.ArrayList;
+
+class Alarm implements Parcelable, Subject {
 
     private static final String LOG_TAG = Alarm.class.getSimpleName();
 
@@ -19,10 +21,6 @@ class Alarm implements Parcelable {
 
     private int id;
     private long timestamp;
-
-//    private int hour;
-//    private int minute;
-//    private boolean aMpM;
 
     private int isActive;
 
@@ -36,22 +34,17 @@ class Alarm implements Parcelable {
 
     private AlarmManager alarmManager;
     private PendingIntent pendingAlarmIntent;
+    private ArrayList<AlarmObserver> alarmObservers;
 
-//    Alarm (Context context, int hour, int minute, int alarmId, long timestamp, int active, String label, String alarmType){
     Alarm (Context context, int alarmId, long timestamp, int active, String label, String alarmType){
 
         this.context = context;
+
 
         this.id = alarmId;
         this.timestamp = timestamp;
 
         this.isActive = active;
-
-        int hourFromTimeStamp = Utility.getHourFromTimeStamp(this.timestamp);
-
-//        this.hour = Utility.getHourFor12HourClock(hourFromTimeStamp);
-//        this.minute = Utility.getMinuteFromTimeStamp(this.timestamp);
-//        this.aMpM = Utility.determineIfAmOrPm(this.timestamp);
 
         this.label = label;
         this.alarmType = alarmType;
@@ -65,14 +58,12 @@ class Alarm implements Parcelable {
 
     Alarm (Context context, int hour, int minute){
 
+        alarmObservers = new ArrayList<AlarmObserver>();
+
         this.context = context;
 
         this.timestamp = Utility.getTimeStampFromHourAndMinute(hour, minute);
         this.id = (int) this.timestamp;
-
-//        this.hour = Utility.getHourFor12HourClock(Utility.getHourFromTimeStamp(timestamp));
-//        this.minute = Utility.getMinuteFromTimeStamp(timestamp);
-//        this.aMpM = setAmPm(timestamp);
 
         this.isActive = 1;
 
@@ -94,8 +85,6 @@ class Alarm implements Parcelable {
         id = in.readInt();
         timestamp = in.readLong();
         isActive = in.readInt();
-//        hour = in.readInt();
-//        minute = in.readInt();
         label = in.readString();
         alarmType = in.readString();
     }
@@ -106,8 +95,6 @@ class Alarm implements Parcelable {
         out.writeInt(id);
         out.writeLong(timestamp);
         out.writeInt(isActive);
-//        out.writeInt(hour);
-//        out.writeInt(minute);
         out.writeString(label);
         out.writeString(alarmType);
 
@@ -161,6 +148,7 @@ class Alarm implements Parcelable {
         pendingAlarmIntent = PendingIntent.getBroadcast(context, id, alarmIntent, 0);
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, this.timestamp, pendingAlarmIntent);
+        Log.v(LOG_TAG, "Alarm registered");
     }
 
     public void cancelAlarm(){ alarmManager.cancel(pendingAlarmIntent); }
@@ -176,8 +164,6 @@ class Alarm implements Parcelable {
 
     }
 
-//    }
-
     public void setDayAlarmOnOrOff(Days day){
         day.alarmOn = !day.alarmOn;
     }
@@ -186,7 +172,6 @@ class Alarm implements Parcelable {
 
         @Override
         public Alarm createFromParcel(Parcel in) {
-
             return new Alarm(in);
         }
 
@@ -194,12 +179,27 @@ class Alarm implements Parcelable {
         public Alarm[] newArray(int i) {
             return new Alarm[0];
         }
-    };
 
+    };
 
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    @Override
+    public void registerObserver(AlarmObserver observer) {
+        alarmObservers.add(observer);
+        Log.v(LOG_TAG, "Snooze Alarm observer added to observer list");
+    }
+
+    @Override
+    public void notifyObservers() {
+        if(alarmObservers != null) {
+            for (AlarmObserver observer : alarmObservers) {
+                observer.update();
+            }
+        }
     }
 
     enum Days {
@@ -231,22 +231,6 @@ class Alarm implements Parcelable {
         this.timestamp = timestamp;
     }
 
-//    String getaMpM() { return aMpM ? "AM" : "PM"; }
-//
-//    int getHour() { return hour; }
-//
-//    public void setHour(int hour) {
-//        this.hour = hour;
-//    }
-//
-//    public int getMinute() {
-//        return minute;
-//    }
-//
-//    public void setMinute(int minute) {
-//        this.minute = minute;
-//    }
-
     public boolean isAlarmIsRepeating() {
         return alarmIsRepeating;
     }
@@ -267,11 +251,7 @@ class Alarm implements Parcelable {
         return label;
     }
 
-    public void setLabel(String label) {
-
-        this.label = label;
-
-    }
+    public void setLabel(String label) { this.label = label; }
 
     public String getAlarmType() {
         return alarmType;
@@ -280,7 +260,6 @@ class Alarm implements Parcelable {
     public void setAlarmType(String alarmType) {
         this.alarmType = alarmType;
     }
-
 
     public int getIsActive() {
         return isActive;
