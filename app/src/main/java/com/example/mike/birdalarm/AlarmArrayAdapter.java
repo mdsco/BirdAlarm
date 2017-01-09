@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -122,7 +121,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                         (TextView) convertView.findViewById(R.id.alarm_type_textview);
         String alarmType = alarmItem.getAlarmType();
 
-        String formattedName = Utility.getFormattedName(alarmType);
+        String formattedName = Utility.getFormattedNameFromFilename(alarmType);
 
         alarmTypeTextView.setText(formattedName);
 

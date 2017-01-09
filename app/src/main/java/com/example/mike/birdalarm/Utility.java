@@ -58,6 +58,18 @@ public class Utility {
         return calendar.getTimeInMillis();
     }
 
+    public static int getDayOfYearFromTimeStamp(long timestamp){
+
+        Date date = new Date(timestamp);
+        SimpleDateFormat sdf = new SimpleDateFormat("D");
+        sdf.setTimeZone(TimeZone.getDefault());
+        String formattedDate = sdf.format(date);
+        int dayOfYear = Integer.valueOf(formattedDate);
+
+        return dayOfYear;
+
+    }
+
     public static int getHourFromTimeStamp(long timestamp){
 
         Date date = new Date(timestamp);
@@ -137,7 +149,7 @@ public class Utility {
         return "PM";
     }
 
-    public static String getFormattedName(String fileName) {
+    public static String getFormattedNameFromFilename(String fileName) {
         String strings = fileName.substring(0,fileName.indexOf('.'));
         return strings.replace('_',  ' ');
     }

@@ -67,12 +67,12 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
             fillAlarmItems(cursor);
             sortAlarms(alarmItems);
             setExpandedStateOfAlarmsToFalse(alarmItems);
+            cursor.close();
         }
 
         adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
         setListAdapter(adapter);
 
-        cursor.close();
 
         return view;
 

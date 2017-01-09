@@ -1,16 +1,11 @@
 package com.example.mike.birdalarm;
 
 import android.app.TimePickerDialog;
-import android.content.BroadcastReceiver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.WakefulBroadcastReceiver;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -134,7 +129,7 @@ public class MainActivity extends AppCompatActivity
         switch (name) {
 
             case "cute robin chirping":
-                return "cute_robin_chirping.mp4";
+                return "small_robin_chirping.mp4";
             case "bower bird":
                 return "bower_bird.mp4";
             case "bower bird3":

@@ -9,9 +9,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.CalendarContract;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 class Alarm implements Parcelable, Subject {
 
@@ -147,8 +150,50 @@ class Alarm implements Parcelable, Subject {
 
         pendingAlarmIntent = PendingIntent.getBroadcast(context, id, alarmIntent, 0);
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, this.timestamp, pendingAlarmIntent);
+        long wakeUpTime = getCorrectWakeUpTimeStamp(timestamp);
+
+//      Uncomment below line for immediate alarm trigger
+//        alarmManager.setExact(AlarmManager.RTC_WAKEUP, this.timestamp, pendingAlarmIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, wakeUpTime, pendingAlarmIntent);
         Log.v(LOG_TAG, "Alarm registered");
+    }
+
+    private long getCorrectWakeUpTimeStamp(long timestamp) {
+
+        final long oneMinuteFromNow = getOneMinuteFromNow();
+
+        Log.v(LOG_TAG, "Now " + Utility.getFormattedTime(timestamp));
+        Log.v(LOG_TAG, "One minute from now " + Utility.getFormattedTime(oneMinuteFromNow));
+
+        if(timestamp < oneMinuteFromNow){
+
+            long in24HoursTimestamp = getTimestampFor24HoursBasedOnThisTimestamp(timestamp);
+            Log.v(LOG_TAG, "'24 hours' from now; " + Utility.getFormattedTime(in24HoursTimestamp));
+
+            return in24HoursTimestamp;
+
+        } else {
+            return timestamp;
+        }
+    }
+
+    private long getTimestampFor24HoursBasedOnThisTimestamp(long timestamp) {
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTimeZone(TimeZone.getDefault());
+        calendar2.setTimeInMillis(timestamp);
+        int dayOfYear = Utility.getDayOfYearFromTimeStamp(timestamp);
+        calendar2.set(Calendar.DAY_OF_YEAR, dayOfYear + 1);
+
+        return calendar2.getTimeInMillis();
+    }
+
+    private long getOneMinuteFromNow() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getDefault());
+        long newTimestamp = System.currentTimeMillis();
+        calendar.setTimeInMillis(newTimestamp);
+        calendar.set(Calendar.MINUTE, Calendar.MINUTE + 1);
+        return calendar.getTimeInMillis();
     }
 
     public void cancelAlarm(){ alarmManager.cancel(pendingAlarmIntent); }

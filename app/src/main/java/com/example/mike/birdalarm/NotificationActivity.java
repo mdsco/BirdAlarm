@@ -15,8 +15,6 @@ public class NotificationActivity extends Activity {
     public static final String NOTIFICATION_ID = "NotificationId";
     public static final String IS_SLEEPING = "IsSleeping";
 
-//    String alarmLabel;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
