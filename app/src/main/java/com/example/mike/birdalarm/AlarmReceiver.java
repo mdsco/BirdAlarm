@@ -10,11 +10,9 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Parcelable;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.util.Log;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -28,68 +26,56 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         Alarm alarmPassedInThroughIntent =
                 intent.getExtras().getParcelable("alarmPassedInThroughIntent");
 
-        if (alarmPassedInThroughIntent != null) {
+        long timestamp = alarmPassedInThroughIntent.getTimestamp();
+        String time = Utility.getFormattedTime(timestamp);
 
-            long timestamp = alarmPassedInThroughIntent.getTimestamp();
-            String time = Utility.getFormattedTime(timestamp);
+        KeyguardManager keyguardManager =
+                (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        boolean locked = keyguardManager.inKeyguardRestrictedInputMode();
 
-            String label = alarmPassedInThroughIntent.getLabel();
+        PowerManager powerManager =
+                (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 
-            KeyguardManager keyguardManager =
-                    (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-            boolean locked = keyguardManager.inKeyguardRestrictedInputMode();
+        boolean screenOn;
 
-            PowerManager powerManager =
-                    (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-
-            boolean screenOn;
-
-            if (Build.VERSION.SDK_INT >= 20) {
-                screenOn = powerManager.isInteractive();
-            } else {
-                screenOn = powerManager.isScreenOn();
-            }
-
-            if (locked || !screenOn) {
-
-                Intent alarmIntent =
-                        new Intent(context, AlarmLockScreenTextureViewVideoActivity.class);
-                alarmIntent.putExtra("alarmPassedInThroughIntent", alarmPassedInThroughIntent);
-
-                alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                context.startActivity(alarmIntent);
-
-            } else {
-
-                createPopUpNotification(context, time, label);
-//                playAlarmSound(context);
-
-            }
+        if (Build.VERSION.SDK_INT >= 20) {
+            screenOn = powerManager.isInteractive();
         } else {
-
-            String sleepTime = intent.getStringExtra("Time");
-            String label = intent.getStringExtra("Label");
-            createPopUpNotification(context, sleepTime, label);
-
+            screenOn = powerManager.isScreenOn();
         }
 
+        if (locked || !screenOn) {
+
+            Intent alarmIntent =
+                    new Intent(context, AlarmLockScreenTextureViewVideoActivity.class);
+            alarmIntent.putExtra("alarmPassedInThroughIntent", alarmPassedInThroughIntent);
+
+            alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            context.startActivity(alarmIntent);
+
+        } else {
+            createPopUpNotification(context, time, alarmPassedInThroughIntent);
+//                playAlarmSound(context);
+
+        }
     }
 
-    private void createPopUpNotification(Context context, String time, String label) {
+    private void createPopUpNotification(Context context, String time, Alarm alarm) {
 
         final int mNotificationId = (int) System.currentTimeMillis();
 
         PendingIntent dismissIntent =
-                NotificationActivity.getDismissIntent(mNotificationId, context, label);
+                NotificationActivity.getDismissIntent(mNotificationId, context, alarm);
 
         PendingIntent sleepIntent =
-                NotificationActivity.getSleepIntent(context, mNotificationId, label);
+                NotificationActivity.getSleepIntent(context, mNotificationId, alarm);
 
+        //TODO - Decide what notification sound is going to be
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle(label)
+                        .setContentTitle(alarm.getLabel())
                         .setContentText(time)
 //                        .setDefaults(Notification.DEFAULT_ALL)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
@@ -97,10 +83,10 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                         .addAction(0, "Cancel", dismissIntent)
                         .addAction(0, "Sleep", sleepIntent);
 
-        NotificationManager mNotifyMgr =
+        NotificationManager mNotifyManager =
                 (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
 
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        mNotifyManager.notify(mNotificationId, mBuilder.build());
 
     }
 

@@ -84,6 +84,10 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        updateAlarmTypeForAlamAtPositionInList(resultCode, data);
+    }
+
+    private void updateAlarmTypeForAlamAtPositionInList(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
 
             String alarmName = data.getStringExtra("alarmName");

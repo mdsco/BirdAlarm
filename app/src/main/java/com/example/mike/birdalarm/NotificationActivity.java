@@ -1,23 +1,21 @@
 package com.example.mike.birdalarm;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 public class NotificationActivity extends Activity {
 
 
-    private String LOG_TAG = NotificationActivity.class.getSimpleName();
+    private static String LOG_TAG = NotificationActivity.class.getSimpleName();
 
     public static final String NOTIFICATION_ID = "NotificationId";
     public static final String IS_SLEEPING = "IsSleeping";
 
-    String alarmLabel;
+//    String alarmLabel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,62 +26,48 @@ public class NotificationActivity extends Activity {
 
         Intent intent = getIntent();
         int notificationId = intent.getIntExtra(NOTIFICATION_ID, -1);
-        alarmLabel = intent.getStringExtra("Label");
+        boolean isSleeping = intent.getBooleanExtra(IS_SLEEPING, false);
+        Alarm alarmPassedInThroughIntent = intent.getParcelableExtra("alarmPassedInThroughIntent");
+
+        GlobalState applicationContext = (GlobalState) getApplicationContext();
+        Alarm originalAlarm = applicationContext
+                                        .getOriginalAlarm(alarmPassedInThroughIntent.getId());
 
         manager.cancel(notificationId);
         finish();
 
-        if(intent.getBooleanExtra(IS_SLEEPING, false)){
-            registerAlarm();
+        if(isSleeping){
+            new SnoozeAlarm(getBaseContext(), originalAlarm);
         }
     }
 
-    public static PendingIntent getDismissIntent(int notificationId, Context context, String label) {
+    public static PendingIntent getDismissIntent(int notificationId,
+                                                            Context context, Alarm alarm) {
 
-        return getPendingIntent(false, context,notificationId, label);
+        return getPendingIntent(false, context, notificationId, alarm);
     }
 
-    public static PendingIntent getSleepIntent(Context context, int notificationId, String label){
+    public static PendingIntent getSleepIntent(Context context, int notificationId, Alarm alarm){
 
-        return getPendingIntent(true, context, notificationId, label);
+        return getPendingIntent(true, context, notificationId, alarm);
     }
 
-    private static PendingIntent getPendingIntent(boolean isSleepIntent, Context context, int id, String label){
+    private static PendingIntent getPendingIntent(boolean isSleepIntent,
+                                           Context context, int notificationId, Alarm alarm){
 
-        Intent sleepIntent = new Intent(context, NotificationActivity.class);
-        sleepIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        sleepIntent.putExtra(NOTIFICATION_ID, id);
-        sleepIntent.putExtra("Label", label);
+        Intent intent = new Intent(context, NotificationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra(NOTIFICATION_ID, notificationId);
+        intent.putExtra("alarmPassedInThroughIntent", alarm);
 
         if(isSleepIntent) {
-            sleepIntent.putExtra(IS_SLEEPING, true);
+            intent.putExtra(IS_SLEEPING, true);
         }
 
         int requestCode = (int) System.currentTimeMillis();
 
         return PendingIntent.getActivity(
-                context, requestCode, sleepIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-    }
-
-    public void registerAlarm() {
-
-
-        Context context = getBaseContext();
-        long timeStampForAlarmSleep = Utility.getTimeStampForAlarmSleep(context);
-
-        AlarmManager alarmManager =
-                    (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-        alarmIntent.putExtra("Time", Utility.getFormattedTime(timeStampForAlarmSleep));
-        alarmIntent.putExtra("Label", alarmLabel);
-
-        int requestCode = (int) System.currentTimeMillis();
-        PendingIntent pendingAlarmIntent =
-                PendingIntent.getBroadcast(context, requestCode, alarmIntent, 0);
-
-        alarmManager.setExact(
-                AlarmManager.RTC_WAKEUP, timeStampForAlarmSleep, pendingAlarmIntent);
+                context, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
     }
 }

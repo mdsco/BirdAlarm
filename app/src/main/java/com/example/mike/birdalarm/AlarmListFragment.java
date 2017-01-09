@@ -114,7 +114,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                 alarmItems.add(new Alarm(getActivity(),
                                             alarmId, timestamp, active, label, alarmType));
 
-
+                updateAlarmListInGlobalSpace(getActivity());
 
             } while(cursor.moveToNext());
 
@@ -162,8 +162,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
         alarmItems.add(alarm);
 
-        GlobalState applicationContext = (GlobalState) context.getApplicationContext();
-        applicationContext.setAlarmList(alarmItems);
+        updateAlarmListInGlobalSpace(context);
 
         sortAlarms(alarmItems);
 
@@ -183,6 +182,11 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
         });
 
+    }
+
+    private void updateAlarmListInGlobalSpace(Context context) {
+        GlobalState applicationContext = (GlobalState) context.getApplicationContext();
+        applicationContext.setAlarmList(alarmItems);
     }
 
     private void sortAlarms(ArrayList<Alarm> alarmItems) {
@@ -236,8 +240,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
         alarm.deleteAlarmFromDatabase(alarm);
         //remove from list of alarms to be added to listview
         alarmItems.remove(alarm);
-        GlobalState applicationContext = (GlobalState) getActivity().getApplicationContext();
-        applicationContext.setAlarmList(alarmItems);
+        updateAlarmListInGlobalSpace(getActivity());
 
         //reload list view
         adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);

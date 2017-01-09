@@ -194,6 +194,12 @@ class Alarm implements Parcelable, Subject {
     }
 
     @Override
+    public void removeObserver(AlarmObserver observer) {
+        alarmObservers.remove(observer);
+        Log.v(LOG_TAG, "Snooze alarm observer removed from observer list");
+    }
+
+    @Override
     public void notifyObservers() {
         if(alarmObservers != null) {
             for (AlarmObserver observer : alarmObservers) {
