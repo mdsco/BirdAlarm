@@ -3,6 +3,7 @@ package com.example.mike.birdalarm;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,7 +13,7 @@ import java.util.TimeZone;
 public class Utility {
 
 
-    private String LOG_TAG = Utility.class.getSimpleName();
+    private static final String LOG_TAG = Utility.class.getSimpleName();
 
     public static long getTimeStampFromHourAndMinute(int hour, int minute){
 
@@ -82,6 +83,18 @@ public class Utility {
 
     }
 
+    public static int get24FormatHourFromTimeStamp(long timestamp){
+
+        Date date = new Date(timestamp);
+        SimpleDateFormat sdf = new SimpleDateFormat("H");
+        sdf.setTimeZone(TimeZone.getDefault());
+        String formattedDate = sdf.format(date);
+        int hour = Integer.valueOf(formattedDate);
+
+        return hour;
+
+    }
+
     public static int getMinuteFromTimeStamp(long timestamp){
 
         Date date = new Date(timestamp);
@@ -118,7 +131,6 @@ public class Utility {
         return hour;
     }
 
-    //boolean is true if pm
     public static int getHourFor24HourClock(int hour, boolean amPm){
 
         if(!amPm){

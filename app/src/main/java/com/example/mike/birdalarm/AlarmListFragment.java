@@ -26,7 +26,9 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     private String LOG_TAG = AlarmListFragment.class.getSimpleName();
 
+    private MainActivity activity;
     private ArrayList<Alarm> alarmItems = new ArrayList<>();
+
     AlarmArrayAdapter adapter;
 
     String[] projection = {
@@ -70,12 +72,10 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
             cursor.close();
         }
 
-        adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
+        adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems, activity);
         setListAdapter(adapter);
 
-
         return view;
-
     }
 
     @Override
@@ -149,7 +149,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
             alarmItems = savedInstanceState.getParcelableArrayList("alarms");
         }
 
-        adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
+        adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems, activity);
         setListAdapter(adapter);
 
     }
@@ -168,8 +168,9 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
         final int alarmPosition = alarmItems.indexOf(alarm);
 
-        adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
+        adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems, activity);
         setListAdapter(adapter);
+
 
         ListView listView = (ListView) getActivity().findViewById(android.R.id.list);
         listView.post(new Runnable() {
@@ -243,7 +244,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
         updateAlarmListInGlobalSpace(getActivity());
 
         //reload list view
-        adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems);
+        adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems, activity);
         setListAdapter(adapter);
 
         Toast toast = Toast.makeText(getActivity(), Utility.getFormattedTime(alarm.getTimestamp())
@@ -260,5 +261,9 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     public void setAlarmItems(ArrayList<Alarm> alarmItems) {
         this.alarmItems = alarmItems;
+    }
+
+    public void setActivity(MainActivity activity) {
+        this.activity = activity;
     }
 }

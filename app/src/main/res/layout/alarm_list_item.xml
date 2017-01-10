@@ -123,4 +123,13 @@
         android:layout_below="@+id/options_layout"
         android:layout_alignParentStart="true" />
 
+    <TextView
+        android:text="Tomorrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/options_layout"
+        android:layout_alignStart="@+id/alarm_time_text_view"
+        android:id="@+id/tomorrowTextView"
+        android:onClick=""/>
+
 </RelativeLayout>

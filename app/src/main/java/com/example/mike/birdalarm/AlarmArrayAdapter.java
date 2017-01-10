@@ -23,8 +23,10 @@ import java.util.List;
 class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
 
+    private final MainActivity activity;
     private String LOG_TAG = AlarmArrayAdapter.class.getSimpleName();
     private View currentView;
+
 
     interface Deleter {
         void deleteThisAlarm(Alarm alarm);
@@ -34,12 +36,14 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
     private List<Alarm> alarmList;
     private AlarmListFragment fragment;
 
-    AlarmArrayAdapter(Context context, AlarmListFragment fragment, List<Alarm> alarmList) {
+    AlarmArrayAdapter(Context context, AlarmListFragment fragment, List<Alarm> alarmList, MainActivity activity) {
         super(context, R.layout.alarm_list_item, alarmList);
 
         this.context = context;
         this.fragment = fragment;
         this.alarmList = alarmList;
+
+        this.activity = activity;
 
     }
 
@@ -65,6 +69,15 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
         final TextView alarmAmPm = (TextView) convertView.findViewById(R.id.am_pm_text_view);
         alarmAmPm.setText(Utility.getAmOrPm(timestamp));
+
+        TimeViewOnClickListener timeViewOnClickListener =
+                                    new TimeViewOnClickListener(activity, alarmItem, alarmAmPm);
+
+        alarmListItemTime.setOnClickListener(timeViewOnClickListener);
+
+
+        TextView tomorrowView = (TextView) convertView.findViewById(R.id.tomorrowTextView);
+//        TomorrowViewUpdater tomorrowViewUpdater = new TomorrowViewUpdater(tomorrowView, timestamp, context);
 
         Switch alarmSwitch = (Switch) convertView.findViewById(R.id.alarm_active_switch);
 
@@ -101,6 +114,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                 String[] selectionArgs = {String.valueOf(alarmItem.getId())};
 
                 alarmItem.updateAlarmInDatabase(values, selection, selectionArgs);
+
             }
         });
 
@@ -161,6 +175,8 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                 return true;
             }
         });
+
+
 
         Button deleteAlarmButton = (Button) convertView.findViewById(R.id.delete_alarm_button);
 

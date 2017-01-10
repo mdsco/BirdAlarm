@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity
 
         alarmListFragment = (AlarmListFragment) getFragmentManager()
                 .findFragmentById(R.id.alarm_list_fragment);
+
+        alarmListFragment.setActivity(this);
     }
 
     @Override
@@ -59,9 +61,13 @@ public class MainActivity extends AppCompatActivity
     public void showTimePickerDialog(View view) {
 
         DialogFragment timePickerDialogFragment = new TimePickerDialogFragment();
-
         timePickerDialogFragment.show(getSupportFragmentManager(), "timePicker");
+    }
 
+    @Override
+    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+
+        alarmListFragment.addAlarm(MainActivity.this, hour, minute);
     }
 
     @Override
@@ -69,14 +75,10 @@ public class MainActivity extends AppCompatActivity
         super.onPause();
     }
 
-    @Override
-    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-        alarmListFragment.addAlarm(MainActivity.this, hour, minute);
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
 
         updateAlarmTypeForAlamAtPositionInList(resultCode, data);
