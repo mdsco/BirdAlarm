@@ -5,6 +5,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -126,6 +128,9 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             optionsSection.setVisibility(View.GONE);
         }
 
+        setListenerOnDayButtons(convertView);
+
+
         View selectAlarmLayout = convertView.findViewById(R.id.alarm_type_layout);
         selectAlarmLayout.setOnClickListener(getAlarmTypeSelection(position, alarmItem));
 
@@ -206,6 +211,45 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         });
 
         return convertView;
+    }
+
+    private void setListenerOnDayButtons(View view) {
+
+
+
+        Button mondayButton = (Button) view.findViewById(R.id.mondayButton);
+        Button tuesdayButton = (Button) view.findViewById(R.id.tuesdayButton);
+        Button wednesdayButton = (Button) view.findViewById(R.id.wednesdayButton);
+        Button thursdayButton = (Button) view.findViewById(R.id.thursdayButton);
+        Button fridayButton = (Button) view.findViewById(R.id.fridayButton);
+        Button saturdayButton = (Button) view.findViewById(R.id.saturdayButton);
+        Button sundayButton = (Button) view.findViewById(R.id.sundayButton);
+
+        View.OnClickListener clickListener =  new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Button button = (Button) view;
+                if(button.getTag().equals("off")){
+                    Log.v(LOG_TAG, "got herre");
+                    button.setBackground(ContextCompat.getDrawable(context, R.drawable.on_day_selection_button_shape));
+                    button.setTag("on");
+                } else {
+                    Log.v(LOG_TAG, "got herre 2");
+                    button.setBackground(ContextCompat.getDrawable(context, R.drawable.off_day_selection_button_shape));
+                    button.setTag("off");
+                }
+            }
+        };
+
+        mondayButton.setOnClickListener(clickListener);
+        tuesdayButton.setOnClickListener(clickListener);
+        wednesdayButton.setOnClickListener(clickListener);
+        thursdayButton.setOnClickListener(clickListener);
+        fridayButton.setOnClickListener(clickListener);
+        saturdayButton.setOnClickListener(clickListener);
+        sundayButton.setOnClickListener(clickListener);
+
+
     }
 
     @NonNull
