@@ -34,6 +34,7 @@ class TimeViewOnClickListener implements View.OnClickListener,
         TimePickerDialog timePickerDialog = new TimePickerDialog(activity, this, hour, minute,
                 DateFormat.is24HourFormat(activity));
 
+
         timePickerDialog.show();
     }
 

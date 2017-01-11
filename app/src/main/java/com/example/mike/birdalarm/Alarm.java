@@ -188,12 +188,15 @@ class Alarm implements Parcelable, Subject {
     }
 
     private long getOneMinuteFromNow() {
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getDefault());
         long newTimestamp = System.currentTimeMillis();
+        int minuteFromTimeStamp = Utility.getMinuteFromTimeStamp(newTimestamp);
         calendar.setTimeInMillis(newTimestamp);
-        calendar.set(Calendar.MINUTE, Calendar.MINUTE + 1);
+        calendar.set(Calendar.MINUTE,  minuteFromTimeStamp + 1);
         return calendar.getTimeInMillis();
+
     }
 
     public void cancelAlarm(){ alarmManager.cancel(pendingAlarmIntent); }

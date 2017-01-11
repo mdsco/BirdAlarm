@@ -77,7 +77,8 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
 
         TextView tomorrowView = (TextView) convertView.findViewById(R.id.tomorrowTextView);
-//        TomorrowViewUpdater tomorrowViewUpdater = new TomorrowViewUpdater(tomorrowView, timestamp, context);
+//        TomorrowViewUpdater tomorrowViewUpdater =
+//                                      new TomorrowViewUpdater(tomorrowView, timestamp, context);
 
         Switch alarmSwitch = (Switch) convertView.findViewById(R.id.alarm_active_switch);
 
