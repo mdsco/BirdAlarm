@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
     private final MainActivity activity;
     private String LOG_TAG = AlarmArrayAdapter.class.getSimpleName();
     private View currentView;
+    private TextView tomorrowView;
 
 
     interface Deleter {
@@ -79,7 +81,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         alarmListItemTime.setOnClickListener(timeViewOnClickListener);
 
 
-        TextView tomorrowView = (TextView) convertView.findViewById(R.id.tomorrowTextView);
+        tomorrowView = (TextView) convertView.findViewById(R.id.tomorrowTextView);
 //        TomorrowViewUpdater tomorrowViewUpdater =
 //                                      new TomorrowViewUpdater(tomorrowView, timestamp, context);
 
@@ -129,7 +131,9 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             optionsSection.setVisibility(View.GONE);
         }
 
-        setListenerOnDayButtons(convertView);
+        LinearLayout weekdaySection = (LinearLayout) convertView.findViewById(R.id.day_layout);
+
+        setListenerOnDayButtons(weekdaySection);
         setCorrectDayButtonState(convertView, alarmItem);
 
 
@@ -184,8 +188,6 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             }
         });
 
-
-
         Button deleteAlarmButton = (Button) convertView.findViewById(R.id.delete_alarm_button);
 
         deleteAlarmButton.setOnClickListener(new View.OnClickListener() {
@@ -217,18 +219,19 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
     private void setCorrectDayButtonState(View view, Alarm alarm) {
 
-        Button mondayButton = (Button) view.findViewById(R.id.mondayButton);
-        Button tuesdayButton = (Button) view.findViewById(R.id.tuesdayButton);
-        Button wednesdayButton = (Button) view.findViewById(R.id.wednesdayButton);
-        Button thursdayButton = (Button) view.findViewById(R.id.thursdayButton);
-        Button fridayButton = (Button) view.findViewById(R.id.fridayButton);
-        Button saturdayButton = (Button) view.findViewById(R.id.saturdayButton);
-        Button sundayButton = (Button) view.findViewById(R.id.sundayButton);
+        Button mondayButton = (Button) view.findViewById(R.id.Monday);
+        Button tuesdayButton = (Button) view.findViewById(R.id.Tuesday);
+        Button wednesdayButton = (Button) view.findViewById(R.id.Wednesday);
+        Button thursdayButton = (Button) view.findViewById(R.id.Thursday);
+        Button fridayButton = (Button) view.findViewById(R.id.Friday);
+        Button saturdayButton = (Button) view.findViewById(R.id.Saturday);
+        Button sundayButton = (Button) view.findViewById(R.id.Sunday);
 
         Alarm.Days[] days = alarm.getDays();
-        for(int i = 0; i < days.length; i++){
+        for (Alarm.Days day : days) {
 
-            switch (days[i]){
+
+            switch (day) {
 
                 case MONDAY:
                     mondayButton.setTag("on");
@@ -268,13 +271,9 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
     private void setListenerOnDayButtons(View view) {
 
-        Button mondayButton = (Button) view.findViewById(R.id.mondayButton);
-        Button tuesdayButton = (Button) view.findViewById(R.id.tuesdayButton);
-        Button wednesdayButton = (Button) view.findViewById(R.id.wednesdayButton);
-        Button thursdayButton = (Button) view.findViewById(R.id.thursdayButton);
-        Button fridayButton = (Button) view.findViewById(R.id.fridayButton);
-        Button saturdayButton = (Button) view.findViewById(R.id.saturdayButton);
-        Button sundayButton = (Button) view.findViewById(R.id.sundayButton);
+        final LinearLayout linearLayout = ((LinearLayout) view);
+
+        int childCount = linearLayout.getChildCount();
 
         View.OnClickListener clickListener =  new View.OnClickListener() {
             @Override
@@ -284,31 +283,101 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                     button.setBackground(ContextCompat.getDrawable(context, R.drawable.on_day_selection_button_shape));
                     button.setTextColor(Color.BLACK);
                     button.setTag("on");
+                    setTomorrowLabelBasedOnAlarmId(linearLayout);
                 } else {
                     button.setBackground(ContextCompat.getDrawable(context, R.drawable.off_day_selection_button_shape));
                     button.setTextColor(Color.WHITE);
                     button.setTag("off");
+                    setTomorrowLabelBasedOnAlarmId(linearLayout);
                 }
             }
         };
 
-        mondayButton.setOnClickListener(clickListener);
-        tuesdayButton.setOnClickListener(clickListener);
-        wednesdayButton.setOnClickListener(clickListener);
-        thursdayButton.setOnClickListener(clickListener);
-        fridayButton.setOnClickListener(clickListener);
-        saturdayButton.setOnClickListener(clickListener);
-        sundayButton.setOnClickListener(clickListener);
+        for(int i = 0; i < childCount; i++ ) {
+            Button button = (Button) linearLayout.getChildAt(i);
+            button.setOnClickListener(clickListener);
+        }
+    }
+
+    private void setTomorrowLabelBasedOnAlarmId(LinearLayout linearLayout){
+
+        String alarmDaysLabelString = "";
+        int onCount = 0;
+
+        int childCount = linearLayout.getChildCount();
+
+        for(int i = 0; i < childCount; i++){
+            Button button = (Button) linearLayout.getChildAt(i);
+            if(button.getTag().equals("on")){
+                onCount++;
+            }
+        }
+
+        int commaCount = 0;
+        for(int i = 0; i < childCount; i++) {
+
+            Button button = (Button) linearLayout.getChildAt(i);
+            int id = button.getId();
+
+            if(button.getTag().equals("on")) {
+                commaCount++;
+                switch (id) {
+                    case R.id.Monday:
+                        alarmDaysLabelString += addDayLabel("Monday", button, commaCount, onCount);
+                        break;
+                    case R.id.Tuesday:
+                        alarmDaysLabelString += addDayLabel("Tuesday", button, commaCount, onCount);
+                        break;
+                    case R.id.Wednesday:
+                        alarmDaysLabelString += addDayLabel("Wednesday", button, commaCount, onCount);
+                        break;
+                    case R.id.Thursday:
+                        alarmDaysLabelString += addDayLabel("Thursday", button, commaCount, onCount);
+                        break;
+                    case R.id.Friday:
+                        alarmDaysLabelString += addDayLabel("Friday", button, commaCount, onCount);
+                        break;
+                    case R.id.Saturday:
+                        alarmDaysLabelString += addDayLabel("Saturday", button, commaCount, onCount);
+                        break;
+                    case R.id.Sunday:
+                        alarmDaysLabelString += addDayLabel("Sunday", button, commaCount, onCount);
+                        break;
+                }
+            }
+
+        }
+
+        tomorrowView.setText(alarmDaysLabelString);
 
     }
 
+    private String addDayLabel(String day, Button button, int commaCount, int onCount){
+
+        String alarmDaysLabelString = "";
+
+        if(button.getTag().equals("on")) {
+            alarmDaysLabelString = day;
+            if(onCount > 1) {
+                alarmDaysLabelString = day.substring(0, 3);
+            }
+            if(commaCount < onCount){
+                alarmDaysLabelString += ", ";
+            }
+        }
+        return alarmDaysLabelString;
+    }
+
+
     private void setCorrectButtonBackgroundColorBasedOnTag(Button button) {
         if(button.getTag().equals("on")){
-            button.setBackground(ContextCompat.getDrawable(context, R.drawable.on_day_selection_button_shape));
+            button.setBackground(ContextCompat.getDrawable(context,
+                                    R.drawable.on_day_selection_button_shape));
             button.setTextColor(Color.BLACK);
             button.setTag("on");
         } else {
-            button.setBackground(ContextCompat.getDrawable(context, R.drawable.off_day_selection_button_shape));
+            button.setBackground(ContextCompat.getDrawable(context,
+                                    R.drawable.off_day_selection_button_shape));
             button.setTextColor(Color.WHITE);
             button.setTag("off");
         }

@@ -18,7 +18,7 @@
         android:layout_width="1dp"
         android:layout_height="1dp"
         android:focusable="true"
-        android:focusableInTouchMode="true"/>
+        android:focusableInTouchMode="true" />
 
     <TextView
         android:id="@+id/alarm_time_text_view"
@@ -57,101 +57,104 @@
         android:layout_below="@+id/alarm_time_text_view"
         android:layout_centerHorizontal="true">
 
-        <Button
-            android:text="M"
-            android:textColor="@color/colorWhite"
-            android:layout_width="@dimen/day_button_diameter"
-            android:layout_height="@dimen/day_button_diameter"
-            android:layout_margin="10dp"
-            android:id="@+id/mondayButton"
-            android:tag="off"
-            android:background="@drawable/off_day_selection_button_shape"/>
+        <LinearLayout
+            android:id="@+id/day_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <Button
-            android:text="T"
-            android:textColor="@color/colorWhite"
-            android:layout_width="@dimen/day_button_diameter"
-            android:layout_height="@dimen/day_button_diameter"
-            android:layout_marginRight="10dp"
-            android:id="@+id/tuesdayButton"
-            android:tag="off"
-            android:layout_alignBottom="@+id/mondayButton"
-            android:layout_toEndOf="@+id/mondayButton"
-            android:background="@drawable/off_day_selection_button_shape"/>
+            <Button
+                android:id="@+id/Monday"
+                android:layout_gravity="center_vertical"
+                android:layout_width="@dimen/day_button_diameter"
+                android:layout_height="@dimen/day_button_diameter"
+                android:layout_margin="10dp"
+                android:background="@drawable/off_day_selection_button_shape"
+                android:tag="off"
+                android:text="M"
+                android:textColor="@color/colorWhite" />
 
-        <Button
-            android:text="W"
-            android:textColor="@color/colorWhite"
-            android:layout_width="@dimen/day_button_diameter"
-            android:layout_height="@dimen/day_button_diameter"
-            android:layout_marginRight="10dp"
-            android:id="@+id/wednesdayButton"
-            android:tag="off"
-            android:layout_alignBottom="@+id/tuesdayButton"
-            android:layout_toEndOf="@+id/tuesdayButton"
-            android:background="@drawable/off_day_selection_button_shape"/>
+            <Button
+                android:id="@+id/Tuesday"
+                android:layout_gravity="center_vertical"
+                android:layout_width="@dimen/day_button_diameter"
+                android:layout_height="@dimen/day_button_diameter"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/off_day_selection_button_shape"
+                android:tag="off"
+                android:text="T"
+                android:textColor="@color/colorWhite" />
 
-        <Button
-            android:text="T"
-            android:textColor="@color/colorWhite"
-            android:layout_width="@dimen/day_button_diameter"
-            android:layout_height="@dimen/day_button_diameter"
-            android:layout_marginRight="10dp"
-            android:id="@+id/thursdayButton"
-            android:tag="off"
-            android:layout_alignBottom="@+id/wednesdayButton"
-            android:layout_toEndOf="@+id/wednesdayButton"
-            android:background="@drawable/off_day_selection_button_shape"/>
+            <Button
+                android:id="@+id/Wednesday"
+                android:layout_gravity="center_vertical"
+                android:layout_width="@dimen/day_button_diameter"
+                android:layout_height="@dimen/day_button_diameter"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/off_day_selection_button_shape"
+                android:tag="off"
+                android:text="W"
+                android:textColor="@color/colorWhite" />
 
-        <Button
-            android:text="F"
-            android:textColor="@color/colorWhite"
-            android:layout_width="@dimen/day_button_diameter"
-            android:layout_height="@dimen/day_button_diameter"
-            android:layout_marginRight="10dp"
-            android:id="@+id/fridayButton"
-            android:tag="off"
-            android:layout_alignBottom="@+id/thursdayButton"
-            android:layout_toEndOf="@+id/thursdayButton"
-            android:background="@drawable/off_day_selection_button_shape"/>
+            <Button
+                android:id="@+id/Thursday"
+                android:layout_gravity="center_vertical"
+                android:layout_width="@dimen/day_button_diameter"
+                android:layout_height="@dimen/day_button_diameter"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/off_day_selection_button_shape"
+                android:tag="off"
+                android:text="T"
+                android:textColor="@color/colorWhite" />
 
-        <Button
-            android:text="S"
-            android:textColor="@color/colorWhite"
-            android:layout_width="@dimen/day_button_diameter"
-            android:layout_height="@dimen/day_button_diameter"
-            android:layout_marginRight="10dp"
-            android:id="@+id/saturdayButton"
-            android:tag="off"
-            android:layout_alignBottom="@+id/fridayButton"
-            android:layout_toEndOf="@+id/fridayButton"
-            android:background="@drawable/off_day_selection_button_shape"/>
+            <Button
+                android:id="@+id/Friday"
+                android:layout_gravity="center_vertical"
+                android:layout_width="@dimen/day_button_diameter"
+                android:layout_height="@dimen/day_button_diameter"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/off_day_selection_button_shape"
+                android:tag="off"
+                android:text="F"
+                android:textColor="@color/colorWhite" />
 
-        <Button
-            android:text="S"
-            android:textColor="@color/colorWhite"
-            android:layout_width="@dimen/day_button_diameter"
-            android:layout_height="@dimen/day_button_diameter"
-            android:layout_marginRight="10dp"
-            android:id="@+id/sundayButton"
-            android:tag="off"
-            android:layout_alignBottom="@+id/saturdayButton"
-            android:layout_toEndOf="@+id/saturdayButton"
-            android:background="@drawable/off_day_selection_button_shape"/>
+            <Button
+                android:id="@+id/Saturday"
+                android:layout_gravity="center_vertical"
+                android:layout_width="@dimen/day_button_diameter"
+                android:layout_height="@dimen/day_button_diameter"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/off_day_selection_button_shape"
+                android:tag="off"
+                android:text="S"
+                android:textColor="@color/colorWhite" />
+
+            <Button
+                android:id="@+id/Sunday"
+                android:layout_gravity="center_vertical"
+                android:layout_width="@dimen/day_button_diameter"
+                android:layout_height="@dimen/day_button_diameter"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/off_day_selection_button_shape"
+                android:tag="off"
+                android:text="S"
+                android:textColor="@color/colorWhite" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/alarm_type_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/mondayButton">
+            android:layout_below="@+id/day_layout">
 
             <Button
                 android:id="@+id/change_alarm_button"
                 android:layout_width="0dp"
-                android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
+                android:layout_weight="2.16"
                 android:backgroundTint="@android:color/transparent"
                 android:drawableLeft="@android:drawable/ic_popup_reminder"
                 android:stateListAnimator="@null" />
@@ -159,14 +162,14 @@
             <TextView
                 android:id="@+id/alarm_type_textview"
                 android:layout_width="0dp"
-                android:layout_weight="6"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/change_alarm_button"
                 android:layout_alignBottom="@+id/change_alarm_button"
                 android:layout_alignStart="@+id/label_edit_text"
                 android:layout_marginStart="12dp"
+                android:layout_weight="6"
                 android:text="TextView"
-                android:textSize="24sp" />
+                android:textSize="18sp" />
 
         </LinearLayout>
 
@@ -174,15 +177,15 @@
             android:id="@+id/label_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/alarm_type_layout"
+            android:layout_below="@+id/alarm_type_layout"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:ems="10"
             android:hint="Label"
             android:imeOptions="actionDone"
             android:inputType="textPersonName"
-            android:layout_below="@+id/alarm_type_layout"
-            android:layout_alignStart="@+id/alarm_type_layout" />
+            android:paddingLeft="@dimen/activity_horizontal_margin" />
 
 
     </RelativeLayout>
@@ -201,38 +204,24 @@
         android:id="@+id/delete_alarm_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/options_layout"
         android:backgroundTint="@android:color/transparent"
         android:drawableLeft="@android:drawable/ic_menu_delete"
-        android:stateListAnimator="@null"
-        android:layout_below="@+id/options_layout"
-        android:layout_alignParentStart="true" />
+        android:stateListAnimator="@null" />
 
     <TextView
-        android:text="Tomorrow"
+        android:id="@+id/tomorrowTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/options_layout"
         android:layout_alignStart="@+id/alarm_time_text_view"
-        android:id="@+id/tomorrowTextView"
-        android:onClick=""/>
+        android:onClick=""
+        android:text="Tomorrow" />
 
 </RelativeLayout>
 
 
-<!--<Button-->
-<!--android:id="@+id/tuesdayButton"-->
-<!--android:layout_width="40dp"-->
-<!--android:layout_height="40dp"-->
-<!--android:layout_margin="10dp"-->
-<!--android:layout_alignBaseline="@+id/mondayButton"-->
-<!--android:layout_alignBottom="@+id/mondayButton"-->
-<!--android:background="@drawable/off_day_selection_button_shape"-->
-<!--android:text="Tues"/>-->
+    <!--<Button--><!--android:id="@+id/tuesdayButton"--><!--android:layout_width="40dp"--><!--android:layout_height="40dp"--><!--android:layout_margin="10dp"--><!--android:layout_alignBaseline="@+id/mondayButton"--><!--android:layout_alignBottom="@+id/mondayButton"--><!--android:background="@drawable/off_day_selection_button_shape"--><!--android:text="Tues"/>-->
 
-<!--<Button-->
-<!--android:id="@+id/wednesdayButton"-->
-<!--android:layout_width="40dp"-->
-<!--android:layout_height="40dp"-->
-<!--android:layout_margin="10dp"-->
-<!--android:background="@drawable/off_day_selection_button_shape"-->
-<!--android:text="Wed"/>-->
+    <!--<Button--><!--android:id="@+id/wednesdayButton"--><!--android:layout_width="40dp"--><!--android:layout_height="40dp"--><!--android:layout_margin="10dp"--><!--android:background="@drawable/off_day_selection_button_shape"--><!--android:text="Wed"/>-->
