@@ -37,6 +37,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TIME,
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE,
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING,
+            UserCreatedAlarmContract.NewAlarmEntry.COLUMN_DAYS_ACTIVE,
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE,
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_LABEL
     };
@@ -45,8 +46,9 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
     private int COL_TIME = 1;
     private int COL_ACTIVE = 2;
     private int COL_REPEATING = 3;
-    private int COL_TYPE = 4;
-    private int COL_LABEL = 5;
+    private int COL_DAYS_ACTIVE = 4;
+    private int COL_TYPE = 5;
+    private int COL_LABEL = 6;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,6 +107,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                 long timestamp = cursor.getLong(COL_TIME);
                 int active = cursor.getInt(COL_ACTIVE);
                 int repeating = cursor.getInt(COL_REPEATING);
+                String days = cursor.getString(COL_DAYS_ACTIVE);
                 String alarmType = cursor.getString(COL_TYPE);
                 String label = cursor.getString(COL_LABEL);
 
@@ -112,7 +115,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                 calendar.setTime(new Date(timestamp));
 
                 alarmItems.add(new Alarm(getActivity(),
-                                            alarmId, timestamp, active, label, alarmType));
+                                alarmId, timestamp, active, days, label, alarmType));
 
                 updateAlarmListInGlobalSpace(getActivity());
 

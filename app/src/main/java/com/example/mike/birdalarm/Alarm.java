@@ -39,15 +39,17 @@ class Alarm implements Parcelable, Subject {
     private PendingIntent pendingAlarmIntent;
     private ArrayList<AlarmObserver> alarmObservers;
 
-    Alarm (Context context, int alarmId, long timestamp, int active, String label, String alarmType){
+    Alarm(Context context, int alarmId, long timestamp, int active,
+                                                String days, String label, String alarmType) {
 
         this.context = context;
-
 
         this.id = alarmId;
         this.timestamp = timestamp;
 
         this.isActive = active;
+
+        this.days = getDaysArrayFromDaysString(days);
 
         this.label = label;
         this.alarmType = alarmType;
@@ -59,7 +61,7 @@ class Alarm implements Parcelable, Subject {
         registerAlarm(this.id);
     }
 
-    Alarm (Context context, int hour, int minute){
+    Alarm(Context context, int hour, int minute) {
 
         alarmObservers = new ArrayList<AlarmObserver>();
 
@@ -69,6 +71,8 @@ class Alarm implements Parcelable, Subject {
         this.id = (int) this.timestamp;
 
         this.isActive = 1;
+
+        days = new Days[]{Days.MONDAY};
 
         this.alarmType = Defaults.DEFAULT_ALARM_TYPE;
         this.label = context.getString(R.string.default_label_name);
@@ -83,7 +87,7 @@ class Alarm implements Parcelable, Subject {
 
     }
 
-    private Alarm(Parcel in){
+    private Alarm(Parcel in) {
 
         id = in.readInt();
         timestamp = in.readLong();
@@ -112,10 +116,22 @@ class Alarm implements Parcelable, Subject {
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TIME, this.timestamp);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE, isActive);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING, 1);
+        alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_DAYS_ACTIVE, getDaysStringFromString(days));
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE, this.alarmType);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_LABEL, this.label);
 
         contentResolver.insert(UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI, alarmValues);
+    }
+
+    public static String getDaysStringFromString(Days[] days) {
+
+        String daysString = "";
+
+        for (Days day : days) {
+            daysString += day.toString() + ",";
+        }
+
+        return daysString;
     }
 
     public int deleteAlarmFromDatabase(Alarm alarm) {
@@ -130,13 +146,13 @@ class Alarm implements Parcelable, Subject {
 
     }
 
-    public int updateAlarmInDatabase(ContentValues values, String selection, String[] selectionArgs){
+    public int updateAlarmInDatabase(ContentValues values, String selection, String[] selectionArgs) {
 
         ContentResolver contentResolver = context.getContentResolver();
         Uri contentUri = UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI;
 
         int numberRowsUpdated =
-                    contentResolver.update(contentUri, values, selection, selectionArgs);
+                contentResolver.update(contentUri, values, selection, selectionArgs);
 
         return numberRowsUpdated;
     }
@@ -165,7 +181,7 @@ class Alarm implements Parcelable, Subject {
         Log.v(LOG_TAG, "Now " + Utility.getFormattedTime(timestamp));
         Log.v(LOG_TAG, "One minute from now " + Utility.getFormattedTime(oneMinuteFromNow));
 
-        if(timestamp < oneMinuteFromNow){
+        if (timestamp < oneMinuteFromNow) {
 
             long in24HoursTimestamp = getTimestampFor24HoursBasedOnThisTimestamp(timestamp);
             Log.v(LOG_TAG, "'24 hours' from now; " + Utility.getFormattedTime(in24HoursTimestamp));
@@ -194,29 +210,31 @@ class Alarm implements Parcelable, Subject {
         long newTimestamp = System.currentTimeMillis();
         int minuteFromTimeStamp = Utility.getMinuteFromTimeStamp(newTimestamp);
         calendar.setTimeInMillis(newTimestamp);
-        calendar.set(Calendar.MINUTE,  minuteFromTimeStamp + 1);
+        calendar.set(Calendar.MINUTE, minuteFromTimeStamp + 1);
         return calendar.getTimeInMillis();
 
     }
 
-    public void cancelAlarm(){ alarmManager.cancel(pendingAlarmIntent); }
+    public void cancelAlarm() {
+        alarmManager.cancel(pendingAlarmIntent);
+    }
 
-
-    public void reregisterAlarm(){
+    public void reregisterAlarm() {
 
         cancelAlarm();
         deleteAlarmFromDatabase(this);
-        setId(getId()+1);
+        setId(getId() + 1);
         registerAlarm(getId());
         addAlarmToDatabase();
 
     }
 
-    public void setDayAlarmOnOrOff(Days day){
+
+    public void setDayAlarmOnOrOff(Days day) {
         day.alarmOn = !day.alarmOn;
     }
 
-    public static final Parcelable.Creator<Alarm> CREATOR = new Parcelable.Creator<Alarm>(){
+    public static final Parcelable.Creator<Alarm> CREATOR = new Parcelable.Creator<Alarm>() {
 
         @Override
         public Alarm createFromParcel(Parcel in) {
@@ -249,31 +267,89 @@ class Alarm implements Parcelable, Subject {
 
     @Override
     public void notifyObservers() {
-        if(alarmObservers != null) {
+        if (alarmObservers != null) {
             for (AlarmObserver observer : alarmObservers) {
                 observer.update();
             }
         }
     }
 
+    public Days[] getDays() {
+
+        return days;
+    }
+
     enum Days {
 
-        MONDAY(true), TUESDAY(true), WEDNESDAY(true), THURSDAY(true),
-        FRIDAY(true), SATURDAY(true), SUNDAY(true);
+        MONDAY(true, "Monday"), TUESDAY(false, "Tuesday"), WEDNESDAY(false, "Wednesday"),
+        THURSDAY(false, "Thursday"), FRIDAY(false, "Friday"), SATURDAY(false, "Saturday"),
+        SUNDAY(false, "Sunday");
 
         boolean alarmOn;
 
-        Days(boolean alarmOn){
+        private final String name;
+
+        Days(boolean alarmOn, String name) {
+            this.alarmOn = alarmOn;
+            this.name = name;
+        }
+
+        public void setAlarmOn(boolean alarmOn) {
             this.alarmOn = alarmOn;
         }
 
+        @Override
+        public String toString() {
+            return this.name;
+        }
+    }
+
+    private Days[] getDaysArrayFromDaysString(String days) {
+
+        String[] daysStringArray = days.split(",");
+
+        Days[] daysEnumArray = new Days[daysStringArray.length];
+
+        for (int i = 0; i < daysStringArray.length; i++) {
+
+            switch (daysStringArray[i]) {
+
+                case "Monday":
+                    daysEnumArray[i] = Days.MONDAY;
+                    break;
+                case "Tuesday":
+                    daysEnumArray[i] = Days.TUESDAY;
+                    break;
+                case "Wednesday":
+                    daysEnumArray[i] = Days.WEDNESDAY;
+                    break;
+                case "Thursday":
+                    daysEnumArray[i] = Days.THURSDAY;
+                    break;
+                case "Friday":
+                    daysEnumArray[i] = Days.FRIDAY;
+                    break;
+                case "Saturday":
+                    daysEnumArray[i] = Days.SATURDAY;
+                    break;
+                case "Sunday":
+                    daysEnumArray[i] = Days.SUNDAY;
+                    break;
+                default:
+                    break;
+
+            }
+
+        }
+
+        return daysEnumArray;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public int getId(){
+    public int getId() {
         return this.id;
     }
 
@@ -293,11 +369,11 @@ class Alarm implements Parcelable, Subject {
         this.alarmIsRepeating = alarmIsRepeating;
     }
 
-    public boolean isExpanded(){
+    public boolean isExpanded() {
         return isExpanded;
     }
 
-    public void setExpandedState(boolean activeOrNot){
+    public void setExpandedState(boolean activeOrNot) {
         isExpanded = activeOrNot;
     }
 
@@ -305,7 +381,9 @@ class Alarm implements Parcelable, Subject {
         return label;
     }
 
-    public void setLabel(String label) { this.label = label; }
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
     public String getAlarmType() {
         return alarmType;

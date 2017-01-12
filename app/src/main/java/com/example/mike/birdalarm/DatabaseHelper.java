@@ -29,6 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TIME + " INTEGER NOT NULL," +
                 UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE + " INTEGER NOT NULL," +
                 UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING + " INTEGER NOT NULL," +
+                UserCreatedAlarmContract.NewAlarmEntry.COLUMN_DAYS_ACTIVE + " TEXT NOT NULL," +
                 UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE + " INTEGER NOT NULL," +
                 UserCreatedAlarmContract.NewAlarmEntry.COLUMN_LABEL + " TEXT NOT NULL);";
 

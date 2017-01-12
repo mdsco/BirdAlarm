@@ -71,6 +71,18 @@ public class Utility {
 
     }
 
+    public static int getDayOfWeekFromTimeStamp(long timestamp){
+
+        Date date = new Date(timestamp);
+        SimpleDateFormat sdf = new SimpleDateFormat("E");
+        sdf.setTimeZone(TimeZone.getDefault());
+        String formattedDate = sdf.format(date);
+        int dayOfYear = Integer.valueOf(formattedDate);
+
+        return dayOfYear;
+
+    }
+
     public static int getHourFromTimeStamp(long timestamp){
 
         Date date = new Date(timestamp);

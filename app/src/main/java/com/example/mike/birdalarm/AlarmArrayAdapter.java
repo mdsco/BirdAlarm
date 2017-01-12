@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -129,6 +130,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         }
 
         setListenerOnDayButtons(convertView);
+        setCorrectDayButtonState(convertView, alarmItem);
 
 
         View selectAlarmLayout = convertView.findViewById(R.id.alarm_type_layout);
@@ -213,9 +215,58 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         return convertView;
     }
 
+    private void setCorrectDayButtonState(View view, Alarm alarm) {
+
+        Button mondayButton = (Button) view.findViewById(R.id.mondayButton);
+        Button tuesdayButton = (Button) view.findViewById(R.id.tuesdayButton);
+        Button wednesdayButton = (Button) view.findViewById(R.id.wednesdayButton);
+        Button thursdayButton = (Button) view.findViewById(R.id.thursdayButton);
+        Button fridayButton = (Button) view.findViewById(R.id.fridayButton);
+        Button saturdayButton = (Button) view.findViewById(R.id.saturdayButton);
+        Button sundayButton = (Button) view.findViewById(R.id.sundayButton);
+
+        Alarm.Days[] days = alarm.getDays();
+        for(int i = 0; i < days.length; i++){
+
+            switch (days[i]){
+
+                case MONDAY:
+                    mondayButton.setTag("on");
+                    setCorrectButtonBackgroundColorBasedOnTag(mondayButton);
+                    break;
+                case TUESDAY:
+                    tuesdayButton.setTag("on");
+                    setCorrectButtonBackgroundColorBasedOnTag(tuesdayButton);
+                    break;
+                case WEDNESDAY:
+                    wednesdayButton.setTag("on");
+                    setCorrectButtonBackgroundColorBasedOnTag(wednesdayButton);
+                    break;
+                case THURSDAY:
+                    thursdayButton.setTag("on");
+                    setCorrectButtonBackgroundColorBasedOnTag(thursdayButton);
+                    break;
+                case FRIDAY:
+                    fridayButton.setTag("on");
+                    setCorrectButtonBackgroundColorBasedOnTag(fridayButton);
+                    break;
+                case SATURDAY:
+                    saturdayButton.setTag("on");
+                    setCorrectButtonBackgroundColorBasedOnTag(saturdayButton);
+                    break;
+                case SUNDAY:
+                    sundayButton.setTag("on");
+                    setCorrectButtonBackgroundColorBasedOnTag(sundayButton);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+    }
+
     private void setListenerOnDayButtons(View view) {
-
-
 
         Button mondayButton = (Button) view.findViewById(R.id.mondayButton);
         Button tuesdayButton = (Button) view.findViewById(R.id.tuesdayButton);
@@ -230,12 +281,12 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             public void onClick(View view) {
                 Button button = (Button) view;
                 if(button.getTag().equals("off")){
-                    Log.v(LOG_TAG, "got herre");
                     button.setBackground(ContextCompat.getDrawable(context, R.drawable.on_day_selection_button_shape));
+                    button.setTextColor(Color.BLACK);
                     button.setTag("on");
                 } else {
-                    Log.v(LOG_TAG, "got herre 2");
                     button.setBackground(ContextCompat.getDrawable(context, R.drawable.off_day_selection_button_shape));
+                    button.setTextColor(Color.WHITE);
                     button.setTag("off");
                 }
             }
@@ -249,7 +300,18 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         saturdayButton.setOnClickListener(clickListener);
         sundayButton.setOnClickListener(clickListener);
 
+    }
 
+    private void setCorrectButtonBackgroundColorBasedOnTag(Button button) {
+        if(button.getTag().equals("on")){
+            button.setBackground(ContextCompat.getDrawable(context, R.drawable.on_day_selection_button_shape));
+            button.setTextColor(Color.BLACK);
+            button.setTag("on");
+        } else {
+            button.setBackground(ContextCompat.getDrawable(context, R.drawable.off_day_selection_button_shape));
+            button.setTextColor(Color.WHITE);
+            button.setTag("off");
+        }
     }
 
     @NonNull

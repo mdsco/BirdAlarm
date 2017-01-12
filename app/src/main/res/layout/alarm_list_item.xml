@@ -59,6 +59,7 @@
 
         <Button
             android:text="M"
+            android:textColor="@color/colorWhite"
             android:layout_width="@dimen/day_button_diameter"
             android:layout_height="@dimen/day_button_diameter"
             android:layout_margin="10dp"
@@ -68,6 +69,7 @@
 
         <Button
             android:text="T"
+            android:textColor="@color/colorWhite"
             android:layout_width="@dimen/day_button_diameter"
             android:layout_height="@dimen/day_button_diameter"
             android:layout_marginRight="10dp"
@@ -79,6 +81,7 @@
 
         <Button
             android:text="W"
+            android:textColor="@color/colorWhite"
             android:layout_width="@dimen/day_button_diameter"
             android:layout_height="@dimen/day_button_diameter"
             android:layout_marginRight="10dp"
@@ -90,6 +93,7 @@
 
         <Button
             android:text="T"
+            android:textColor="@color/colorWhite"
             android:layout_width="@dimen/day_button_diameter"
             android:layout_height="@dimen/day_button_diameter"
             android:layout_marginRight="10dp"
@@ -101,6 +105,7 @@
 
         <Button
             android:text="F"
+            android:textColor="@color/colorWhite"
             android:layout_width="@dimen/day_button_diameter"
             android:layout_height="@dimen/day_button_diameter"
             android:layout_marginRight="10dp"
@@ -112,6 +117,7 @@
 
         <Button
             android:text="S"
+            android:textColor="@color/colorWhite"
             android:layout_width="@dimen/day_button_diameter"
             android:layout_height="@dimen/day_button_diameter"
             android:layout_marginRight="10dp"
@@ -123,6 +129,7 @@
 
         <Button
             android:text="S"
+            android:textColor="@color/colorWhite"
             android:layout_width="@dimen/day_button_diameter"
             android:layout_height="@dimen/day_button_diameter"
             android:layout_marginRight="10dp"
