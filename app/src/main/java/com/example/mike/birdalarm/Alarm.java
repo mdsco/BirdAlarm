@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.provider.CalendarContract;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -72,7 +71,8 @@ class Alarm implements Parcelable, Subject {
 
         this.isActive = 1;
 
-        days = new Days[]{Days.MONDAY};
+        days = new Days[1];
+        days[0] = Days.MONDAY;
 
         this.alarmType = Defaults.DEFAULT_ALARM_TYPE;
         this.label = context.getString(R.string.default_label_name);
@@ -151,10 +151,7 @@ class Alarm implements Parcelable, Subject {
         ContentResolver contentResolver = context.getContentResolver();
         Uri contentUri = UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI;
 
-        int numberRowsUpdated =
-                contentResolver.update(contentUri, values, selection, selectionArgs);
-
-        return numberRowsUpdated;
+        return contentResolver.update(contentUri, values, selection, selectionArgs);
     }
 
     public void registerAlarm(int id) {
@@ -171,7 +168,6 @@ class Alarm implements Parcelable, Subject {
 //      Uncomment below line for immediate alarm trigger
 //        alarmManager.setExact(AlarmManager.RTC_WAKEUP, this.timestamp, pendingAlarmIntent);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, wakeUpTime, pendingAlarmIntent);
-        Log.v(LOG_TAG, "Alarm registered");
     }
 
     private long getCorrectWakeUpTimeStamp(long timestamp) {
@@ -256,13 +252,11 @@ class Alarm implements Parcelable, Subject {
     @Override
     public void registerObserver(AlarmObserver observer) {
         alarmObservers.add(observer);
-        Log.v(LOG_TAG, "Snooze Alarm observer added to observer list");
     }
 
     @Override
     public void removeObserver(AlarmObserver observer) {
         alarmObservers.remove(observer);
-        Log.v(LOG_TAG, "Snooze alarm observer removed from observer list");
     }
 
     @Override
@@ -277,6 +271,10 @@ class Alarm implements Parcelable, Subject {
     public Days[] getDays() {
 
         return days;
+    }
+
+    public void setDays(Days[] days) {
+        this.days = days;
     }
 
     enum Days {

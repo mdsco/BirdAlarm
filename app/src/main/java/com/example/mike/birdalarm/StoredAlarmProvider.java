@@ -29,11 +29,10 @@ public class StoredAlarmProvider extends ContentProvider {
                                         String[] selectionArgs, String sort) {
 
         SQLiteDatabase readableDatabase = alarmDBHelper.getReadableDatabase();
-        Cursor alarmTableCursor = readableDatabase.query(
+
+        return readableDatabase.query(
                 UserCreatedAlarmContract.NewAlarmEntry.ALARM_TABLE_NAME,
                 projection, selection, selectionArgs, sort, null, null);
-
-        return alarmTableCursor;
     }
 
     @Nullable
@@ -50,19 +49,16 @@ public class StoredAlarmProvider extends ContentProvider {
         long insertedRow = writableDatabase.insert(
                 UserCreatedAlarmContract.NewAlarmEntry.ALARM_TABLE_NAME, null, contentValues);
 
-        Uri returnUri = UserCreatedAlarmContract.NewAlarmEntry.buildAlarmEntryUri(insertedRow);
-
-        return returnUri;
+        return UserCreatedAlarmContract.NewAlarmEntry.buildAlarmEntryUri(insertedRow);
     }
 
     @Override
     public int delete(Uri uri, String whereClause, String[] whereArgs) {
 
         SQLiteDatabase writableDatabase = alarmDBHelper.getWritableDatabase();
-        int deletedRow = writableDatabase.delete(
-                UserCreatedAlarmContract.NewAlarmEntry.ALARM_TABLE_NAME, whereClause, whereArgs);
 
-        return deletedRow;
+        return writableDatabase.delete(
+                UserCreatedAlarmContract.NewAlarmEntry.ALARM_TABLE_NAME, whereClause, whereArgs);
     }
 
     @Override
@@ -70,10 +66,9 @@ public class StoredAlarmProvider extends ContentProvider {
                                             String whereClause, String[] whereArgs) {
 
         SQLiteDatabase writableDatabase = alarmDBHelper.getWritableDatabase();
-        int updatedRow = writableDatabase.update(
+
+        return writableDatabase.update(
                 UserCreatedAlarmContract.NewAlarmEntry.ALARM_TABLE_NAME,
                 contentValues, whereClause, whereArgs);
-
-        return updatedRow;
     }
 }
