@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -81,6 +82,16 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
 
         Button sleepButton = (Button) findViewById(R.id.sleep_button);
         sleepButton.setOnClickListener(getSnoozeAlarmOnClickListener(alarm));
+
+        ImageButton infoButton = (ImageButton) findViewById(R.id.infoButton);
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+
+            }
+        });
     }
 
     @NonNull
@@ -172,11 +183,11 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
         } catch (IllegalArgumentException e) {
             Log.d(LOG_TAG, e.getMessage());
         } catch (SecurityException e) {
-            Log.d(LOG_TAG, e.getMessage());
+//            Log.d(LOG_TAG, e.getMessage());
         } catch (IllegalStateException e) {
-            Log.d(LOG_TAG, e.getMessage());
+//            Log.d(LOG_TAG, e.getMessage());
         } catch (IOException e) {
-            Log.d(LOG_TAG, e.getMessage());
+//            Log.d(LOG_TAG, e.getMessage());
         }
     }
 

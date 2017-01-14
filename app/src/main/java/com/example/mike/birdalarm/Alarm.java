@@ -77,7 +77,7 @@ class Alarm implements Parcelable, Subject {
         days[0] = Days.MONDAY;
 
         this.alarmType = Defaults.DEFAULT_ALARM_TYPE;
-        this.vibrate = true;
+        this.vibrate = false;
         this.label = context.getString(R.string.default_label_name);
 
         alarmIsRepeating = false;
