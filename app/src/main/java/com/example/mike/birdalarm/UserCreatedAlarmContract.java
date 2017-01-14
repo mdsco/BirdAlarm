@@ -27,6 +27,7 @@ public class UserCreatedAlarmContract {
         public final static String COLUMN_REPEATING = "is_repeating";
         public final static String COLUMN_DAYS_ACTIVE = "days_active";
         public final static String COLUMN_ALARM_TYPE = "alarm_type";
+        public final static String COLUMN_VIBRATE = "vibrate";
         public final static String COLUMN_LABEL = "alarm_label";
 
         public static Uri buildAlarmEntryUri(long id){

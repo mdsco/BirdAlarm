@@ -13,7 +13,6 @@
     android:translationZ="10dp"
     tools:context="com.example.mike.birdalarm.MainActivity">
 
-
     <View
         android:layout_width="1dp"
         android:layout_height="1dp"
@@ -187,6 +186,14 @@
             android:inputType="textPersonName"
             android:paddingLeft="@dimen/activity_horizontal_margin" />
 
+        <CheckBox
+            android:text="Vibrate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/vibrateCheckBox"
+            android:layout_above="@+id/label_edit_text"
+            android:layout_alignEnd="@+id/label_edit_text"
+            android:layout_below="@+id/day_layout" />
 
     </RelativeLayout>
 

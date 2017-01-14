@@ -39,6 +39,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING,
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_DAYS_ACTIVE,
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE,
+            UserCreatedAlarmContract.NewAlarmEntry.COLUMN_VIBRATE,
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_LABEL
     };
 
@@ -48,12 +49,12 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
     private int COL_REPEATING = 3;
     private int COL_DAYS_ACTIVE = 4;
     private int COL_TYPE = 5;
-    private int COL_LABEL = 6;
+    private int COL_VIBRATE = 6;
+    private int COL_LABEL = 7;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -109,13 +110,16 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                 int repeating = cursor.getInt(COL_REPEATING);
                 String days = cursor.getString(COL_DAYS_ACTIVE);
                 String alarmType = cursor.getString(COL_TYPE);
+                int vibrate = cursor.getInt(COL_VIBRATE);
                 String label = cursor.getString(COL_LABEL);
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new Date(timestamp));
 
+                boolean vibrateBool = vibrate == 1 ? true : false;
+
                 alarmItems.add(new Alarm(getActivity(),
-                                alarmId, timestamp, active, days, label, alarmType));
+                        alarmId, timestamp, active, days, label, alarmType, vibrateBool));
 
                 updateAlarmListInGlobalSpace(getActivity());
 

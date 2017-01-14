@@ -28,6 +28,7 @@ class Alarm implements Parcelable, Subject {
 
     private String label;
     private String alarmType;
+    private boolean vibrate;
 
     private boolean alarmIsRepeating;
     private Days[] days = {Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY,
@@ -39,7 +40,7 @@ class Alarm implements Parcelable, Subject {
     private ArrayList<AlarmObserver> alarmObservers;
 
     Alarm(Context context, int alarmId, long timestamp, int active,
-                                                String days, String label, String alarmType) {
+          String days, String label, String alarmType, boolean vibrate) {
 
         this.context = context;
 
@@ -52,6 +53,7 @@ class Alarm implements Parcelable, Subject {
 
         this.label = label;
         this.alarmType = alarmType;
+        this.vibrate = vibrate;
 
         alarmIsRepeating = false;
 
@@ -75,6 +77,7 @@ class Alarm implements Parcelable, Subject {
         days[0] = Days.MONDAY;
 
         this.alarmType = Defaults.DEFAULT_ALARM_TYPE;
+        this.vibrate = false;
         this.label = context.getString(R.string.default_label_name);
 
         alarmIsRepeating = false;
@@ -118,6 +121,7 @@ class Alarm implements Parcelable, Subject {
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING, 1);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_DAYS_ACTIVE, getDaysStringFromString(days));
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE, this.alarmType);
+        alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_VIBRATE, this.vibrate ? 1 : 0);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_LABEL, this.label);
 
         contentResolver.insert(UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI, alarmValues);
@@ -275,6 +279,14 @@ class Alarm implements Parcelable, Subject {
 
     public void setDays(Days[] days) {
         this.days = days;
+    }
+
+    public boolean getVibrate() {
+        return vibrate;
+    }
+
+    public void setVibrateToOpposite(){
+        vibrate = !vibrate;
     }
 
     enum Days {

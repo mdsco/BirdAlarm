@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -149,6 +150,29 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         String formattedName = Utility.getFormattedNameFromFilename(alarmType);
 
         alarmTypeTextView.setText(formattedName);
+
+
+        CheckBox vibrateCheckbox = (CheckBox) convertView.findViewById(R.id.vibrateCheckBox);
+        if(alarmItem.getVibrate()){
+            vibrateCheckbox.setChecked(true);
+        }
+        vibrateCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alarmItem.setVibrateToOpposite();
+                ContentValues values = new ContentValues();
+                values.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_VIBRATE,
+                                                        alarmItem.getVibrate() ? 1 : 0);
+
+                String selection =
+                        UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
+                String[] selectionArgs = {String.valueOf(alarmItem.getId())};
+
+                alarmItem.updateAlarmInDatabase(values, selection, selectionArgs);
+
+            }
+        });
+
 
         String label = alarmItem.getLabel();
 
