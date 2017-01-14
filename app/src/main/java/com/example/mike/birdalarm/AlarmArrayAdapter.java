@@ -69,13 +69,13 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         alarmListItemTime.setText(
                 Utility.getHourFromTimeStamp(timestamp) + ":"
                         + String.format("%02d",
-                                Utility.getMinuteFromTimeStamp(timestamp)));
+                        Utility.getMinuteFromTimeStamp(timestamp)));
 
         final TextView alarmAmPm = (TextView) convertView.findViewById(R.id.am_pm_text_view);
         alarmAmPm.setText(Utility.getAmOrPm(timestamp));
 
         TimeViewOnClickListener timeViewOnClickListener =
-                                    new TimeViewOnClickListener(activity, alarmItem, alarmAmPm);
+                new TimeViewOnClickListener(activity, alarmItem, alarmAmPm);
 
         alarmListItemTime.setOnClickListener(timeViewOnClickListener);
 
@@ -87,7 +87,9 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         Switch alarmSwitch = (Switch) convertView.findViewById(R.id.alarm_active_switch);
 
         boolean isActive = false;
-        if(alarmItem.getIsActive() == 1){ isActive = true; }
+        if (alarmItem.getIsActive() == 1) {
+            isActive = true;
+        }
 
         alarmSwitch.setChecked(isActive);
         alarmSwitch.setOnClickListener(new View.OnClickListener() {
@@ -144,7 +146,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         selectAlarmButton.setOnClickListener(getAlarmTypeSelection(position, alarmItem));
 
         TextView alarmTypeTextView =
-                        (TextView) convertView.findViewById(R.id.alarm_type_textview);
+                (TextView) convertView.findViewById(R.id.alarm_type_textview);
         String alarmType = alarmItem.getAlarmType();
 
         String formattedName = Utility.getFormattedNameFromFilename(alarmType);
@@ -153,23 +155,24 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
 
         CheckBox vibrateCheckbox = (CheckBox) convertView.findViewById(R.id.vibrateCheckBox);
-        if(alarmItem.getVibrate()){
+        if (alarmItem.getVibrate()) {
             vibrateCheckbox.setChecked(true);
         }
         vibrateCheckbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 alarmItem.setVibrateToOpposite();
                 ContentValues values = new ContentValues();
+                boolean vibrate = alarmItem.getVibrate();
                 values.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_VIBRATE,
-                                                        alarmItem.getVibrate() ? 1 : 0);
-
+                        vibrate ? 1 : 0);
                 String selection =
                         UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
                 String[] selectionArgs = {String.valueOf(alarmItem.getId())};
 
                 alarmItem.updateAlarmInDatabase(values, selection, selectionArgs);
-
+                alarmItem.reregisterAlarm();
             }
         });
 
@@ -180,7 +183,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
         String defaultLabel = context.getString(R.string.default_label_name);
 
-        if(!label.equals(defaultLabel)) {
+        if (!label.equals(defaultLabel)) {
             labelEditText.setText(label);
         }
 

@@ -71,22 +71,25 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         PendingIntent sleepIntent =
                 NotificationActivity.getSleepIntent(context, mNotificationId, alarm);
 
-        //TODO - Decide what notification sound is going to be
+        //TODO - Decide what notification sound is going to be/Figure out how to make the alarm persist
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle(alarm.getLabel())
                         .setContentText(time)
-//                        .setDefaults(Notification.DEFAULT_ALL)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
-                        .setPriority(Notification.PRIORITY_HIGH)
+                        .setVibrate(VibrationUtility.getVibrationPattern(alarm.getVibrate()))
+                        .setPriority(Notification.PRIORITY_MAX)
                         .addAction(0, "Cancel", dismissIntent)
                         .addAction(0, "Sleep", sleepIntent);
 
         NotificationManager mNotifyManager =
                 (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
 
-        mNotifyManager.notify(mNotificationId, mBuilder.build());
+        Notification notification = mBuilder.build();
+        notification.flags = Notification.FLAG_INSISTENT;
+
+        mNotifyManager.notify(mNotificationId, notification);
 
     }
 

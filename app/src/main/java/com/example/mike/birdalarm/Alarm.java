@@ -77,7 +77,7 @@ class Alarm implements Parcelable, Subject {
         days[0] = Days.MONDAY;
 
         this.alarmType = Defaults.DEFAULT_ALARM_TYPE;
-        this.vibrate = false;
+        this.vibrate = true;
         this.label = context.getString(R.string.default_label_name);
 
         alarmIsRepeating = false;
@@ -97,6 +97,7 @@ class Alarm implements Parcelable, Subject {
         isActive = in.readInt();
         label = in.readString();
         alarmType = in.readString();
+        vibrate = (Boolean) in.readValue(getClass().getClassLoader());
     }
 
     @Override
@@ -107,6 +108,7 @@ class Alarm implements Parcelable, Subject {
         out.writeInt(isActive);
         out.writeString(label);
         out.writeString(alarmType);
+        out.writeValue(vibrate);
 
     }
 
@@ -170,8 +172,8 @@ class Alarm implements Parcelable, Subject {
         long wakeUpTime = getCorrectWakeUpTimeStamp(timestamp);
 
 //      Uncomment below line for immediate alarm trigger
-//        alarmManager.setExact(AlarmManager.RTC_WAKEUP, this.timestamp, pendingAlarmIntent);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, wakeUpTime, pendingAlarmIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, this.timestamp, pendingAlarmIntent);
+//        alarmManager.setExact(AlarmManager.RTC_WAKEUP, wakeUpTime, pendingAlarmIntent);
     }
 
     private long getCorrectWakeUpTimeStamp(long timestamp) {

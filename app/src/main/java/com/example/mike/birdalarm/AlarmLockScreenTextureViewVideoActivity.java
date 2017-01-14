@@ -1,13 +1,12 @@
 package com.example.mike.birdalarm;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.SurfaceTexture;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Surface;
@@ -30,6 +29,8 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
 
     private String FILE_NAME;
     private MediaPlayer mMediaPlayer;
+    private boolean vibrate = false;
+    private Vibrator vibrator;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,14 +46,21 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
         Intent intent = getIntent();
         Alarm alarm = intent.getExtras().getParcelable("alarmPassedInThroughIntent");
 
-        FILE_NAME = alarm.getAlarmType();
+        if(alarm != null) {
+            this.vibrate = alarm.getVibrate();
 
-        long timestamp = alarm.getTimestamp();
+            FILE_NAME = alarm.getAlarmType();
 
-        setLayoutViews(alarm, timestamp);
+            long timestamp = alarm.getTimestamp();
 
-        createAndStartTextureViewAnimation();
+            setLayoutViews(alarm, timestamp);
 
+            if(this.vibrate) {
+                vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                VibrationUtility.initiateVibration(vibrator);
+            }
+            createAndStartTextureViewAnimation();
+        }
     }
 
     private void setLayoutViews(Alarm alarm, long timestamp) {
@@ -80,6 +88,9 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(AlarmLockScreenTextureViewVideoActivity.this.vibrate) {
+                    VibrationUtility.cancelVibration(vibrator);
+                }
                 finish();
             }
         };
@@ -90,6 +101,10 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if(AlarmLockScreenTextureViewVideoActivity.this.vibrate) {
+                    VibrationUtility.cancelVibration(vibrator);
+                }
 
                 GlobalState applicationContext = (GlobalState) getApplicationContext();
                 ArrayList<Alarm> alarmList = applicationContext.getAlarmList();
@@ -132,6 +147,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture,
                                                 int surfaceWidth, int surfaceHeight) {
+
 
         Surface surface = new Surface(surfaceTexture);
 
