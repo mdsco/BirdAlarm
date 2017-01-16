@@ -70,14 +70,4 @@
         android:layout_below="@+id/am_pm_textview"
         android:layout_alignEnd="@+id/am_pm_textview" />
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="270dp"
-        android:layout_height="250dp"
-        android:id="@+id/textView4"
-        android:background="@color/colorDarkBackground"
-        android:layout_marginStart="12dp"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/sleep_button" />
-
 </RelativeLayout>

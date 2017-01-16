@@ -8,10 +8,13 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,7 +25,7 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class AlarmLockScreenTextureViewVideoActivity extends Activity
+public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
         implements TextureView.SurfaceTextureListener {
 
     private static final String LOG_TAG =
@@ -41,6 +44,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.alarm_texture_layout);
 
@@ -85,12 +89,16 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
 
         ImageButton infoButton = (ImageButton) findViewById(R.id.infoButton);
         infoButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
 
-
+                mMediaPlayer.pause();
+                DialogFragment infoFragment =  AlarmInfoFragment.newInstance();
+                infoFragment.show(getSupportFragmentManager(), "dialog");
 
             }
+
         });
     }
 
@@ -210,4 +218,6 @@ public class AlarmLockScreenTextureViewVideoActivity extends Activity
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {}
+
+
 }
