@@ -1,6 +1,5 @@
 package com.example.mike.birdalarm;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.SurfaceTexture;
@@ -8,7 +7,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Surface;
@@ -26,7 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
-        implements TextureView.SurfaceTextureListener {
+        implements TextureView.SurfaceTextureListener, AlarmInfoFragment.DialogClosedListener {
 
     private static final String LOG_TAG =
                 AlarmLockScreenTextureViewVideoActivity.class.getName();
@@ -68,7 +66,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
         }
     }
 
-    private void setLayoutViews(Alarm alarm, long timestamp) {
+    private void setLayoutViews(final Alarm alarm, long timestamp) {
 
         TextView timeTextView = (TextView) findViewById(R.id.alarmTimeTextView);
         String formattedTime = Utility.getFormattedTime(timestamp);
@@ -81,25 +79,14 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
         String labelText = alarm.getLabel();
         alarmLabel.setText(labelText);
 
-        Button cancelButton = (Button) findViewById(R.id.cancelButton);
+        final Button cancelButton = (Button) findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(getStopAlarmOnClickListener());
 
-        Button sleepButton = (Button) findViewById(R.id.sleep_button);
+        final Button sleepButton = (Button) findViewById(R.id.sleep_button);
         sleepButton.setOnClickListener(getSnoozeAlarmOnClickListener(alarm));
 
-        ImageButton infoButton = (ImageButton) findViewById(R.id.infoButton);
-        infoButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-
-                mMediaPlayer.pause();
-                DialogFragment infoFragment =  AlarmInfoFragment.newInstance();
-                infoFragment.show(getSupportFragmentManager(), "dialog");
-
-            }
-
-        });
+        final ImageButton infoButton = (ImageButton) findViewById(R.id.infoButton);
+        infoButton.setOnClickListener(getInfoButtonClickListener(alarm));
     }
 
     @NonNull
@@ -134,6 +121,22 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
 
                 finish();
             }
+        };
+    }
+
+    @NonNull
+    private View.OnClickListener getInfoButtonClickListener(final Alarm alarm) {
+        return new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                mMediaPlayer.pause();
+                AlarmInfoFragment infoFragment =  AlarmInfoFragment.newInstance(alarm.getAlarmType());
+                infoFragment.show(getSupportFragmentManager(), "dialog");
+
+            }
+
         };
     }
 
@@ -220,4 +223,8 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
     public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {}
 
 
+    @Override
+    public void onDialogClosed() {
+        mMediaPlayer.start();
+    }
 }
