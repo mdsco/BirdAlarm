@@ -40,7 +40,7 @@ class Alarm implements Parcelable, Subject {
     private ArrayList<AlarmObserver> alarmObservers;
 
     Alarm(Context context, int alarmId, long timestamp, int active,
-          String days, String label, String alarmType, boolean vibrate) {
+          String days, boolean repeating, String label, String alarmType, boolean vibrate) {
 
         this.context = context;
 
@@ -55,7 +55,7 @@ class Alarm implements Parcelable, Subject {
         this.alarmType = alarmType;
         this.vibrate = vibrate;
 
-        alarmIsRepeating = false;
+        alarmIsRepeating = repeating;
 
         isExpanded = true;
 
@@ -120,7 +120,7 @@ class Alarm implements Parcelable, Subject {
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID, this.id);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TIME, this.timestamp);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE, isActive);
-        alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING, 1);
+        alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING, alarmIsRepeating ? 1 : 0);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_DAYS_ACTIVE, getDaysStringFromString(days));
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE, this.alarmType);
         alarmValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_VIBRATE, this.vibrate ? 1 : 0);
@@ -146,7 +146,7 @@ class Alarm implements Parcelable, Subject {
 
         Uri contentUri = UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI;
         String selection = UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
-        String[] selectionArgs = {String.valueOf((int) alarm.getId())};
+        String[] selectionArgs = {String.valueOf(alarm.getId())};
 
         return contentResolver.delete(contentUri, selection, selectionArgs);
 

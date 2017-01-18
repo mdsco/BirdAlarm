@@ -116,10 +116,12 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new Date(timestamp));
 
+                boolean alarmIsRepeating = repeating == 1 ? true : false;
+
                 boolean vibrateBool = vibrate == 1 ? true : false;
 
-                alarmItems.add(new Alarm(getActivity(),
-                        alarmId, timestamp, active, days, label, alarmType, vibrateBool));
+                alarmItems.add(new Alarm(getActivity(), alarmId, timestamp, active, days,
+                                            alarmIsRepeating, label, alarmType, vibrateBool));
 
                 updateAlarmListInGlobalSpace(getActivity());
 

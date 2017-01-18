@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -125,8 +123,8 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             }
         });
 
-        final RelativeLayout optionsSection =
-                (RelativeLayout) convertView.findViewById(R.id.options_layout);
+        final LinearLayout optionsSection =
+                (LinearLayout) convertView.findViewById(R.id.options_layout);
 
         if (!alarmItem.isExpanded()) {
             optionsSection.setVisibility(View.GONE);
@@ -138,6 +136,29 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
         dayButtonUtility.setListenerOnDayButtons(context, weekdaySection, alarmItem, tomorrowView);
         dayButtonUtility.setCorrectDayButtonState(context, weekdaySection, alarmItem);
+
+        CheckBox repeatCheckBox = (CheckBox) convertView.findViewById(R.id.repeat_days_checkbox);
+        if(alarmItem.isAlarmIsRepeating()){
+            repeatCheckBox.setChecked(true);
+        }
+        repeatCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                alarmItem.setAlarmIsRepeating(!alarmItem.isAlarmIsRepeating());
+
+                ContentValues values = new ContentValues();
+                boolean repeating = alarmItem.isAlarmIsRepeating();
+                values.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING,
+                        repeating ? 1 : 0);
+                String selection =
+                        UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
+                String[] selectionArgs = {String.valueOf(alarmItem.getId())};
+                alarmItem.updateAlarmInDatabase(values, selection, selectionArgs);
+
+            }
+        });
+
 
         View selectAlarmLayout = convertView.findViewById(R.id.alarm_type_layout);
         selectAlarmLayout.setOnClickListener(getAlarmTypeSelection(position, alarmItem));
@@ -153,11 +174,11 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
         alarmTypeTextView.setText(formattedName);
 
-
         CheckBox vibrateCheckbox = (CheckBox) convertView.findViewById(R.id.vibrateCheckBox);
         if (alarmItem.getVibrate()) {
             vibrateCheckbox.setChecked(true);
         }
+
         vibrateCheckbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

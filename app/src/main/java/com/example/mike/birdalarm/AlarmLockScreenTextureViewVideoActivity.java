@@ -27,7 +27,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
         implements TextureView.SurfaceTextureListener, AlarmInfoFragment.DialogClosedListener {
 
     private static final String LOG_TAG =
-                AlarmLockScreenTextureViewVideoActivity.class.getName();
+            AlarmLockScreenTextureViewVideoActivity.class.getName();
 
     private String FILE_NAME;
     private MediaPlayer mMediaPlayer;
@@ -49,7 +49,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
         Intent intent = getIntent();
         Alarm alarm = intent.getExtras().getParcelable("alarmPassedInThroughIntent");
 
-        if(alarm != null) {
+        if (alarm != null) {
             this.vibrate = alarm.getVibrate();
 
             FILE_NAME = alarm.getAlarmType();
@@ -58,12 +58,28 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
 
             setLayoutViews(alarm, timestamp);
 
-            if(this.vibrate) {
+            if (this.vibrate) {
                 vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
                 VibrationUtility.initiateVibration(vibrator);
             }
             createAndStartTextureViewAnimation();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mMediaPlayer != null) {
+            int currentPosition = mMediaPlayer.getCurrentPosition();
+            boolean playing = mMediaPlayer.isPlaying();
+
+            outState.putInt("position", currentPosition);
+            outState.putBoolean("playing", playing);
+
+            Log.v(LOG_TAG, "Is playing: " + mMediaPlayer.isPlaying());
+
+        }
+//        outState.
     }
 
     private void setLayoutViews(final Alarm alarm, long timestamp) {
@@ -94,7 +110,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(AlarmLockScreenTextureViewVideoActivity.this.vibrate) {
+                if (AlarmLockScreenTextureViewVideoActivity.this.vibrate) {
                     VibrationUtility.cancelVibration(vibrator);
                 }
                 finish();
@@ -108,7 +124,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
             @Override
             public void onClick(View view) {
 
-                if(AlarmLockScreenTextureViewVideoActivity.this.vibrate) {
+                if (AlarmLockScreenTextureViewVideoActivity.this.vibrate) {
                     VibrationUtility.cancelVibration(vibrator);
                 }
 
@@ -132,7 +148,8 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
             public void onClick(View view) {
 
                 mMediaPlayer.pause();
-                AlarmInfoFragment infoFragment =  AlarmInfoFragment.newInstance(alarm.getAlarmType());
+                Log.v(LOG_TAG, "Is playing: " + mMediaPlayer.isPlaying());
+                AlarmInfoFragment infoFragment = AlarmInfoFragment.newInstance(alarm.getAlarmType());
                 infoFragment.show(getSupportFragmentManager(), "dialog");
 
             }
@@ -144,8 +161,8 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
 
         Alarm originalAlarm = null;
 
-        for (Alarm alarmInList: alarmList) {
-            if(alarmInList.getId() == alarm.getId()){
+        for (Alarm alarmInList : alarmList) {
+            if (alarmInList.getId() == alarm.getId()) {
                 originalAlarm = alarmInList;
             }
         }
@@ -168,7 +185,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture,
-                                                int surfaceWidth, int surfaceHeight) {
+                                          int surfaceWidth, int surfaceHeight) {
 
 
         Surface surface = new Surface(surfaceTexture);
@@ -204,7 +221,8 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture,
-                                                int surfaceWidth, int surfaceHeight) {}
+                                            int surfaceWidth, int surfaceHeight) {
+    }
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
@@ -220,11 +238,15 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
     }
 
     @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {}
+    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+    }
 
 
     @Override
     public void onDialogClosed() {
+
         mMediaPlayer.start();
+        Log.v(LOG_TAG, "Is playing: " + mMediaPlayer.isPlaying());
+
     }
 }

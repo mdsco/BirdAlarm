@@ -70,7 +70,7 @@ class DayButtonUtility {
         final LinearLayout linearLayout = ((LinearLayout) view);
         int childCount = linearLayout.getChildCount();
 
-        View.OnClickListener clickListener =  new View.OnClickListener() {
+        View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Button button = (Button) view;
