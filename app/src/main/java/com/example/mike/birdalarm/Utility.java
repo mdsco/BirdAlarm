@@ -3,7 +3,6 @@ package com.example.mike.birdalarm;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,15 +11,40 @@ import java.util.TimeZone;
 
 public class Utility {
 
-
     private static final String LOG_TAG = Utility.class.getSimpleName();
 
-    public static long getTimeStampFromHourAndMinute(int hour, int minute){
+     static long getTimeStampFromHourAndMinute(int hour, int minute){
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getDefault());
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+
+        return calendar.getTimeInMillis();
+
+    }
+
+     static long getTimeStampFromDayHourAndMinute(int day, int hour, int minute){
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getDefault());
+        calendar.set(Calendar.DAY_OF_WEEK, day);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+
+        return calendar.getTimeInMillis();
+
+    }
+
+     static long getTimestampForAWeekFromCurrentTimestamp(long timestamp) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getDefault());
+        calendar.setTimeInMillis(timestamp);
+        int dayInMonth = getDayInMonthFromTimeStampAsInt(timestamp);
+        calendar.set(Calendar.DAY_OF_MONTH, dayInMonth + 7);
         calendar.set(Calendar.SECOND, 0);
 
         return calendar.getTimeInMillis();
@@ -36,7 +60,7 @@ public class Utility {
     }
 
 
-    public static long getTimeStampForAlarmSleep(Context context){
+     static long getTimeStampForAlarmSleep(Context context){
 
         SharedPreferences defaultSharedPreferences =
                         PreferenceManager.getDefaultSharedPreferences(context);
@@ -59,76 +83,79 @@ public class Utility {
         return calendar.getTimeInMillis();
     }
 
-    public static int getDayOfYearFromTimeStamp(long timestamp){
+     static int getDayOfYearFromTimeStamp(long timestamp){
 
         Date date = new Date(timestamp);
-        SimpleDateFormat sdf = new SimpleDateFormat("D");
-        sdf.setTimeZone(TimeZone.getDefault());
-        String formattedDate = sdf.format(date);
-        int dayOfYear = Integer.valueOf(formattedDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("D");
+        dateFormat.setTimeZone(TimeZone.getDefault());
+        String formattedDate = dateFormat.format(date);
 
-        return dayOfYear;
+        return Integer.valueOf(formattedDate);
 
     }
 
-    public static int getDayOfWeekFromTimeStamp(long timestamp){
+     static String getDayOfWeekFromTimeStampAsString(long timestamp){
 
         Date date = new Date(timestamp);
-        SimpleDateFormat sdf = new SimpleDateFormat("E");
-        sdf.setTimeZone(TimeZone.getDefault());
-        String formattedDate = sdf.format(date);
-        int dayOfYear = Integer.valueOf(formattedDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
+        dateFormat.setTimeZone(TimeZone.getDefault());
 
-        return dayOfYear;
+        return dateFormat.format(date);
 
     }
 
-    public static int getHourFromTimeStamp(long timestamp){
+     static int getDayInMonthFromTimeStampAsInt(long timestamp){
 
         Date date = new Date(timestamp);
-        SimpleDateFormat sdf = new SimpleDateFormat("h");
-        sdf.setTimeZone(TimeZone.getDefault());
-        String formattedDate = sdf.format(date);
-        int hour = Integer.valueOf(formattedDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d");
+        dateFormat.setTimeZone(TimeZone.getDefault());
 
-        return hour;
+        return Integer.valueOf(dateFormat.format(date));
 
     }
 
-    public static int get24FormatHourFromTimeStamp(long timestamp){
+     static int getHourFromTimeStamp(long timestamp){
 
         Date date = new Date(timestamp);
-        SimpleDateFormat sdf = new SimpleDateFormat("H");
-        sdf.setTimeZone(TimeZone.getDefault());
-        String formattedDate = sdf.format(date);
-        int hour = Integer.valueOf(formattedDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("h");
+        dateFormat.setTimeZone(TimeZone.getDefault());
+        String formattedDate = dateFormat.format(date);
 
-        return hour;
+        return Integer.valueOf(formattedDate);
 
     }
 
-    public static int getMinuteFromTimeStamp(long timestamp){
+     static int get24FormatHourFromTimeStamp(long timestamp){
 
         Date date = new Date(timestamp);
-        SimpleDateFormat sdf = new SimpleDateFormat("mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("H");
+        dateFormat.setTimeZone(TimeZone.getDefault());
+        String formattedDate = dateFormat.format(date);
+
+        return Integer.valueOf(formattedDate);
+
+    }
+
+     static int getMinuteFromTimeStamp(long timestamp){
+
+        Date date = new Date(timestamp);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("mm");
         TimeZone timeZone = TimeZone.getDefault();
-        sdf.setTimeZone(timeZone);
-        String formattedDate = sdf.format(date);
-        int minute = Integer.valueOf(formattedDate);
+        dateFormat.setTimeZone(timeZone);
+        String formattedDate = dateFormat.format(date);
 
-        return minute;
+        return Integer.valueOf(formattedDate);
 
     }
 
-    public static String getFormattedTime(long timestamp){
+     static String getFormattedTime(long timestamp){
 
         Date date = new Date(timestamp);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE h:mm");
         TimeZone timeZone = TimeZone.getDefault();
-        simpleDateFormat.setTimeZone(timeZone);
-        String formattedTime = simpleDateFormat.format(date);
+        dateFormat.setTimeZone(timeZone);
 
-        return formattedTime;
+        return dateFormat.format(date);
 
     }
 
@@ -152,7 +179,7 @@ public class Utility {
         return hour;
     }
 
-    public static boolean determineIfAmOrPm(long timestamp){
+     static boolean determineIfAmOrPm(long timestamp){
 
         Date date = new Date(timestamp);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("a");
@@ -164,7 +191,7 @@ public class Utility {
 
     }
 
-    public static String getAmOrPm(long timestamp){
+     static String getAmOrPm(long timestamp){
 
         if(determineIfAmOrPm(timestamp)){
             return "AM";
@@ -173,10 +200,12 @@ public class Utility {
         return "PM";
     }
 
-    public static String getFormattedNameFromFilename(String fileName) {
+     static String getFormattedNameFromFilename(String fileName) {
         String strings = fileName.substring(0,fileName.indexOf('.'));
         return strings.replace('_',  ' ');
     }
+
+
 
 
 

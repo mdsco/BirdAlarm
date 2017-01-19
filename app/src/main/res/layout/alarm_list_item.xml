@@ -85,6 +85,17 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/Sunday"
+                    android:layout_width="@dimen/day_button_diameter"
+                    android:layout_height="@dimen/day_button_diameter"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="3dp"
+                    android:background="@drawable/off_day_selection_button_shape"
+                    android:tag="off"
+                    android:text="S"
+                    android:textColor="@color/colorWhite" />
+
+                <Button
                     android:id="@+id/Monday"
                     android:layout_width="@dimen/day_button_diameter"
                     android:layout_height="@dimen/day_button_diameter"
@@ -150,16 +161,6 @@
                     android:text="S"
                     android:textColor="@color/colorWhite" />
 
-                <Button
-                    android:id="@+id/Sunday"
-                    android:layout_width="@dimen/day_button_diameter"
-                    android:layout_height="@dimen/day_button_diameter"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="3dp"
-                    android:background="@drawable/off_day_selection_button_shape"
-                    android:tag="off"
-                    android:text="S"
-                    android:textColor="@color/colorWhite" />
 
             </LinearLayout>
 

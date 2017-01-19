@@ -31,8 +31,8 @@ class Alarm implements Parcelable, Subject {
     private boolean vibrate;
 
     private boolean alarmIsRepeating;
-    private Days[] days = {Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY,
-            Days.THURSDAY, Days.FRIDAY, Days.SATURDAY, Days.SUNDAY};
+    private Days[] days = {Days.SUNDAY, Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY,
+            Days.THURSDAY, Days.FRIDAY, Days.SATURDAY};
     private boolean isExpanded;
 
     private AlarmManager alarmManager;
@@ -64,7 +64,7 @@ class Alarm implements Parcelable, Subject {
 
     Alarm(Context context, int hour, int minute) {
 
-        alarmObservers = new ArrayList<AlarmObserver>();
+        alarmObservers = new ArrayList<>();
 
         this.context = context;
 
@@ -129,7 +129,7 @@ class Alarm implements Parcelable, Subject {
         contentResolver.insert(UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI, alarmValues);
     }
 
-    public static String getDaysStringFromString(Days[] days) {
+    static String getDaysStringFromString(Days[] days) {
 
         String daysString = "";
 
@@ -140,7 +140,7 @@ class Alarm implements Parcelable, Subject {
         return daysString;
     }
 
-    public int deleteAlarmFromDatabase(Alarm alarm) {
+    int deleteAlarmFromDatabase(Alarm alarm) {
 
         ContentResolver contentResolver = context.getContentResolver();
 
@@ -152,7 +152,7 @@ class Alarm implements Parcelable, Subject {
 
     }
 
-    public int updateAlarmInDatabase(ContentValues values, String selection, String[] selectionArgs) {
+    int updateAlarmInDatabase(ContentValues values, String selection, String[] selectionArgs) {
 
         ContentResolver contentResolver = context.getContentResolver();
         Uri contentUri = UserCreatedAlarmContract.NewAlarmEntry.CONTENT_URI;
@@ -160,7 +160,7 @@ class Alarm implements Parcelable, Subject {
         return contentResolver.update(contentUri, values, selection, selectionArgs);
     }
 
-    public void registerAlarm(int id) {
+    private void registerAlarm(int id) {
 
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
@@ -174,6 +174,16 @@ class Alarm implements Parcelable, Subject {
 //      Uncomment below line for immediate alarm trigger
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, this.timestamp, pendingAlarmIntent);
 //        alarmManager.setExact(AlarmManager.RTC_WAKEUP, wakeUpTime, pendingAlarmIntent);
+    }
+
+
+    void setTimestampBasedOnNextViableDay() {
+
+        timestamp = NewAlarmTimeStampProvider.getTimestamp(timestamp, days, alarmIsRepeating);
+        Log.v(LOG_TAG, Utility.getFormattedTime(timestamp));
+        setTimestamp(timestamp);
+        reregisterAlarm();
+
     }
 
     private long getCorrectWakeUpTimeStamp(long timestamp) {
@@ -217,11 +227,11 @@ class Alarm implements Parcelable, Subject {
 
     }
 
-    public void cancelAlarm() {
+    void cancelAlarm() {
         alarmManager.cancel(pendingAlarmIntent);
     }
 
-    public void reregisterAlarm() {
+    void reregisterAlarm() {
 
         cancelAlarm();
         deleteAlarmFromDatabase(this);
@@ -231,10 +241,6 @@ class Alarm implements Parcelable, Subject {
 
     }
 
-
-    public void setDayAlarmOnOrOff(Days day) {
-        day.alarmOn = !day.alarmOn;
-    }
 
     public static final Parcelable.Creator<Alarm> CREATOR = new Parcelable.Creator<Alarm>() {
 
@@ -274,45 +280,59 @@ class Alarm implements Parcelable, Subject {
         }
     }
 
-    public Days[] getDays() {
+    Days[] getDays() {
 
         return days;
     }
 
-    public void setDays(Days[] days) {
+    void setDays(Days[] days) {
         this.days = days;
     }
 
-    public boolean getVibrate() {
+    boolean getVibrate() {
         return vibrate;
     }
 
-    public void setVibrateToOpposite(){
+    void setVibrateToOpposite() {
         vibrate = !vibrate;
     }
 
     enum Days {
 
-        MONDAY(true, "Monday"), TUESDAY(false, "Tuesday"), WEDNESDAY(false, "Wednesday"),
-        THURSDAY(false, "Thursday"), FRIDAY(false, "Friday"), SATURDAY(false, "Saturday"),
-        SUNDAY(false, "Sunday");
+        SUNDAY(false, "Sunday"), MONDAY(true, "Monday"), TUESDAY(false, "Tuesday"),
+        WEDNESDAY(false, "Wednesday"), THURSDAY(false, "Thursday"),
+        FRIDAY(false, "Friday"), SATURDAY(false, "Saturday");
 
         boolean alarmOn;
 
-        private final String name;
+        private final String dayName;
 
-        Days(boolean alarmOn, String name) {
+        Days(boolean alarmOn, String dayName) {
+
             this.alarmOn = alarmOn;
-            this.name = name;
+            this.dayName = dayName;
+
+        }
+
+        public String getDayName() {
+            return dayName;
+        }
+
+        public boolean getAlarmOn() {
+            return alarmOn;
         }
 
         public void setAlarmOn(boolean alarmOn) {
             this.alarmOn = alarmOn;
         }
 
+        public void setDayAlarmOnOrOff(Days day) {
+            day.alarmOn = !day.alarmOn;
+        }
+
         @Override
         public String toString() {
-            return this.name;
+            return this.dayName;
         }
     }
 
@@ -365,51 +385,51 @@ class Alarm implements Parcelable, Subject {
         return this.id;
     }
 
-    public long getTimestamp() {
+    long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
 
-    public boolean isAlarmIsRepeating() {
+    boolean isAlarmIsRepeating() {
         return alarmIsRepeating;
     }
 
-    public void setAlarmIsRepeating(boolean alarmIsRepeating) {
+    void setAlarmIsRepeating(boolean alarmIsRepeating) {
         this.alarmIsRepeating = alarmIsRepeating;
     }
 
-    public boolean isExpanded() {
+    boolean isExpanded() {
         return isExpanded;
     }
 
-    public void setExpandedState(boolean activeOrNot) {
+    void setExpandedState(boolean activeOrNot) {
         isExpanded = activeOrNot;
     }
 
-    public String getLabel() {
+    String getLabel() {
         return label;
     }
 
-    public void setLabel(String label) {
+    void setLabel(String label) {
         this.label = label;
     }
 
-    public String getAlarmType() {
+    String getAlarmType() {
         return alarmType;
     }
 
-    public void setAlarmType(String alarmType) {
+    void setAlarmType(String alarmType) {
         this.alarmType = alarmType;
     }
 
-    public int getIsActive() {
+    int getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(int isActive) {
+    void setIsActive(int isActive) {
         this.isActive = isActive;
     }
 

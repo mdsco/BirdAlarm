@@ -33,6 +33,8 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
     private MediaPlayer mMediaPlayer;
     private boolean vibrate = false;
     private Vibrator vibrator;
+    private int position = -1;
+    private boolean isPlaying = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,18 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+        if(savedInstanceState != null) {
+            int savedPostion = savedInstanceState.getInt("position", -1);
+            boolean savedPlayingState = savedInstanceState.getBoolean("playing", true);
+
+            if (savedPostion != -1) {
+                this.position = savedPostion;
+            }
+            if (!savedPlayingState) {
+                this.isPlaying = savedPlayingState;
+            }
+        }
 
         setContentView(R.layout.alarm_texture_layout);
 
@@ -79,7 +93,6 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
             Log.v(LOG_TAG, "Is playing: " + mMediaPlayer.isPlaying());
 
         }
-//        outState.
     }
 
     private void setLayoutViews(final Alarm alarm, long timestamp) {
@@ -96,7 +109,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
         alarmLabel.setText(labelText);
 
         final Button cancelButton = (Button) findViewById(R.id.cancelButton);
-        cancelButton.setOnClickListener(getStopAlarmOnClickListener());
+        cancelButton.setOnClickListener(getStopAlarmOnClickListener(alarm));
 
         final Button sleepButton = (Button) findViewById(R.id.sleep_button);
         sleepButton.setOnClickListener(getSnoozeAlarmOnClickListener(alarm));
@@ -106,14 +119,24 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
     }
 
     @NonNull
-    private View.OnClickListener getStopAlarmOnClickListener() {
+    private View.OnClickListener getStopAlarmOnClickListener(final Alarm alarm) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (AlarmLockScreenTextureViewVideoActivity.this.vibrate) {
                     VibrationUtility.cancelVibration(vibrator);
                 }
+
+                GlobalState applicationContext = (GlobalState) getApplicationContext();
+                ArrayList<Alarm> alarmList = applicationContext.getAlarmList();
+
+                Alarm originalAlarm = getOriginalAlarm(alarmList, alarm);
+
+                originalAlarm.setTimestampBasedOnNextViableDay();
+
                 finish();
+
             }
         };
     }
@@ -174,8 +197,10 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
 
         TextureView textureView = (TextureView) findViewById(R.id.textureView);
         textureView.setSurfaceTextureListener(this);
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-        textureView.startAnimation(animation);
+        if(position == -1) {
+            Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+            textureView.startAnimation(animation);
+        }
     }
 
     @Override
@@ -204,7 +229,13 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
+                    if(position != -1) {
+                        mediaPlayer.seekTo(position);
+                    }
                     mediaPlayer.start();
+                    if(!isPlaying){
+                        mediaPlayer.pause();
+                    }
                 }
             });
 

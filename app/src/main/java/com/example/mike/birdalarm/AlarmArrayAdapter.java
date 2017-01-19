@@ -77,7 +77,6 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
         alarmListItemTime.setOnClickListener(timeViewOnClickListener);
 
-
         tomorrowView = (TextView) convertView.findViewById(R.id.tomorrowTextView);
 //        TomorrowViewUpdater tomorrowViewUpdater =
 //                                      new TomorrowViewUpdater(tomorrowView, timestamp, context);
@@ -141,6 +140,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         if(alarmItem.isAlarmIsRepeating()){
             repeatCheckBox.setChecked(true);
         }
+
         repeatCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
