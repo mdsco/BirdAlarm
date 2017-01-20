@@ -74,7 +74,10 @@ class Alarm implements Parcelable, Subject {
         this.isActive = 1;
 
         days = new Days[1];
-        days[0] = Days.MONDAY;
+
+        String dayOfWeekString = Utility.getDayOfWeekFromTimeStampAsString(timestamp);
+
+        days[0] = Days.getDaysEnumBasedOnString(dayOfWeekString);
 
         this.alarmType = Defaults.DEFAULT_ALARM_TYPE;
         this.vibrate = false;
@@ -113,6 +116,7 @@ class Alarm implements Parcelable, Subject {
     }
 
     private void addAlarmToDatabase() {
+
         ContentResolver contentResolver = context.getContentResolver();
 
         ContentValues alarmValues = new ContentValues();
@@ -312,6 +316,21 @@ class Alarm implements Parcelable, Subject {
             this.alarmOn = alarmOn;
             this.dayName = dayName;
 
+        }
+
+        public static Days getDaysEnumBasedOnString(String dayString){
+
+            switch(dayString){
+
+                case "Sunday": return SUNDAY;
+                case "Monday": return MONDAY;
+                case "Tuesday": return TUESDAY;
+                case "Wednesday": return WEDNESDAY;
+                case "Thursday": return THURSDAY;
+                case "Friday": return FRIDAY;
+                case "Saturday": return SATURDAY;
+                default: return SUNDAY;
+            }
         }
 
         public String getDayName() {
