@@ -64,10 +64,9 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                 (TextView) convertView.findViewById(R.id.alarm_time_text_view);
 
         long timestamp = alarmItem.getTimestamp();
-        alarmListItemTime.setText(
-                Utility.getHourFromTimeStamp(timestamp) + ":"
-                        + String.format("%02d",
-                        Utility.getMinuteFromTimeStamp(timestamp)));
+
+        alarmListItemTime.setText(Utility.getFormattedTime(timestamp));
+
 
         final TextView alarmAmPm = (TextView) convertView.findViewById(R.id.am_pm_text_view);
         alarmAmPm.setText(Utility.getAmOrPm(timestamp));
@@ -155,6 +154,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                         UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
                 String[] selectionArgs = {String.valueOf(alarmItem.getId())};
                 alarmItem.updateAlarmInDatabase(values, selection, selectionArgs);
+                alarmItem.setTimestampBasedOnNextViableDay();
 
             }
         });

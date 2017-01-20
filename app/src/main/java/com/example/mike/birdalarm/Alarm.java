@@ -68,6 +68,7 @@ class Alarm implements Parcelable, Subject {
         this.context = context;
 
         this.timestamp = Utility.getTimeStampFromHourAndMinute(hour, minute);
+
         long wakeUpTime = getCorrectWakeUpTimeStamp(timestamp);
         setTimestamp(wakeUpTime);
 
@@ -181,10 +182,21 @@ class Alarm implements Parcelable, Subject {
 
     void setTimestampBasedOnNextViableDay() {
 
-        timestamp = NewAlarmTimeStampProvider.getTimestamp(timestamp, days, alarmIsRepeating);
-        Log.v(LOG_TAG, "New timestamp: " + Utility.getFormattedTime(timestamp));
-        setTimestamp(timestamp);
-        reregisterAlarm();
+        long newTimestamp = NewAlarmTimeStampProvider.getNextAlarmTimestamp(timestamp, days, alarmIsRepeating);
+
+        if(newTimestamp != -1) {
+
+            setTimestamp(newTimestamp);
+            reregisterAlarm();
+
+            Log.v(LOG_TAG, "New timestamp registered for: " + Utility.getFormattedTime(timestamp));
+
+        }
+        if(newTimestamp == -1) {
+
+            cancelAlarm();
+            Log.v(LOG_TAG, "Alarm cancelled ");
+        }
 
     }
 
@@ -193,11 +205,7 @@ class Alarm implements Parcelable, Subject {
         final long oneMinuteFromNow = System.currentTimeMillis();
 
         if (compareTimestampAndNow(timestamp, oneMinuteFromNow)) {
-
-            long in24HoursTimestamp = getTimestampFor24HoursBasedOnThisTimestamp(timestamp);
-
-            return in24HoursTimestamp;
-
+            return getTimestampFor24HoursBasedOnThisTimestamp(timestamp);
         } else {
             return timestamp;
         }

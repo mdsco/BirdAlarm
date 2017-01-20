@@ -2,81 +2,63 @@ package com.example.mike.birdalarm;
 
 import android.util.Log;
 
-import static java.util.Calendar.FRIDAY;
-import static java.util.Calendar.MONDAY;
-import static java.util.Calendar.SATURDAY;
-import static java.util.Calendar.SUNDAY;
-import static java.util.Calendar.THURSDAY;
-import static java.util.Calendar.TUESDAY;
-import static java.util.Calendar.WEDNESDAY;
+import static java.util.Calendar.*;
 
-
- class NewAlarmTimeStampProvider {
+class NewAlarmTimeStampProvider {
 
     private static final String LOG_TAG = NewAlarmTimeStampProvider.class.getSimpleName();
 
-     static long getTimestamp(long timestamp, Alarm.Days[] days, boolean repeating) {
+    static long getNextAlarmTimestamp(long timestamp, Alarm.Days[] days, boolean repeating) {
 
-        //this part works, I think
-        if (days.length == 1 && repeating) {
+        for (Alarm.Days day : days) {
 
-            if(timestamp < System.currentTimeMillis()) {
-                return Utility.getTimestampForAWeekFromCurrentTimestamp(timestamp);
+            String dayName = day.getDayName();
+
+            int dayIntForDayInList = getDayInt(dayName);
+            int hour = Utility.get24FormatHourFromTimeStamp(timestamp);
+            int minute = Utility.getMinuteFromTimeStamp(timestamp);
+
+            long newTimestamp = Utility.getTimeStampFromDayHourAndMinute
+                    (dayIntForDayInList, hour, minute);
+
+            String formattedTime = Utility.getFormattedTime(newTimestamp);
+
+            if (newTimestamp > System.currentTimeMillis()) {
+//                Log.v(LOG_TAG, formattedTime + " is new timestamp");
+                return newTimestamp;
             }
-            
-        } else if (days.length > 1) {
 
-            if(timestamp < System.currentTimeMillis()) {
-                for (int indexOfDayInWeek = 0; indexOfDayInWeek < days.length; indexOfDayInWeek++) {
+        }
 
-                    //get day of week as string from timestamp
-                    String dayOfWeekFromTimeStamp =
-                            Utility.getDayOfWeekFromTimeStampAsString(timestamp);
+        if (repeating) {
 
-                    int dayIntFromTimestamp = getDayInt(dayOfWeekFromTimeStamp);
-
-                    //get day of week from day name string as int
-                    String dayName = days[indexOfDayInWeek].getDayName();
-                    int dayIntForDayInList = getDayInt(dayName);
-
-                    //compare theses ints to make sure the one from the list is greater
-                    if (dayIntForDayInList > dayIntFromTimestamp) {
-
-                        //if it is greater create a new timestamp by adding the difference
-                        //between the daylist item int and the timestamp int
-                        int hour = Utility.getHourFromTimeStamp(timestamp);
-                        int minute = Utility.getMinuteFromTimeStamp(timestamp);
-
-                        return Utility.getTimeStampFromDayHourAndMinute(dayIntForDayInList, hour, minute);
-
-                    }
-
-                }
-            }
-            
-            if(repeating && days[days.length -1].getDayName().equals("Saturday")){
+            if (days.length != 0) {
 
                 String dayName = days[0].getDayName();
+                int weekFromTimeStampAsInt = Utility.getWeekFromTimeStampAsInt(timestamp);
+
+                int week = weekFromTimeStampAsInt;
+                if (weekFromTimeStampAsInt <= Utility.getWeekFromTimeStampAsInt(System.currentTimeMillis())) {
+                    week = weekFromTimeStampAsInt + 1;
+                }
 
                 int dayInt = getDayInt(dayName);
-
-                int day = Utility.getDayInMonthFromTimeStampAsInt(timestamp);
-                int hour = Utility.getHourFromTimeStamp(timestamp);
+                int hour = Utility.get24FormatHourFromTimeStamp(timestamp);
                 int minute = Utility.getMinuteFromTimeStamp(timestamp);
 
-                long timeStampFromDayHourAndMinute =
-                        Utility.getTimeStampFromDayHourAndMinute(day + dayInt, hour, minute);
+                long newTimestamp = Utility.getTimeStampFromWeekDayHourAndMinute(week, dayInt, hour, minute);
 
-                Log.v(LOG_TAG, "New timestamp day as int "
-                        + Utility.getDayInMonthFromTimeStampAsInt(timeStampFromDayHourAndMinute));
-                Log.v(LOG_TAG, "New timestamp day string "
-                        + Utility.getDayOfWeekFromTimeStampAsString(timeStampFromDayHourAndMinute));
+//                Log.v(LOG_TAG, Utility.getFormattedTime(newTimestamp)
+//                        + " is new timestamp");
+                return newTimestamp;
 
             }
 
-        } 
+        }
 
-        return 0;
+//        Log.v(LOG_TAG, "no new timestamp, -1 returned to indicate alarm cancel ");
+        //if -1 is returned no alarm should be triggered; need to cancel any pending alarms for passedin timestamp
+        return -1;
 
     }
 
