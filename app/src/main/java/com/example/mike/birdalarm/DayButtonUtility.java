@@ -88,6 +88,9 @@ class DayButtonUtility {
                 resetDaysListToSelectedDays(linearLayout, alarm);
 
                 updateDatebaseWithNewDaysString(alarm);
+
+                alarm.setTimestampBasedOnNextViableDay();
+
             }
         };
 
@@ -117,6 +120,7 @@ class DayButtonUtility {
         String[] selectionArgs = {String.valueOf(alarm.getId())};
 
         alarm.updateAlarmInDatabase(values, selection, selectionArgs);
+
     }
 
     private  void resetDaysListToSelectedDays(View view, Alarm alarm){

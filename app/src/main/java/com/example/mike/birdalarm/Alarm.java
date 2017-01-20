@@ -31,8 +31,7 @@ class Alarm implements Parcelable, Subject {
     private boolean vibrate;
 
     private boolean alarmIsRepeating;
-    private Days[] days = {Days.SUNDAY, Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY,
-            Days.THURSDAY, Days.FRIDAY, Days.SATURDAY};
+    private Days[] days = {};
     private boolean isExpanded;
 
     private AlarmManager alarmManager;
@@ -69,6 +68,9 @@ class Alarm implements Parcelable, Subject {
         this.context = context;
 
         this.timestamp = Utility.getTimeStampFromHourAndMinute(hour, minute);
+        long wakeUpTime = getCorrectWakeUpTimeStamp(timestamp);
+        setTimestamp(wakeUpTime);
+
         this.id = (int) this.timestamp;
 
         this.isActive = 1;
@@ -173,18 +175,14 @@ class Alarm implements Parcelable, Subject {
 
         pendingAlarmIntent = PendingIntent.getBroadcast(context, id, alarmIntent, 0);
 
-        long wakeUpTime = getCorrectWakeUpTimeStamp(timestamp);
-
-//      Uncomment below line for immediate alarm trigger
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, this.timestamp, pendingAlarmIntent);
-//        alarmManager.setExact(AlarmManager.RTC_WAKEUP, wakeUpTime, pendingAlarmIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, timestamp, pendingAlarmIntent);
     }
 
 
     void setTimestampBasedOnNextViableDay() {
 
         timestamp = NewAlarmTimeStampProvider.getTimestamp(timestamp, days, alarmIsRepeating);
-        Log.v(LOG_TAG, Utility.getFormattedTime(timestamp));
+        Log.v(LOG_TAG, "New timestamp: " + Utility.getFormattedTime(timestamp));
         setTimestamp(timestamp);
         reregisterAlarm();
 
@@ -192,15 +190,11 @@ class Alarm implements Parcelable, Subject {
 
     private long getCorrectWakeUpTimeStamp(long timestamp) {
 
-        final long oneMinuteFromNow = getOneMinuteFromNow();
+        final long oneMinuteFromNow = System.currentTimeMillis();
 
-        Log.v(LOG_TAG, "Now " + Utility.getFormattedTime(timestamp));
-        Log.v(LOG_TAG, "One minute from now " + Utility.getFormattedTime(oneMinuteFromNow));
-
-        if (timestamp < oneMinuteFromNow) {
+        if (compareTimestampAndNow(timestamp, oneMinuteFromNow)) {
 
             long in24HoursTimestamp = getTimestampFor24HoursBasedOnThisTimestamp(timestamp);
-            Log.v(LOG_TAG, "'24 hours' from now; " + Utility.getFormattedTime(in24HoursTimestamp));
 
             return in24HoursTimestamp;
 
@@ -209,26 +203,33 @@ class Alarm implements Parcelable, Subject {
         }
     }
 
-    private long getTimestampFor24HoursBasedOnThisTimestamp(long timestamp) {
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.setTimeZone(TimeZone.getDefault());
-        calendar2.setTimeInMillis(timestamp);
-        int dayOfYear = Utility.getDayOfYearFromTimeStamp(timestamp);
-        calendar2.set(Calendar.DAY_OF_YEAR, dayOfYear + 1);
+    private boolean compareTimestampAndNow(long timestamp, long now) {
 
-        return calendar2.getTimeInMillis();
+        if (Utility.getDayInMonthFromTimeStampAsInt(timestamp)
+                                == Utility.getDayInMonthFromTimeStampAsInt(now)) {
+            if (Utility.getHourFromTimeStamp(timestamp)
+                                    == Utility.getHourFromTimeStamp(now)) {
+                if (Utility.getMinuteFromTimeStamp(timestamp)
+                                        == Utility.getMinuteFromTimeStamp(now)) {
+
+                    return true;
+
+                }
+            }
+        }
+
+        return false;
+
     }
 
-    private long getOneMinuteFromNow() {
-
+    private long getTimestampFor24HoursBasedOnThisTimestamp(long timestamp) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getDefault());
-        long newTimestamp = System.currentTimeMillis();
-        int minuteFromTimeStamp = Utility.getMinuteFromTimeStamp(newTimestamp);
-        calendar.setTimeInMillis(newTimestamp);
-        calendar.set(Calendar.MINUTE, minuteFromTimeStamp + 1);
-        return calendar.getTimeInMillis();
+        calendar.setTimeInMillis(timestamp);
+        int dayOfYear = Utility.getDayOfYearFromTimeStamp(timestamp);
+        calendar.set(Calendar.DAY_OF_YEAR, dayOfYear + 1);
 
+        return calendar.getTimeInMillis();
     }
 
     void cancelAlarm() {
@@ -244,7 +245,6 @@ class Alarm implements Parcelable, Subject {
         addAlarmToDatabase();
 
     }
-
 
     public static final Parcelable.Creator<Alarm> CREATOR = new Parcelable.Creator<Alarm>() {
 
@@ -318,18 +318,26 @@ class Alarm implements Parcelable, Subject {
 
         }
 
-        public static Days getDaysEnumBasedOnString(String dayString){
+        public static Days getDaysEnumBasedOnString(String dayString) {
 
-            switch(dayString){
+            switch (dayString) {
 
-                case "Sunday": return SUNDAY;
-                case "Monday": return MONDAY;
-                case "Tuesday": return TUESDAY;
-                case "Wednesday": return WEDNESDAY;
-                case "Thursday": return THURSDAY;
-                case "Friday": return FRIDAY;
-                case "Saturday": return SATURDAY;
-                default: return SUNDAY;
+                case "Sunday":
+                    return SUNDAY;
+                case "Monday":
+                    return MONDAY;
+                case "Tuesday":
+                    return TUESDAY;
+                case "Wednesday":
+                    return WEDNESDAY;
+                case "Thursday":
+                    return THURSDAY;
+                case "Friday":
+                    return FRIDAY;
+                case "Saturday":
+                    return SATURDAY;
+                default:
+                    return SUNDAY;
             }
         }
 
@@ -353,6 +361,7 @@ class Alarm implements Parcelable, Subject {
         public String toString() {
             return this.dayName;
         }
+
     }
 
     private Days[] getDaysArrayFromDaysString(String days) {
