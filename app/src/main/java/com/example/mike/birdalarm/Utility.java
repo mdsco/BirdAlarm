@@ -38,7 +38,7 @@ public class Utility {
 
     }
 
-    public static long getTimeStampFromWeekDayHourAndMinute(int week, int day, int hour, int minute) {
+     static long getTimeStampFromWeekDayHourAndMinute(int week, int day, int hour, int minute) {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getDefault());
@@ -50,41 +50,6 @@ public class Utility {
 
         return calendar.getTimeInMillis();
     }
-
-    static long getTimeStampFromDayOfMonthHourAndMinute(int day, int hour, int minute) {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getDefault());
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
-
-        return calendar.getTimeInMillis();
-
-    }
-
-    static long getTimestampForAWeekFromCurrentTimestamp(long timestamp) {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getDefault());
-        calendar.setTimeInMillis(timestamp);
-        int dayInMonth = getDayInMonthFromTimeStampAsInt(timestamp);
-        calendar.set(Calendar.DAY_OF_MONTH, dayInMonth + 7);
-        calendar.set(Calendar.SECOND, 0);
-
-        return calendar.getTimeInMillis();
-
-    }
-
-    public static long getTimeStampForAlarmSleep(long timestamp) {
-
-        int hourFromTimeStamp = getHourFromTimeStamp(timestamp);
-        int minuteFromTimeStamp = getMinuteFromTimeStamp(timestamp);
-
-        return getTimeStampFromHourAndMinute(hourFromTimeStamp, minuteFromTimeStamp + 2);
-    }
-
 
     static long getTimeStampForAlarmSleep(Context context) {
 
@@ -120,13 +85,13 @@ public class Utility {
 
     }
 
-    static String getDayOfWeekFromTimeStampAsString(long timestamp) {
+    static int getWeekFromTimeStampAsInt(long timestamp) {
 
         Date date = new Date(timestamp);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("w");
         dateFormat.setTimeZone(TimeZone.getDefault());
 
-        return dateFormat.format(date);
+        return Integer.valueOf(dateFormat.format(date));
 
     }
 
@@ -140,13 +105,13 @@ public class Utility {
 
     }
 
-    static int getWeekFromTimeStampAsInt(long timestamp) {
+    static String getDayOfWeekFromTimeStampAsString(long timestamp) {
 
         Date date = new Date(timestamp);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("w");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
         dateFormat.setTimeZone(TimeZone.getDefault());
 
-        return Integer.valueOf(dateFormat.format(date));
+        return dateFormat.format(date);
 
     }
 
@@ -187,7 +152,8 @@ public class Utility {
     static String getFormattedTime(long timestamp) {
 
         Date date = new Date(timestamp);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("w EEE h:mm");
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("w EEE h:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("h:mm");
         TimeZone timeZone = TimeZone.getDefault();
         dateFormat.setTimeZone(timeZone);
 

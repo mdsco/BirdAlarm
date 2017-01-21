@@ -204,30 +204,11 @@ class Alarm implements Parcelable, Subject {
 
         final long oneMinuteFromNow = System.currentTimeMillis();
 
-        if (compareTimestampAndNow(timestamp, oneMinuteFromNow)) {
+        if (timestamp <= oneMinuteFromNow) {
             return getTimestampFor24HoursBasedOnThisTimestamp(timestamp);
         } else {
             return timestamp;
         }
-    }
-
-    private boolean compareTimestampAndNow(long timestamp, long now) {
-
-        if (Utility.getDayInMonthFromTimeStampAsInt(timestamp)
-                                == Utility.getDayInMonthFromTimeStampAsInt(now)) {
-            if (Utility.getHourFromTimeStamp(timestamp)
-                                    == Utility.getHourFromTimeStamp(now)) {
-                if (Utility.getMinuteFromTimeStamp(timestamp)
-                                        == Utility.getMinuteFromTimeStamp(now)) {
-
-                    return true;
-
-                }
-            }
-        }
-
-        return false;
-
     }
 
     private long getTimestampFor24HoursBasedOnThisTimestamp(long timestamp) {
