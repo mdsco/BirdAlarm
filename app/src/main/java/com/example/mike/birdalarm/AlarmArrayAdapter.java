@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
@@ -26,12 +28,16 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
     private final MainActivity activity;
     private String LOG_TAG = AlarmArrayAdapter.class.getSimpleName();
-    private View currentView;
     private TextView tomorrowView;
+    public int position;
 
 
     interface Deleter {
         void deleteThisAlarm(Alarm alarm);
+    }
+
+    interface ExpandCollapseListener {
+        void listItemCollapsed(Alarm alarm);
     }
 
     private Context context;
@@ -58,71 +64,18 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             convertView = inflater.inflate(R.layout.alarm_list_item, parent, false);
         }
 
+        final LinearLayout optionsSection =
+                (LinearLayout) convertView.findViewById(R.id.options_layout);
+
         final Alarm alarmItem = alarmList.get(position);
 
-        TextView alarmListItemTime =
-                (TextView) convertView.findViewById(R.id.alarm_time_text_view);
-
-        long timestamp = alarmItem.getTimestamp();
-
-        alarmListItemTime.setText(Utility.getFormattedTime(timestamp));
-
-
-        final TextView alarmAmPm = (TextView) convertView.findViewById(R.id.am_pm_text_view);
-        alarmAmPm.setText(Utility.getAmOrPm(timestamp));
-
-        TimeViewOnClickListener timeViewOnClickListener =
-                new TimeViewOnClickListener(activity, alarmItem, alarmAmPm);
-
-        alarmListItemTime.setOnClickListener(timeViewOnClickListener);
+        setTimeTextViews(convertView, alarmItem);
 
         tomorrowView = (TextView) convertView.findViewById(R.id.tomorrowTextView);
 //        TomorrowViewUpdater tomorrowViewUpdater =
 //                                      new TomorrowViewUpdater(tomorrowView, timestamp, context);
 
-        Switch alarmSwitch = (Switch) convertView.findViewById(R.id.alarm_active_switch);
-
-        boolean isActive = false;
-        if (alarmItem.getIsActive() == 1) {
-            isActive = true;
-        }
-
-        alarmSwitch.setChecked(isActive);
-        alarmSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Switch alarmSwitch = (Switch) view;
-                if (!alarmSwitch.isChecked()) {
-
-                    updateAlarmActiveStatus(alarmItem, false);
-                    alarmItem.cancelAlarm();
-
-                } else if (alarmSwitch.isChecked()) {
-
-                    updateAlarmActiveStatus(alarmItem, true);
-                    alarmItem.reregisterAlarm();
-                }
-            }
-
-            private void updateAlarmActiveStatus(Alarm alarm, boolean isActive) {
-
-                int value = isActive ? 1 : 0;
-                alarm.setIsActive(value);
-
-                ContentValues values = new ContentValues();
-                values.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE, value);
-
-                String selection =
-                        UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
-                String[] selectionArgs = {String.valueOf(alarmItem.getId())};
-
-                alarmItem.updateAlarmInDatabase(values, selection, selectionArgs);
-
-            }
-        });
-
-        final LinearLayout optionsSection =
-                (LinearLayout) convertView.findViewById(R.id.options_layout);
+        setAlarmSwitch(convertView, alarmItem);
 
         if (!alarmItem.isExpanded()) {
             optionsSection.setVisibility(View.GONE);
@@ -130,35 +83,9 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
         LinearLayout weekdaySection = (LinearLayout) convertView.findViewById(R.id.day_layout);
 
-        DayButtonUtility dayButtonUtility = new DayButtonUtility();
+        setDayButtons(alarmItem, weekdaySection);
 
-        dayButtonUtility.setListenerOnDayButtons(context, weekdaySection, alarmItem, tomorrowView);
-        dayButtonUtility.setCorrectDayButtonState(context, weekdaySection, alarmItem);
-
-        CheckBox repeatCheckBox = (CheckBox) convertView.findViewById(R.id.repeat_days_checkbox);
-        if(alarmItem.isAlarmIsRepeating()){
-            repeatCheckBox.setChecked(true);
-        }
-
-        repeatCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                alarmItem.setAlarmIsRepeating(!alarmItem.isAlarmIsRepeating());
-
-                ContentValues values = new ContentValues();
-                boolean repeating = alarmItem.isAlarmIsRepeating();
-                values.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING,
-                        repeating ? 1 : 0);
-                String selection =
-                        UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
-                String[] selectionArgs = {String.valueOf(alarmItem.getId())};
-                alarmItem.updateAlarmInDatabase(values, selection, selectionArgs);
-                alarmItem.setTimestampBasedOnNextViableDay();
-
-            }
-        });
-
+        setRepeatCheckbox(convertView, alarmItem);
 
         View selectAlarmLayout = convertView.findViewById(R.id.alarm_type_layout);
         selectAlarmLayout.setOnClickListener(getAlarmTypeSelection(position, alarmItem));
@@ -174,30 +101,61 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
         alarmTypeTextView.setText(formattedName);
 
-        CheckBox vibrateCheckbox = (CheckBox) convertView.findViewById(R.id.vibrateCheckBox);
-        if (alarmItem.getVibrate()) {
-            vibrateCheckbox.setChecked(true);
-        }
+        setVibrateCheckbox(convertView, alarmItem);
 
-        vibrateCheckbox.setOnClickListener(new View.OnClickListener() {
+        setAlarmLabel(convertView, alarmItem);
+
+        setDeleteAlarmButton(convertView, alarmItem);
+
+        setCollapseListItemButton(position, convertView, optionsSection, alarmItem);
+
+        return convertView;
+    }
+
+    private void setCollapseListItemButton(final int position, final View convertView,
+                                           final LinearLayout optionsSection, final Alarm alarmItem) {
+        Button collapseButton = (Button) convertView.findViewById(R.id.collapse_button);
+
+        collapseButton.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View view) {
 
-                alarmItem.setVibrateToOpposite();
-                ContentValues values = new ContentValues();
-                boolean vibrate = alarmItem.getVibrate();
-                values.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_VIBRATE,
-                        vibrate ? 1 : 0);
-                String selection =
-                        UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
-                String[] selectionArgs = {String.valueOf(alarmItem.getId())};
+                AlarmArrayAdapter.this.position = position;
 
-                alarmItem.updateAlarmInDatabase(values, selection, selectionArgs);
-                alarmItem.reregisterAlarm();
+                ExpandCollapseListener fragment =
+                        (ExpandCollapseListener) AlarmArrayAdapter.this.fragment;
+
+                if (!alarmItem.isExpanded()) {
+                    fragment.listItemCollapsed(alarmItem);
+                }
+
+
+
+                if (optionsSection.getVisibility() == View.VISIBLE) {
+                    Fx.toggleContents(getContext(), optionsSection, convertView);
+                } else if (optionsSection.getVisibility() == View.GONE) {
+                    Fx.toggleContents(getContext(), optionsSection, convertView);
+                }
+            }
+
+        });
+    }
+
+    private void setDeleteAlarmButton(View convertView, final Alarm alarmItem) {
+        Button deleteAlarmButton = (Button) convertView.findViewById(R.id.delete_alarm_button);
+
+        deleteAlarmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Deleter fragment = AlarmArrayAdapter.this.fragment;
+                fragment.deleteThisAlarm(alarmItem);
             }
         });
+    }
 
-
+    private void setAlarmLabel(View convertView, final Alarm alarmItem) {
         String label = alarmItem.getLabel();
 
         final TextView labelEditText = (EditText) convertView.findViewById(R.id.label_edit_text);
@@ -208,7 +166,12 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             labelEditText.setText(label);
         }
 
-        labelEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        labelEditText.setOnEditorActionListener(getLabelditorActionListener(alarmItem, labelEditText));
+    }
+
+    @NonNull
+    private TextView.OnEditorActionListener getLabelditorActionListener(final Alarm alarmItem, final TextView labelEditText) {
+        return new TextView.OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
@@ -233,35 +196,144 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
                 return true;
             }
-        });
+        };
+    }
 
-        Button deleteAlarmButton = (Button) convertView.findViewById(R.id.delete_alarm_button);
+    private void setVibrateCheckbox(View convertView, final Alarm alarmItem) {
+        CheckBox vibrateCheckbox = (CheckBox) convertView.findViewById(R.id.vibrateCheckBox);
+        if (alarmItem.getVibrate()) {
+            vibrateCheckbox.setChecked(true);
+        }
 
-        deleteAlarmButton.setOnClickListener(new View.OnClickListener() {
+        vibrateCheckbox.setOnClickListener(getVibrateButtonClickListener(alarmItem));
+    }
+
+    @NonNull
+    private View.OnClickListener getVibrateButtonClickListener(final Alarm alarmItem) {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Deleter fragment = AlarmArrayAdapter.this.fragment;
-                fragment.deleteThisAlarm(alarmItem);
+
+                alarmItem.setVibrateToOpposite();
+                ContentValues values = new ContentValues();
+                boolean vibrate = alarmItem.getVibrate();
+                values.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_VIBRATE,
+                        vibrate ? 1 : 0);
+                String selection =
+                        UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
+                String[] selectionArgs = {String.valueOf(alarmItem.getId())};
+
+                alarmItem.updateAlarmInDatabase(values, selection, selectionArgs);
+                alarmItem.reregisterAlarm();
             }
-        });
+        };
+    }
 
-        Button collapseButton = (Button) convertView.findViewById(R.id.collapse_button);
+    private void setRepeatCheckbox(View convertView, final Alarm alarmItem) {
 
-        collapseButton.setOnClickListener(new View.OnClickListener() {
+        CheckBox repeatCheckBox = (CheckBox) convertView.findViewById(R.id.repeat_days_checkbox);
+        if (alarmItem.isAlarmIsRepeating()) {
+            repeatCheckBox.setChecked(true);
+        }
 
+        repeatCheckBox.setOnClickListener(getRepeatCheckboxClickListener(alarmItem));
+    }
+
+    @NonNull
+    private View.OnClickListener getRepeatCheckboxClickListener(final Alarm alarmItem) {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (optionsSection.getVisibility() == View.VISIBLE) {
-                    Fx.toggleContents(getContext(), optionsSection);
-                } else if (optionsSection.getVisibility() == View.GONE) {
-                    Fx.toggleContents(getContext(), optionsSection);
+                alarmItem.setAlarmIsRepeating(!alarmItem.isAlarmIsRepeating());
+
+                ContentValues values = new ContentValues();
+                boolean repeating = alarmItem.isAlarmIsRepeating();
+                values.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_REPEATING,
+                        repeating ? 1 : 0);
+                String selection =
+                        UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
+                String[] selectionArgs = {String.valueOf(alarmItem.getId())};
+                alarmItem.updateAlarmInDatabase(values, selection, selectionArgs);
+                alarmItem.setTimestampBasedOnNextViableDay();
+
+            }
+        };
+    }
+
+    private void setDayButtons(Alarm alarmItem, LinearLayout weekdaySection) {
+        DayButtonUtility dayButtonUtility = new DayButtonUtility();
+
+        dayButtonUtility.setListenerOnDayButtons(context, weekdaySection, alarmItem, tomorrowView);
+        dayButtonUtility.setCorrectDayButtonState(context, weekdaySection, alarmItem);
+    }
+
+    private void setAlarmSwitch(View convertView, final Alarm alarmItem) {
+        Switch alarmSwitch = (Switch) convertView.findViewById(R.id.alarm_active_switch);
+
+        boolean isActive = false;
+        if (alarmItem.getIsActive() == 1) {
+            isActive = true;
+        }
+
+        alarmSwitch.setChecked(isActive);
+        alarmSwitch.setOnClickListener(getAlarmSwitchclickListener(alarmItem));
+    }
+
+    @NonNull
+    private View.OnClickListener getAlarmSwitchclickListener(final Alarm alarmItem) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Switch alarmSwitch = (Switch) view;
+                if (!alarmSwitch.isChecked()) {
+
+                    updateAlarmActiveStatus(alarmItem, false);
+                    alarmItem.cancelAlarm();
+
+                } else if (alarmSwitch.isChecked()) {
+
+                    updateAlarmActiveStatus(alarmItem, true);
+                    alarmItem.reregisterAlarm();
                 }
             }
 
-        });
 
-        return convertView;
+        };
+    }
+
+    private void updateAlarmActiveStatus(Alarm alarmItem, boolean isActive) {
+
+        int value = isActive ? 1 : 0;
+        alarmItem.setIsActive(value);
+
+        ContentValues values = new ContentValues();
+        values.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ACTIVE, value);
+
+        String selection =
+                UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(alarmItem.getId())};
+
+        alarmItem.updateAlarmInDatabase(values, selection, selectionArgs);
+
+    }
+
+    private void setTimeTextViews(View convertView, Alarm alarmItem) {
+        TextView alarmListItemTime =
+                (TextView) convertView.findViewById(R.id.alarm_time_text_view);
+
+        long timestamp = alarmItem.getTimestamp();
+
+        alarmListItemTime.setText(Utility.getFormattedTime(timestamp));
+
+
+        final TextView alarmAmPm = (TextView) convertView.findViewById(R.id.am_pm_text_view);
+        alarmAmPm.setText(Utility.getAmOrPm(timestamp));
+
+        TimeViewOnClickListener timeViewOnClickListener =
+                new TimeViewOnClickListener(activity, alarmItem, alarmAmPm);
+
+        alarmListItemTime.setOnClickListener(timeViewOnClickListener);
     }
 
     @NonNull
@@ -275,8 +347,8 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                 Intent intent = new Intent(context, AlarmSelectionActivity.class);
 
                 intent.putExtra("viewPosition", position);
-                intent.putExtra("alarmType", alarm.getAlarmType());
-                AlarmArrayAdapter.this.currentView = view;
+                String alarmType = alarm.getAlarmType();
+                intent.putExtra("alarmType", alarmType);
 
                 ((Activity) context).startActivityForResult(intent, 0);
 

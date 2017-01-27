@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +34,10 @@ class AlarmTypeArrayAdapter extends ArrayAdapter<String>
 
         this.context = context;
         this.listItems = listItems;
-        this.alarmTypeFromAlarm
-                = getTitle(((Activity) this.context).getIntent().getStringExtra("alarmType"));
+
+        String alarmType = ((Activity) this.context).getIntent().getStringExtra("alarmType");
+
+        this.alarmTypeFromAlarm = getTitle(alarmType);
     }
 
     @NonNull
@@ -45,7 +48,6 @@ class AlarmTypeArrayAdapter extends ArrayAdapter<String>
             LayoutInflater layoutInflater = ((Activity) context).getLayoutInflater();
             convertView = layoutInflater.inflate(R.layout.alarm_type_item, parent, false);
         }
-
 
         TextView listItemTextView = (TextView) convertView.findViewById(R.id.alarm_type_textview);
 

@@ -31,7 +31,9 @@
             android:layout_weight="2"
             android:layout_marginStart="10dp"
             android:text="8:00"
-            android:textSize="70sp" />
+            android:textSize="54sp"
+            android:elevation="1dp"
+            android:includeFontPadding="false" />
 
         <TextView
             android:id="@+id/am_pm_text_view"

@@ -3,6 +3,7 @@ package com.example.mike.birdalarm;
 import android.app.ListFragment;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,11 @@ import java.util.List;
 
 public class AlarmTypeListFragment extends ListFragment {
 
-
     private String LOG_TAG = AlarmTypeListFragment.class.getSimpleName();
 
     @Override
     public View onCreateView(LayoutInflater inflater,
-                                    ViewGroup container, Bundle savedInstanceState) {
+                             ViewGroup container, Bundle savedInstanceState) {
 
         View alarmTypeList = inflater.inflate(R.layout.fragment_alarm_type_list, container);
 
@@ -27,13 +27,13 @@ public class AlarmTypeListFragment extends ListFragment {
 
         alarmTypes.addAll(getVideosInAssets());
 
-        AlarmTypeArrayAdapter adapter =
-                new AlarmTypeArrayAdapter(getActivity(), R.layout.alarm_type_item, alarmTypes);
+        AlarmTypeArrayAdapter adapter = new AlarmTypeArrayAdapter(getActivity(), R.layout.alarm_type_item, alarmTypes);
 
         setListAdapter(adapter);
         adapter.setList(this);
 
         return alarmTypeList;
+
     }
 
     public List<String> getVideosInAssets(){

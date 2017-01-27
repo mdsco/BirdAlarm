@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (name) {
 
-            case "cute robin chirping":
+            case "small robin chirping":
                 return "small_robin_chirping.mp4";
             case "bower bird":
                 return "bower_bird.mp4";
@@ -139,6 +140,8 @@ public class MainActivity extends AppCompatActivity
                 return "bower_bird3.mp4";
             case "bower bird4":
                 return "bower_bird4.mp4";
+            case "red wing blackbird":
+                return "red_wing_blackbird.mp4";
             default:
                 return "";
         }

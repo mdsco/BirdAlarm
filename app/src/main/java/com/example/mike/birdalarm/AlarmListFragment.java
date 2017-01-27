@@ -21,7 +21,8 @@ import java.util.Date;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter.Deleter{
+public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter.Deleter,
+                                                    AlarmArrayAdapter.ExpandCollapseListener{
 
 
     private String LOG_TAG = AlarmListFragment.class.getSimpleName();
@@ -74,8 +75,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
             setExpandedStateOfAlarmsToFalse(alarmItems);
         }
 
-        adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems, activity);
-        setListAdapter(adapter);
+        createAdapterAndSetOnListFragment();
 
         cursor.close();
         return view;
@@ -158,9 +158,13 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
             alarmItems = savedInstanceState.getParcelableArrayList("alarms");
         }
 
+        createAdapterAndSetOnListFragment();
+
+    }
+
+    private void createAdapterAndSetOnListFragment() {
         adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems, activity);
         setListAdapter(adapter);
-
     }
 
     public void addAlarm(Context context, int hour, int minute) {
@@ -177,8 +181,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
         final int alarmPosition = alarmItems.indexOf(alarm);
 
-        adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems, activity);
-        setListAdapter(adapter);
+        createAdapterAndSetOnListFragment();
 
 
         ListView listView = (ListView) getActivity().findViewById(android.R.id.list);
@@ -231,7 +234,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     }
 
-    private void setExpandedStateOfAlarmsToFalse(ArrayList<Alarm> alarmItems) {
+    public static void setExpandedStateOfAlarmsToFalse(ArrayList<Alarm> alarmItems) {
         for (Alarm next : alarmItems) {
             next.setExpandedState(false);
         }
@@ -253,8 +256,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
         updateAlarmListInGlobalSpace(getActivity());
 
         //reload list view
-        adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems, activity);
-        setListAdapter(adapter);
+        createAdapterAndSetOnListFragment();
 
         Toast toast = Toast.makeText(getActivity(), Utility.getFormattedTime(alarm.getTimestamp())
                 + Utility.getAmOrPm(alarm.getTimestamp()).toLowerCase()
@@ -274,5 +276,16 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     public void setActivity(MainActivity activity) {
         this.activity = activity;
+    }
+
+    @Override
+    public void listItemCollapsed(Alarm alarm) {
+
+        setExpandedStateOfAlarmsToFalse(alarmItems);
+
+        alarm.setExpandedState(true);
+
+        createAdapterAndSetOnListFragment();
+
     }
 }
