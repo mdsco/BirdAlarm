@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity
 
                 ArrayList<Alarm> alarmItems = fragment.getAlarmItems();
 
-                Alarm alarm = alarmItems.get(viewPosition);
+                Alarm alarm = (Alarm) alarmItems.get(viewPosition);
 
                 //get filename from name
                 String fileName = getFileName(alarmName);

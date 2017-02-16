@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class GlobalState extends Application {
 
-    ArrayList<Alarm> alarmList = new ArrayList<Alarm>();
+    ArrayList<Alarm> alarmList = new ArrayList<>();
 
     public ArrayList<Alarm> getAlarmList() {
         return alarmList;
@@ -22,9 +22,9 @@ public class GlobalState extends Application {
         Alarm originalAlarm = null;
 
         for (Alarm alarmInList: alarmList) {
-            if(alarmInList.getId() == id){
-                originalAlarm = alarmInList;
-            }
+                if (alarmInList.getId() == id) {
+                    originalAlarm = alarmInList;
+                }
         }
 
         return originalAlarm;

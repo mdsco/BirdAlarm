@@ -22,8 +22,7 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter.Deleter,
-                                                    AlarmArrayAdapter.ExpandCollapseListener{
-
+        AlarmArrayAdapter.ExpandCollapseListener {
 
     private String LOG_TAG = AlarmListFragment.class.getSimpleName();
 
@@ -42,6 +41,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE,
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_VIBRATE,
             UserCreatedAlarmContract.NewAlarmEntry.COLUMN_LABEL
+
     };
 
     private int COL_ALARM_ID = 0;
@@ -68,7 +68,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
         Cursor cursor = contentResolver.query(UserCreatedAlarmContract
                 .NewAlarmEntry.CONTENT_URI, projection, null, null, null);
 
-        if(cursor != null && cursor.getCount() > 0){
+        if (cursor != null && cursor.getCount() > 0) {
 
             fillAlarmItems(cursor);
             sortAlarms(alarmItems);
@@ -85,14 +85,14 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK) {
 
-            for(Alarm alarm : alarmItems) {
-                if(resultCode == alarm.getId()) {
+            for (Alarm alarm : alarmItems) {
+                if (resultCode == alarm.getId()) {
                     alarm.setAlarmType(data.getStringExtra("NewBirdAlarm"));
                 }
             }
-        } else if(resultCode == RESULT_CANCELED){
+        } else if (resultCode == RESULT_CANCELED) {
             return;
         }
 
@@ -100,11 +100,11 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     private void fillAlarmItems(Cursor cursor) {
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
 
             do {
 
-                int alarmId =  cursor.getInt(COL_ALARM_ID);
+                int alarmId = cursor.getInt(COL_ALARM_ID);
                 long timestamp = cursor.getLong(COL_TIME);
                 int active = cursor.getInt(COL_ACTIVE);
                 int repeating = cursor.getInt(COL_REPEATING);
@@ -121,11 +121,11 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                 boolean vibrateBool = vibrate == 1 ? true : false;
 
                 alarmItems.add(new Alarm(getActivity(), alarmId, timestamp, active, days,
-                                            alarmIsRepeating, label, alarmType, vibrateBool));
+                        alarmIsRepeating, label, alarmType, vibrateBool));
 
                 updateAlarmListInGlobalSpace(getActivity());
 
-            } while(cursor.moveToNext());
+            } while (cursor.moveToNext());
 
         }
 
@@ -138,7 +138,8 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
         super.onActivityCreated(savedInstanceState);
 
-        getListView().setOnItemClickListener(new OnItemClickListenerListViewItem());
+        ExpandingListView listView = (ExpandingListView) getListView();
+//        getListView().setOnItemClickListener(new OnItemClickListenerListViewItem());
 
     }
 
@@ -148,13 +149,14 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
         outState.putParcelableArrayList("alarms", alarmItems);
 
+
     }
 
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             alarmItems = savedInstanceState.getParcelableArrayList("alarms");
         }
 
@@ -163,8 +165,15 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
     }
 
     private void createAdapterAndSetOnListFragment() {
+
         adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems, activity);
+
         setListAdapter(adapter);
+
+//        ListView listView = getListView();
+//        ((ExpandingListView)this.getListView()).setAdapter(adapter);
+
+
     }
 
     public void addAlarm(Context context, int hour, int minute) {
@@ -182,7 +191,6 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
         final int alarmPosition = alarmItems.indexOf(alarm);
 
         createAdapterAndSetOnListFragment();
-
 
         ListView listView = (ListView) getActivity().findViewById(android.R.id.list);
         listView.post(new Runnable() {
@@ -208,27 +216,28 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
             @Override
             public int compare(Alarm alarmOne, Alarm alarmTwo) {
 
-                long alarmOneTimestamp = alarmOne.getTimestamp();
-                long alarmTwoTimestamp = alarmTwo.getTimestamp();
+                    long alarmOneTimestamp = alarmOne.getTimestamp();
+                    long alarmTwoTimestamp = alarmTwo.getTimestamp();
 
-                int alarmOneHourFromTimeStamp = Utility.getHourFromTimeStamp(alarmOneTimestamp);
-                int alarmTwoHourFromTimeStamp = Utility.getHourFromTimeStamp(alarmTwoTimestamp);
+                    int alarmOneHourFromTimeStamp = Utility.getHourFromTimeStamp(alarmOneTimestamp);
+                    int alarmTwoHourFromTimeStamp = Utility.getHourFromTimeStamp(alarmTwoTimestamp);
 
-                int alarmOneMinuteFromTimeStamp = Utility.getMinuteFromTimeStamp(alarmOneTimestamp);
-                int alarmTwoMinuteFromTimeStamp = Utility.getMinuteFromTimeStamp(alarmTwoTimestamp);
+                    int alarmOneMinuteFromTimeStamp = Utility.getMinuteFromTimeStamp(alarmOneTimestamp);
+                    int alarmTwoMinuteFromTimeStamp = Utility.getMinuteFromTimeStamp(alarmTwoTimestamp);
 
 
-                if(alarmOneHourFromTimeStamp < alarmTwoHourFromTimeStamp){
-                    return -1;
-                }
-
-                if(alarmOneHourFromTimeStamp == alarmTwoHourFromTimeStamp){
-                    if(alarmOneMinuteFromTimeStamp < alarmTwoMinuteFromTimeStamp){
+                    if (alarmOneHourFromTimeStamp < alarmTwoHourFromTimeStamp) {
                         return -1;
                     }
-                }
 
-                return 1;
+                    if (alarmOneHourFromTimeStamp == alarmTwoHourFromTimeStamp) {
+                        if (alarmOneMinuteFromTimeStamp < alarmTwoMinuteFromTimeStamp) {
+                            return -1;
+                        }
+                    }
+
+                    return 1;
+
             }
         });
 

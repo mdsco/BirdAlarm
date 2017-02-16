@@ -4,7 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -74,6 +79,7 @@ class DayButtonUtility {
             @Override
             public void onClick(View view) {
                 Button button = (Button) view;
+
                 if(button.getTag().equals("off")){
                     setButtonLook(button, context, "on", Color.BLACK,
                                                     R.drawable.on_day_selection_button_shape);
@@ -106,6 +112,32 @@ class DayButtonUtility {
         button.setBackground(ContextCompat.getDrawable(context, drawable));
         button.setTextColor(color);
         button.setTag(onOffTagString);
+        setButtonTouchAnimation(button);
+
+    }
+
+
+    private void setButtonTouchAnimation(final Button button){
+
+        final DecelerateInterpolator dInterpolator = new DecelerateInterpolator();
+        final OvershootInterpolator oInterpolator = new OvershootInterpolator(10f);
+
+        button.animate().setDuration(200);
+
+        button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                    button.animate().setInterpolator(dInterpolator).scaleX(.7f).scaleY(.7f);
+                } else if(motionEvent.getAction() == MotionEvent.ACTION_UP){
+                    button.animate().setInterpolator(oInterpolator).scaleX(1f).scaleY(1f);
+                }
+
+                return false;
+            }
+        });
+
 
     }
 

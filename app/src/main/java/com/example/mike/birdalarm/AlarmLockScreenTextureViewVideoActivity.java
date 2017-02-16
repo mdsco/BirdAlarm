@@ -46,7 +46,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             int savedPostion = savedInstanceState.getInt("position", -1);
             boolean savedPlayingState = savedInstanceState.getBoolean("playing", true);
 
@@ -186,7 +186,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
 
         for (Alarm alarmInList : alarmList) {
             if (alarmInList.getId() == alarm.getId()) {
-                originalAlarm = alarmInList;
+                originalAlarm = (Alarm) alarmInList;
             }
         }
 
@@ -197,7 +197,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
 
         TextureView textureView = (TextureView) findViewById(R.id.textureView);
         textureView.setSurfaceTextureListener(this);
-        if(position == -1) {
+        if (position == -1) {
             Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
             textureView.startAnimation(animation);
         }
@@ -229,11 +229,11 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
-                    if(position != -1) {
+                    if (position != -1) {
                         mediaPlayer.seekTo(position);
                     }
                     mediaPlayer.start();
-                    if(!isPlaying){
+                    if (!isPlaying) {
                         mediaPlayer.pause();
                     }
                 }

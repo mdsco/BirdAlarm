@@ -17,14 +17,14 @@ public class Fx {
         if(alarmListItemContents.isShown()){
 
             slide_up(context, alarmListItemContents);
-            slide_up_parent(context, parent);
+//            slide_up_parent(context, parent);
 //            alarmListItemContents.setVisibility(View.GONE);
 
         } else {
 
 //            alarmListItemContents.setVisibility(View.VISIBLE);
             slide_down(context, alarmListItemContents);
-            slide_down_parent(context, parent);
+//            slide_down_parent(context, parent);
 
         }
     }

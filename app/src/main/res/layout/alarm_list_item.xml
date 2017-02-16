@@ -16,54 +16,73 @@
     <View
         android:layout_width="1dp"
         android:layout_height="1dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true" />
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 
     <LinearLayout
+        android:id="@+id/item_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/alarm_time_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="2"
+                android:elevation="1dp"
+                android:includeFontPadding="false"
+                android:text="8:00"
+                android:textSize="54sp" />
+
+            <TextView
+                android:id="@+id/am_pm_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="AM" />
+
+            <Switch
+                android:id="@+id/alarm_active_switch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1"
+                android:checked="true"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:textColor="@color/colorPrimary" />
+
+            <Button
+                android:id="@+id/collapse_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@android:color/transparent"
+                android:drawableLeft="@android:drawable/arrow_down_float"
+                android:stateListAnimator="@null" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/alarm_time_text_view"
-            android:layout_width="0dp"
+            android:id="@+id/tomorrowTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:layout_marginStart="10dp"
-            android:text="8:00"
-            android:textSize="54sp"
-            android:elevation="1dp"
-            android:includeFontPadding="false" />
-
-        <TextView
-            android:id="@+id/am_pm_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="AM" />
-
-        <Switch
-            android:id="@+id/alarm_active_switch"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:layout_marginEnd="20dp"
-            android:layout_gravity="center_vertical"
-            android:checked="true"
-            android:textColor="@color/colorPrimary" />
+            android:layout_marginStart="15dp"
+            android:text="Tomorrow"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tomorrowTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:onClick=""
-        android:text="Tomorrow"
-        android:textSize="18sp" />
-
-    <LinearLayout
+    <com.example.mike.birdalarm.ExpandingLayout
         android:id="@+id/options_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -73,10 +92,10 @@
             android:id="@+id/day_button_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -93,6 +112,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="3dp"
                     android:background="@drawable/off_day_selection_button_shape"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:tag="off"
                     android:text="S"
                     android:textColor="@color/colorWhite" />
@@ -104,6 +125,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="3dp"
                     android:background="@drawable/off_day_selection_button_shape"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:tag="off"
                     android:text="M"
                     android:textColor="@color/colorWhite" />
@@ -115,6 +138,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="3dp"
                     android:background="@drawable/off_day_selection_button_shape"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:tag="off"
                     android:text="T"
                     android:textColor="@color/colorWhite" />
@@ -126,6 +151,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="3dp"
                     android:background="@drawable/off_day_selection_button_shape"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:tag="off"
                     android:text="W"
                     android:textColor="@color/colorWhite" />
@@ -137,6 +164,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="3dp"
                     android:background="@drawable/off_day_selection_button_shape"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:tag="off"
                     android:text="T"
                     android:textColor="@color/colorWhite" />
@@ -148,6 +177,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="3dp"
                     android:background="@drawable/off_day_selection_button_shape"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:tag="off"
                     android:text="F"
                     android:textColor="@color/colorWhite" />
@@ -159,6 +190,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="3dp"
                     android:background="@drawable/off_day_selection_button_shape"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:tag="off"
                     android:text="S"
                     android:textColor="@color/colorWhite" />
@@ -170,9 +203,11 @@
                 android:id="@+id/repeat_days_checkbox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="10dp"
                 android:layout_gravity="end"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:text="Repeat" />
 
         </LinearLayout>
@@ -181,8 +216,8 @@
             android:id="@+id/alarm_type_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <Button
@@ -190,31 +225,36 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@android:color/transparent"
-                android:drawableStart="@android:drawable/ic_popup_reminder"
+                android:drawableStart="@drawable/bell_icon"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:stateListAnimator="@null" />
 
             <TextView
                 android:id="@+id/alarm_type_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textSize="18sp"
-                android:layout_alignTop="@+id/vibrateCheckBox"
                 android:layout_alignParentStart="true"
-                android:layout_marginStart="60dp" />
+                android:layout_alignTop="@+id/vibrateCheckBox"
+                android:layout_marginStart="60dp"
+                android:text="TextView"
+                android:textSize="18sp" />
 
             <CheckBox
                 android:id="@+id/vibrateCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vibrate"
-                android:gravity="center_vertical"
                 android:layout_alignBaseline="@+id/change_alarm_button"
                 android:layout_alignBottom="@+id/change_alarm_button"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="10dp" />
+                android:layout_marginEnd="10dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center_vertical"
+                android:text="Vibrate" />
 
         </RelativeLayout>
+
 
         <EditText
             android:id="@+id/label_edit_text"
@@ -223,41 +263,37 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:hint="Label"
             android:imeOptions="actionDone"
             android:inputType="textPersonName"
-            android:paddingStart="@dimen/activity_horizontal_margin"
-            android:paddingEnd="@dimen/activity_horizontal_margin" />
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin" />
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/delete_alarm_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:drawableLeft="@android:drawable/ic_menu_delete"
+            android:stateListAnimator="@null" />
+
+
+    </com.example.mike.birdalarm.ExpandingLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/delete_alarm_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@android:color/transparent"
-            android:drawableLeft="@android:drawable/ic_menu_delete"
-            android:stateListAnimator="@null" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="5"/>
-
-        <Button
-            android:id="@+id/collapse_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@android:color/transparent"
-            android:drawableLeft="@android:drawable/arrow_down_float"
-            android:stateListAnimator="@null" />
+            android:layout_weight="5"
+            android:focusable="false"
+            android:focusableInTouchMode="false" />
 
     </LinearLayout>
 

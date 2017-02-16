@@ -15,9 +15,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-class Alarm implements Parcelable, Subject {
+class Alarm implements Parcelable, Subject, OnSizeChangedListener {
 
     private static final String LOG_TAG = Alarm.class.getSimpleName();
+    private final int CELL_DEFAULT_HEIGHT = 200;
 
     public Context context = null;
 
@@ -37,6 +38,9 @@ class Alarm implements Parcelable, Subject {
     private AlarmManager alarmManager;
     private PendingIntent pendingAlarmIntent;
     private ArrayList<AlarmObserver> alarmObservers;
+
+    private int mCollapsedHeight = CELL_DEFAULT_HEIGHT;
+    private int mExpandedHeight = -1;
 
     Alarm(Context context, int alarmId, long timestamp, int active,
           String days, boolean repeating, String label, String alarmType, boolean vibrate) {
@@ -88,7 +92,7 @@ class Alarm implements Parcelable, Subject {
 
         alarmIsRepeating = false;
 
-        isExpanded = true;
+        isExpanded = false;
 
         registerAlarm(this.id);
 
@@ -450,4 +454,24 @@ class Alarm implements Parcelable, Subject {
         this.isActive = isActive;
     }
 
+    public int getCollapsedHeight() {
+        return mCollapsedHeight;
+    }
+
+    public void setCollapsedHeight(int collapsedHeight) {
+        mCollapsedHeight = collapsedHeight;
+    }
+
+    public int getExpandedHeight() {
+        return mExpandedHeight;
+    }
+
+    public void setExpandedHeight(int expandedHeight) {
+        mExpandedHeight = expandedHeight;
+    }
+
+    @Override
+    public void onSizeChanged(int newHeight) {
+        setExpandedHeight(newHeight);
+    }
 }
