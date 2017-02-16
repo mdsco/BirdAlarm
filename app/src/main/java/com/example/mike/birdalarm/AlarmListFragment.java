@@ -73,11 +73,11 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
             fillAlarmItems(cursor);
             sortAlarms(alarmItems);
             setExpandedStateOfAlarmsToFalse(alarmItems);
+            cursor.close();
         }
 
         createAdapterAndSetOnListFragment();
 
-        cursor.close();
         return view;
     }
 
@@ -92,9 +92,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                     alarm.setAlarmType(data.getStringExtra("NewBirdAlarm"));
                 }
             }
-        } else if (resultCode == RESULT_CANCELED) {
-            return;
-        }
+        } else if (resultCode == RESULT_CANCELED) {}
 
     }
 
@@ -116,9 +114,9 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new Date(timestamp));
 
-                boolean alarmIsRepeating = repeating == 1 ? true : false;
+                boolean alarmIsRepeating = repeating == 1;
 
-                boolean vibrateBool = vibrate == 1 ? true : false;
+                boolean vibrateBool = vibrate == 1;
 
                 alarmItems.add(new Alarm(getActivity(), alarmId, timestamp, active, days,
                         alarmIsRepeating, label, alarmType, vibrateBool));

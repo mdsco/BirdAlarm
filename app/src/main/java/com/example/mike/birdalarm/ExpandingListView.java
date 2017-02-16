@@ -17,15 +17,17 @@ package com.example.mike.birdalarm;
  */
 
 
-import android.animation.*;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class ExpandingListView extends ListView {
 
     private boolean mShouldRemoveObserver = false;
 
-    private List<View> mViewsToDraw = new ArrayList<View>();
+    private List<View> mViewsToDraw = new ArrayList<>();
 
     private int[] mTranslate;
 
@@ -103,8 +105,7 @@ public class ExpandingListView extends ListView {
             boolean isCellCompletelyDisappearing = bottom - yTranslateBottom < 0;
 
             // Hack to force the view to shrink correctly
-            isCollapsingBelowBottom = (yTranslateTop + yTranslateBottom > range) ? false
-                    : isCollapsingBelowBottom;
+            isCollapsingBelowBottom = yTranslateTop + yTranslateBottom <= range && isCollapsingBelowBottom;
 
             if (isCollapsingBelowBottom) {
                 yTranslateTop = yTranslateBottom - leftoverExtent;
@@ -165,7 +166,7 @@ public class ExpandingListView extends ListView {
         final int oldTop = view.getTop();
         final int oldBottom = view.getBottom();
 
-        final HashMap<View, int[]> oldCoordinates = new HashMap<View, int[]>();
+        final HashMap<View, int[]> oldCoordinates = new HashMap<>();
 
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -262,7 +263,7 @@ public class ExpandingListView extends ListView {
                 int yTranslateTop = mTranslate[0];
                 int yTranslateBottom = mTranslate[1];
 
-                ArrayList<Animator> animations = new ArrayList<Animator>();
+                ArrayList<Animator> animations = new ArrayList<>();
 
                 int index = indexOfChild(view);
 
@@ -386,7 +387,7 @@ public class ExpandingListView extends ListView {
         final int oldTop = view.getTop();
         final int oldBottom = view.getBottom();
 
-        final HashMap<View, int[]> oldCoordinates = new HashMap<View, int[]>();
+        final HashMap<View, int[]> oldCoordinates = new HashMap<>();
 
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -499,7 +500,7 @@ public class ExpandingListView extends ListView {
 				 * Animates all the cells present on the screen after the
 				 * collapse.
 				 */
-                ArrayList<Animator> animations = new ArrayList<Animator>();
+                ArrayList<Animator> animations = new ArrayList<>();
                 for (int i = 0; i < childCount; i++) {
                     View v = getChildAt(i);
                     if (v != view) {

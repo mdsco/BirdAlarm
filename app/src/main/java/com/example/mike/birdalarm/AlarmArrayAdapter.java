@@ -4,14 +4,11 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
@@ -24,7 +21,6 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
@@ -46,10 +42,6 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
     private List<Alarm> alarmList;
     private AlarmListFragment fragment;
 
-
-    private final int TYPE_REAL = 0;
-    private final int TYPE_FAKE = 1;
-
     AlarmArrayAdapter(Context context, AlarmListFragment fragment,
                       List<Alarm> alarmList, MainActivity activity) {
 
@@ -68,7 +60,6 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-
         if (convertView == null) {
 
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
@@ -78,93 +69,80 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
         final Alarm alarm = alarmList.get(position);
 
+        final View convertView2 = convertView;
 
-            final View convertView2 = convertView;
+        LinearLayout linearLayout = (LinearLayout) (convertView.findViewById(
+                R.id.item_linear_layout));
+        LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams
+                (AbsListView.LayoutParams.MATCH_PARENT, alarm.getCollapsedHeight());
+        linearLayout.setLayoutParams(linearLayoutParams);
 
-            final LinearLayout optionsSection =
-                    (LinearLayout) convertView.findViewById(R.id.options_layout);
+        final ExpandingListView listView = (ExpandingListView) fragment.getListView();
 
+        ExpandingLayout expandingLayout = (ExpandingLayout) convertView.findViewById(R.id.options_layout);
+        expandingLayout.setExpandedHeight(alarm.getExpandedHeight());
+        expandingLayout.setSizeChangedListener(alarm);
 
-            LinearLayout linearLayout = (LinearLayout) (convertView.findViewById(
-                    R.id.item_linear_layout));
-            LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams
-                    (AbsListView.LayoutParams.MATCH_PARENT, alarm.getCollapsedHeight());
-            linearLayout.setLayoutParams(linearLayoutParams);
+        if (!alarm.isExpanded()) {
+            expandingLayout.setVisibility(View.GONE);
+        } else {
+            expandingLayout.setVisibility(View.VISIBLE);
+        }
 
-            final ExpandingListView listView = (ExpandingListView) fragment.getListView();
+        final Alarm alarmItem = alarm;
 
-            ExpandingLayout expandingLayout = (ExpandingLayout) convertView.findViewById(R.id.options_layout);
-            expandingLayout.setExpandedHeight(alarm.getExpandedHeight());
-            expandingLayout.setSizeChangedListener(alarm);
+        setTimeTextViews(convertView, alarmItem);
 
-            if (!alarm.isExpanded()) {
-                expandingLayout.setVisibility(View.GONE);
-            } else {
-                expandingLayout.setVisibility(View.VISIBLE);
-            }
-
-
-            final Alarm alarmItem = (Alarm) alarm;
-
-            setTimeTextViews(convertView, alarmItem);
-
-            tomorrowView = (TextView) convertView.findViewById(R.id.tomorrowTextView);
+        tomorrowView = (TextView) convertView.findViewById(R.id.tomorrowTextView);
 //        TomorrowViewUpdater tomorrowViewUpdater =
 //                                      new TomorrowViewUpdater(tomorrowView, timestamp, context);
 
-            setAlarmSwitch(convertView, alarmItem);
+        setAlarmSwitch(convertView, alarmItem);
 
-            if (!alarmItem.isExpanded()) {
-                optionsSection.setVisibility(View.GONE);
-            }
+        LinearLayout weekdaySection = (LinearLayout) convertView.findViewById(R.id.day_layout);
 
-            LinearLayout weekdaySection = (LinearLayout) convertView.findViewById(R.id.day_layout);
+        setDayButtons(alarmItem, weekdaySection);
 
-            setDayButtons(alarmItem, weekdaySection);
+        setRepeatCheckbox(convertView, alarmItem);
 
-            setRepeatCheckbox(convertView, alarmItem);
+        View selectAlarmLayout = convertView.findViewById(R.id.alarm_type_layout);
+        selectAlarmLayout.setOnClickListener(getAlarmTypeSelection(position, alarmItem));
 
-            View selectAlarmLayout = convertView.findViewById(R.id.alarm_type_layout);
-            selectAlarmLayout.setOnClickListener(getAlarmTypeSelection(position, alarmItem));
+        View selectAlarmButton = convertView.findViewById(R.id.change_alarm_button);
+        selectAlarmButton.setOnClickListener(getAlarmTypeSelection(position, alarmItem));
 
-            View selectAlarmButton = convertView.findViewById(R.id.change_alarm_button);
-            selectAlarmButton.setOnClickListener(getAlarmTypeSelection(position, alarmItem));
+        TextView alarmTypeTextView =
+                (TextView) convertView.findViewById(R.id.alarm_type_textview);
 
-            TextView alarmTypeTextView =
-                    (TextView) convertView.findViewById(R.id.alarm_type_textview);
+        String alarmType = alarmItem.getAlarmType();
 
-            String alarmType = alarmItem.getAlarmType();
+        String formattedName = Utility.getFormattedNameFromFilename(alarmType);
 
-            String formattedName = Utility.getFormattedNameFromFilename(alarmType);
+        alarmTypeTextView.setText(formattedName);
 
-            alarmTypeTextView.setText(formattedName);
+        setVibrateCheckbox(convertView, alarmItem);
 
-            setVibrateCheckbox(convertView, alarmItem);
+        setAlarmLabel(convertView, alarmItem);
 
-            setAlarmLabel(convertView, alarmItem);
+        setDeleteAlarmButton(convertView, alarmItem);
 
-            setDeleteAlarmButton(convertView, alarmItem);
-
-            convertView.setLayoutParams(new ListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT,
-                    AbsListView.LayoutParams.WRAP_CONTENT));
+        convertView.setLayoutParams(new ListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT,
+                AbsListView.LayoutParams.WRAP_CONTENT));
 
 
-            Button collapseButton = (Button) convertView.findViewById(R.id.collapse_button);
-            collapseButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+        Button collapseButton = (Button) convertView.findViewById(R.id.collapse_button);
+        collapseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-                    if (!alarmItem.isExpanded()) {
-                        listView.expandView(convertView2);
-                    } else {
-                        listView.collapseView(convertView2);
-                    }
-
+                if (!alarmItem.isExpanded()) {
+                    listView.expandView(convertView2);
+                } else {
+                    listView.collapseView(convertView2);
                 }
-            });
 
-
-//        setCollapseListItemButton(position, convertView, optionsSection, alarmItem);
+            }
+        });
 
         return convertView;
     }

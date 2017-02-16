@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -94,19 +93,16 @@ public class MainActivity extends AppCompatActivity
 
             if (viewPosition != -1) {
 
-                //get Alarm to be updated
                 AlarmListFragment fragment = (AlarmListFragment) getFragmentManager()
                         .findFragmentById(R.id.alarm_list_fragment);
 
                 ArrayList<Alarm> alarmItems = fragment.getAlarmItems();
 
-                Alarm alarm = (Alarm) alarmItems.get(viewPosition);
+                Alarm alarm = alarmItems.get(viewPosition);
 
-                //get filename from name
                 String fileName = getFileName(alarmName);
                 alarm.setAlarmType(fileName);
 
-                //update alarm type in database
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_TYPE, fileName);
                 String selection = UserCreatedAlarmContract.NewAlarmEntry.COLUMN_ALARM_ID + " = ?";
