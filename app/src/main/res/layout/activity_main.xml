@@ -11,12 +11,17 @@
     android:descendantFocusability="blocksDescendants"
     tools:context="com.example.mike.birdalarm.MainActivity">
 
-    <fragment
-        android:id="@+id/alarm_list_fragment"
-        android:name="com.example.mike.birdalarm.AlarmListFragment"
+    <!--<fragment-->
+        <!--android:id="@+id/alarm_list_fragment"-->
+        <!--android:name="com.example.mike.birdalarm.AlarmListFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
+
+    <fragment android:id="@+id/alarm_recyclerview_fragment"
+        android:name="com.example.mike.birdalarm.AlarmRecyclerViewFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    
+
     <ImageButton
         android:id="@+id/add_alarm_button"
         android:background="@drawable/add_alarm_button_shape"

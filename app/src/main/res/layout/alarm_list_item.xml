@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -25,7 +26,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,52 +34,59 @@
 
             <TextView
                 android:id="@+id/alarm_time_text_view"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:layout_marginStart="10dp"
-                android:layout_weight="2"
                 android:elevation="1dp"
                 android:includeFontPadding="false"
                 android:text="8:00"
-                android:textSize="54sp" />
+                android:textSize="65sp" />
 
             <TextView
                 android:id="@+id/am_pm_text_view"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="AM" />
+                android:text="AM"
+                android:layout_alignBaseline="@+id/alarm_time_text_view"
+                android:layout_alignBottom="@+id/alarm_time_text_view"
+                android:layout_toEndOf="@+id/alarm_time_text_view"
+                android:layout_marginStart="7dp" />
 
             <Switch
                 android:id="@+id/alarm_active_switch"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="20dp"
-                android:layout_weight="1"
+                android:layout_marginEnd="75dp"
                 android:checked="true"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:layout_alignBottom="@+id/am_pm_text_view"
+                android:layout_alignParentEnd="true" />
 
-            <Button
-                android:id="@+id/collapse_button"
-                android:layout_width="0dp"
+            <ImageButton
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="7dp"
+                app:srcCompat="@drawable/down_arrow_32"
                 android:backgroundTint="@android:color/transparent"
-                android:drawableLeft="@android:drawable/arrow_down_float"
-                android:stateListAnimator="@null" />
+                android:id="@+id/collapse_button"
+                android:layout_alignParentEnd="true" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tomorrowTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="-10dp"
+            android:includeFontPadding="false"
             android:layout_marginStart="15dp"
             android:text="Tomorrow"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 
@@ -103,6 +111,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
+                android:layout_marginStart="10dp"
                 android:orientation="horizontal">
 
                 <Button
@@ -204,7 +213,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="20dp"
                 android:layout_weight="1"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
@@ -218,6 +227,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
             android:orientation="horizontal">
 
             <Button
@@ -247,7 +257,7 @@
                 android:layout_alignBaseline="@+id/change_alarm_button"
                 android:layout_alignBottom="@+id/change_alarm_button"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="22dp"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:gravity="center_vertical"
@@ -260,8 +270,8 @@
             android:id="@+id/label_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:ems="10"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -275,8 +285,10 @@
             android:id="@+id/delete_alarm_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginEnd="7dp"
             android:backgroundTint="@android:color/transparent"
-            android:drawableLeft="@android:drawable/ic_menu_delete"
+            android:drawableRight="@android:drawable/ic_menu_delete"
             android:stateListAnimator="@null" />
 
 
@@ -298,3 +310,51 @@
     </LinearLayout>
 
 </LinearLayout>
+
+
+<!--<LinearLayout-->
+
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:orientation="horizontal">-->
+
+<!--<TextView-->
+    <!--android:id="@+id/alarm_time_text_view"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginStart="10dp"-->
+    <!--android:layout_weight="2"-->
+    <!--android:elevation="1dp"-->
+    <!--android:includeFontPadding="false"-->
+    <!--android:text="8:00"-->
+    <!--android:textSize="54sp" />-->
+
+<!--<TextView-->
+    <!--android:id="@+id/am_pm_text_view"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="AM" />-->
+
+<!--<Switch-->
+    <!--android:id="@+id/alarm_active_switch"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:layout_marginEnd="20dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:checked="true"-->
+    <!--android:focusable="false"-->
+    <!--android:focusableInTouchMode="false"-->
+    <!--android:textColor="@color/colorPrimary" />-->
+
+<!--<Button-->
+    <!--android:id="@+id/collapse_button"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:backgroundTint="@android:color/transparent"-->
+    <!--android:drawableLeft="@android:drawable/arrow_down_float"-->
+    <!--android:stateListAnimator="@null" />-->
+
+<!--</LinearLayout>-->

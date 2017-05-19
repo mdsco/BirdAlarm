@@ -96,6 +96,37 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+
+        super.onActivityCreated(savedInstanceState);
+
+        ExpandingListView listView = (ExpandingListView) getListView();
+//        getListView().setOnItemClickListener(new OnItemClickListenerListViewItem());
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelableArrayList("alarms", alarmItems);
+
+
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            alarmItems = savedInstanceState.getParcelableArrayList("alarms");
+        }
+
+        createAdapterAndSetOnListFragment();
+
+    }
+
     private void fillAlarmItems(Cursor cursor) {
 
         if (cursor.moveToFirst()) {
@@ -131,37 +162,6 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-
-        super.onActivityCreated(savedInstanceState);
-
-        ExpandingListView listView = (ExpandingListView) getListView();
-//        getListView().setOnItemClickListener(new OnItemClickListenerListViewItem());
-
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putParcelableArrayList("alarms", alarmItems);
-
-
-    }
-
-    @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            alarmItems = savedInstanceState.getParcelableArrayList("alarms");
-        }
-
-        createAdapterAndSetOnListFragment();
-
-    }
-
     private void createAdapterAndSetOnListFragment() {
 
         adapter = new AlarmArrayAdapter(getActivity(), this, alarmItems, activity);
@@ -170,7 +170,6 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
 //        ListView listView = getListView();
 //        ((ExpandingListView)this.getListView()).setAdapter(adapter);
-
 
     }
 
@@ -252,7 +251,6 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
         //!!!determine if vertical offset needs to exist, toast currently overlaps add alarm button
         float toastVerticalOffset = 0.05f;
-
 
         alarm.cancelAlarm();
         //remove alarm from database

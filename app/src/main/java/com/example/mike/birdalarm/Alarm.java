@@ -18,7 +18,7 @@ import java.util.TimeZone;
 class Alarm implements Parcelable, Subject, OnSizeChangedListener {
 
     private static final String LOG_TAG = Alarm.class.getSimpleName();
-    private final int CELL_DEFAULT_HEIGHT = 200;
+    private final int CELL_DEFAULT_HEIGHT = 375;
 
     public Context context = null;
 

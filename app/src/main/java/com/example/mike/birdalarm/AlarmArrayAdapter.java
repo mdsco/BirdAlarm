@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -130,8 +131,9 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
                 AbsListView.LayoutParams.WRAP_CONTENT));
 
 
-        Button collapseButton = (Button) convertView.findViewById(R.id.collapse_button);
+        ImageButton collapseButton = (ImageButton) convertView.findViewById(R.id.collapse_button);
         collapseButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
 

@@ -5,6 +5,7 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="texture_view_width">1280dp</dimen>
     <dimen name="texture_view_height">736dp</dimen>
-    <dimen name="day_button_diameter">40dp</dimen>
+    <dimen name="day_button_diameter">35dp</dimen>
+    <dimen name="card_view_vertical">5dp</dimen>
 
 </resources>

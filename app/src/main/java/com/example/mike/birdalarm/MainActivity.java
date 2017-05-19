@@ -3,9 +3,12 @@ package com.example.mike.birdalarm;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.transition.Explode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,16 +18,16 @@ import android.widget.TimePicker;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
-        implements TimePickerDialog.OnTimeSetListener {
+public class MainActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
     private String LOG_TAG = MainActivity.class.getSimpleName();
-
-    public AlarmListFragment getAlarmListFragment() {
-        return alarmListFragment;
-    }
-
-    private AlarmListFragment alarmListFragment;
+    private AlarmRecyclerViewFragment alarmRecyclerViewFragment;
+//
+//    public AlarmListFragment getAlarmListFragment() {
+//        return alarmListFragment;
+//    }
+//
+//    private AlarmListFragment alarmListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +35,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        alarmListFragment = (AlarmListFragment) getFragmentManager()
-                .findFragmentById(R.id.alarm_list_fragment);
+        alarmRecyclerViewFragment = (AlarmRecyclerViewFragment) getFragmentManager()
+                                                .findFragmentById(R.id.alarm_recyclerview_fragment);
 
-        alarmListFragment.setActivity(this);
+        alarmRecyclerViewFragment.setActivity(this);
+
     }
 
     @Override
@@ -68,14 +72,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
 
-        alarmListFragment.addAlarm(MainActivity.this, hour, minute);
+        alarmRecyclerViewFragment.addAlarm(MainActivity.this, hour, minute);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateAlarmTypeForAlarmAtPositionInList(int resultCode, Intent data) {
+
         if (resultCode == RESULT_OK) {
 
             String alarmName = data.getStringExtra("alarmName");
@@ -93,8 +97,8 @@ public class MainActivity extends AppCompatActivity
 
             if (viewPosition != -1) {
 
-                AlarmListFragment fragment = (AlarmListFragment) getFragmentManager()
-                        .findFragmentById(R.id.alarm_list_fragment);
+                AlarmRecyclerViewFragment fragment = (AlarmRecyclerViewFragment) getFragmentManager()
+                                                            .findFragmentById(R.id.alarm_recyclerview_fragment);
 
                 ArrayList<Alarm> alarmItems = fragment.getAlarmItems();
 
@@ -113,15 +117,19 @@ public class MainActivity extends AppCompatActivity
                 alarm.reregisterAlarm();
 
                 //!!! A method in AlarmListFragment to reload the list might nice (to be called here)
-                ListView listView =
-                        (ListView) fragment.getView().findViewById(android.R.id.list);
-                TextView textView = (TextView) listView.getChildAt(viewPosition)
+
+                RecyclerView recyclerView = (RecyclerView) fragment.getView()
+                                                    .findViewById(R.id.alarm_recycler_view);
+
+                TextView textView = (TextView) recyclerView.getChildAt(viewPosition)
                         .findViewById(R.id.alarm_type_textview);
+
                 textView.setText(alarmName);
 
             }
 
         }
+
     }
 
     private String getFileName(String name) {
