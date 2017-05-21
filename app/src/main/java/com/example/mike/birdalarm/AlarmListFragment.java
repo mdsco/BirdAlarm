@@ -112,7 +112,6 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
 
         outState.putParcelableArrayList("alarms", alarmItems);
 
-
     }
 
     @Override

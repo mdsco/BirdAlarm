@@ -44,7 +44,7 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
     private AlarmListFragment fragment;
 
     AlarmArrayAdapter(Context context, AlarmListFragment fragment,
-                      List<Alarm> alarmList, MainActivity activity) {
+                                        List<Alarm> alarmList, MainActivity activity) {
 
         super(context, R.layout.alarm_list_item, alarmList);
 
@@ -129,7 +129,6 @@ class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
         convertView.setLayoutParams(new ListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT,
                 AbsListView.LayoutParams.WRAP_CONTENT));
-
 
         ImageButton collapseButton = (ImageButton) convertView.findViewById(R.id.collapse_button);
         collapseButton.setOnClickListener(new View.OnClickListener() {

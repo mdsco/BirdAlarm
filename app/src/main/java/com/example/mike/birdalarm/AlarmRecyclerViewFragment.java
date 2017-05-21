@@ -29,6 +29,8 @@ import static android.app.Activity.RESULT_OK;
 public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecyclerViewAdapter.Deleter {
 
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
+    private static final String ALARM_ITEMS = "alarms";
+
     private static final int SPAN_COUNT = 2;
     private static final String LOG_TAG = AlarmRecyclerViewFragment.class.getSimpleName();
     public final static String TAG = "RecyclerViewFragment";
@@ -93,13 +95,10 @@ public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecycler
                     .getSerializable(KEY_LAYOUT_MANAGER);
         }
 
-        Alarm alarm = new Alarm(getActivity(), 6, 25);
-        alarmItems.add(alarm);
-
         setRecyclerViewLayoutManager(currentLayoutManagerType);
-        alarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter(activity, alarmItems);
+        alarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter
+                                        (getActivity(), alarmItems, this, (MainActivity) getActivity());
         recyclerView.setAdapter(alarmRecyclerViewAdapter);
-
 
 //        createAdapterAndSetOnListFragment();
 
@@ -111,10 +110,10 @@ public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecycler
         super.onViewStateRestored(savedInstanceState);
 
         if (savedInstanceState != null) {
-            alarmItems = savedInstanceState.getParcelableArrayList("alarms");
+            alarmItems = savedInstanceState.getParcelableArrayList(ALARM_ITEMS);
         }
 
-        createAdapterAndSetOnListFragment();
+//        createAdapterAndSetOnListFragment();
 
     }
 
@@ -142,11 +141,12 @@ public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecycler
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(KEY_LAYOUT_MANAGER, currentLayoutManagerType);
-        outState.putParcelableArrayList("alarms", alarmItems);
+        outState.putParcelableArrayList(ALARM_ITEMS, alarmItems);
 
     }
 
     public void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
+
         int scrollPosition = 0;
 
         // If a layout manager has already been set, get current scroll position.
@@ -171,6 +171,7 @@ public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecycler
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.scrollToPosition(scrollPosition);
+
     }
 
     public void addAlarm(Context context, int hour, int minute) {
@@ -187,7 +188,12 @@ public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecycler
 
         final int alarmPosition = alarmItems.indexOf(alarm);
 
-        createAdapterAndSetOnListFragment();
+//        createAdapterAndSetOnListFragment();
+//        alarmRecyclerViewAdapter.notifyDataSetChanged();
+//        alarmRecyclerViewAdapter.notifyItemInserted(alarmPosition);
+
+//        alarmRecyclerViewAdapter.addAlarm(alarm);
+        alarmRecyclerViewAdapter.notifyDataSetChanged();
 
         recyclerView.post(new Runnable() {
             @Override
@@ -202,10 +208,11 @@ public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecycler
 
         layoutManager = new LinearLayoutManager(getActivity());
 
+        setRecyclerViewLayoutManager(currentLayoutManagerType);
         recyclerView = new RecyclerView(getActivity());
-        alarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter(activity, alarmItems);
+        alarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter
+                                    (activity, alarmItems, this, (MainActivity) getActivity());
         recyclerView.setAdapter(alarmRecyclerViewAdapter);
-        setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER);
 
     }
 
@@ -340,5 +347,7 @@ public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecycler
     public void setAlarmItems(ArrayList<Alarm> alarmItems) {
         this.alarmItems = alarmItems;
     }
+
+
 
 }
