@@ -63,6 +63,7 @@ class Alarm implements Parcelable, Subject, OnSizeChangedListener {
         isExpanded = true;
 
         registerAlarm(this.id);
+
     }
 
     Alarm(Context context, int hour, int minute) {
@@ -92,7 +93,7 @@ class Alarm implements Parcelable, Subject, OnSizeChangedListener {
 
         alarmIsRepeating = false;
 
-        isExpanded = false;
+        isExpanded = true;
 
         registerAlarm(this.id);
 

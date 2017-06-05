@@ -24,7 +24,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         Alarm alarmPassedInThroughIntent =
-                intent.getExtras().getParcelable("alarmPassedInThroughIntent");
+                        intent.getExtras().getParcelable("alarmPassedInThroughIntent");
 
         long timestamp = alarmPassedInThroughIntent.getTimestamp();
         String time = Utility.getFormattedTime(timestamp);
@@ -71,7 +71,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         PendingIntent sleepIntent =
                 NotificationActivity.getSleepIntent(context, mNotificationId, alarm);
 
-        //TODO - Decide what notification sound is going to be/Figure out how to make the alarm persist
+        //TODO - Decide what notification sound is going to be/Figure out how to make the alarm repeat
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.mipmap.ic_launcher)
