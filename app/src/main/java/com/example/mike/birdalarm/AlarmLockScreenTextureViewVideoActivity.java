@@ -63,6 +63,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
         Intent intent = getIntent();
         Alarm alarm = intent.getExtras().getParcelable("alarmPassedInThroughIntent");
 
+
         if (alarm != null) {
             this.vibrate = alarm.getVibrate();
 
@@ -128,12 +129,18 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
                     VibrationUtility.cancelVibration(vibrator);
                 }
 
-                GlobalState applicationContext = (GlobalState) getApplicationContext();
+                ApplicationSpace applicationContext = (ApplicationSpace) getApplicationContext();
                 ArrayList<Alarm> alarmList = applicationContext.getAlarmList();
 
                 Alarm originalAlarm = getOriginalAlarm(alarmList, alarm);
 
-                originalAlarm.setTimestampBasedOnNextViableDay();
+                //Set the next day that this alarm is viable
+                if(originalAlarm != null) {
+                    originalAlarm.setTimestampBasedOnNextViableDay();
+                } else {
+                    //TODO: find alarm in database and set new timestamp
+                    //and set next time
+                }
 
                 finish();
 
@@ -151,7 +158,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
                     VibrationUtility.cancelVibration(vibrator);
                 }
 
-                GlobalState applicationContext = (GlobalState) getApplicationContext();
+                ApplicationSpace applicationContext = (ApplicationSpace) getApplicationContext();
                 ArrayList<Alarm> alarmList = applicationContext.getAlarmList();
 
                 Alarm originalAlarm = getOriginalAlarm(alarmList, alarm);

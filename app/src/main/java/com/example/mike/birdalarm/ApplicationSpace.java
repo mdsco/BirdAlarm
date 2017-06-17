@@ -5,9 +5,9 @@ import android.app.Application;
 import java.util.ArrayList;
 
 
-public class GlobalState extends Application {
+public class ApplicationSpace extends Application {
 
-    ArrayList<Alarm> alarmList = new ArrayList<>();
+    private ArrayList<Alarm> alarmList = new ArrayList<>();
 
     public ArrayList<Alarm> getAlarmList() {
         return alarmList;

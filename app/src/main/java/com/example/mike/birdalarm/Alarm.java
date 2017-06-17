@@ -184,10 +184,10 @@ class Alarm implements Parcelable, Subject, OnSizeChangedListener {
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, timestamp, pendingAlarmIntent);
     }
 
-
     void setTimestampBasedOnNextViableDay() {
 
-        long newTimestamp = NewAlarmTimeStampProvider.getNextAlarmTimestamp(timestamp, days, alarmIsRepeating);
+        long newTimestamp = NewAlarmTimeStampProvider
+                                .getNextAlarmTimestamp(timestamp, days, alarmIsRepeating);
 
         if(newTimestamp != -1) {
 
@@ -197,6 +197,7 @@ class Alarm implements Parcelable, Subject, OnSizeChangedListener {
             Log.v(LOG_TAG, "New timestamp registered for: " + Utility.getFormattedTime(timestamp));
 
         }
+
         if(newTimestamp == -1) {
 
             cancelAlarm();
@@ -234,7 +235,8 @@ class Alarm implements Parcelable, Subject, OnSizeChangedListener {
 
         cancelAlarm();
         deleteAlarmFromDatabase(this);
-        setId(getId() + 1);
+        int newId = getId() + 1;
+        setId(newId);
         registerAlarm(getId());
         addAlarmToDatabase();
 

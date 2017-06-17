@@ -35,7 +35,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
     Context context;
 
     private List<Alarm> alarmList;
-    private TextView tomorrowView;
     private Alarm currentAlarm;
     private float expandedViewElevation = 20.0f;
     private float expandedViewZ = 40.0f;
@@ -67,13 +66,18 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         final AutoTransition transition = new AutoTransition();
         transition.setDuration(100);
 
+        final View itemView = alarmViewHolder.itemView;
+
+
         alarmViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
 
             boolean visible = false;
 
             @Override
             public void onClick(@NonNull View view) {
-                
+
+
+
                 visible = currentAlarm.isExpanded();
 
                 Log.v("Initial elevation", collapsedViewElevation + "");
@@ -84,6 +88,8 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
 
                 visible = !visible;
 
+                Log.v("Visible", visible + "");
+
                 float elevation = visible ? expandedViewElevation : collapsedViewElevation;
                 float zVal = visible ? expandedViewZ : collapsedViewZ;
 
@@ -92,7 +98,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 currentAlarm.setExpandedState(visible ? true : false);
                 view.setElevation(elevation);
                 view.setTranslationZ(zVal);
-
 
             }
 
@@ -105,12 +110,16 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
     public void onBindViewHolder(AlarmViewHolder holder, int position) {
 
         currentAlarm = alarmList.get(position);
+        Log.v("Position", position + "");
 
-        tomorrowView = holder.tomorrowView;
         setTimeTextViews(holder.alarmTimeTextView, holder.aMPmTextView, currentAlarm);
         setAlarmSwitch(holder.onOffSwitch, currentAlarm);
         setRepeatCheckbox(holder.repeatCheckbox, currentAlarm);
-        setDayButtons(currentAlarm, holder.weekdaySection);
+
+        TextView tomorrowView = holder.tomorrowView;
+        setTomorrowView(holder.weekdaySection, tomorrowView);
+        setDayButtons(currentAlarm, holder.weekdaySection, tomorrowView);
+
         holder.selectAlarmButton.setOnClickListener(getAlarmTypeSelection(position, currentAlarm));
         holder.selectAlarmTextView.setOnClickListener(getAlarmTypeSelection(position, currentAlarm));
         String formattedName = Utility.getFormattedNameFromFilename(currentAlarm.getAlarmType());
@@ -129,8 +138,8 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
             holder.itemView.setZ(expandedViewZ);
         }
 
-
     }
+
 
     @Override
     public int getItemCount() {
@@ -152,7 +161,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         TextView aMPmTextView;
         Switch onOffSwitch;
 
-
         public AlarmViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -162,17 +170,14 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
             repeatCheckbox = (CheckBox) itemView.findViewById(R.id.repeat_days_checkbox);
             deleteAlarmButton= (Button) itemView.findViewById(R.id.delete_alarm_button);
             weekdaySection = (LinearLayout) itemView.findViewById(R.id.day_layout);
-
+            tomorrowView = (TextView) itemView.findViewById(R.id.tomorrowTextView);
             selectAlarmButton = (Button) itemView.findViewById(R.id.change_alarm_button);
             selectAlarmTextView = (TextView) itemView.findViewById(R.id.alarm_type_textview);
             labelEditText = (EditText) itemView.findViewById(R.id.label_edit_text);
             vibrateCheckBox = (CheckBox) itemView.findViewById(R.id.vibrateCheckBox);
-            tomorrowView = (TextView) itemView.findViewById(R.id.tomorrowTextView);
             constraintLayout = (ConstraintLayout) itemView.findViewById(R.id.card_options_layout);
 
         }
-
-
 
     }
 
@@ -186,6 +191,13 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 fragment.deleteThisAlarm(alarmItem);
             }
         });
+    }
+
+
+    private void setTomorrowView(LinearLayout weekdaySection, TextView tomorrowView) {
+
+        DayButtonUtility.setTomorrowLabelBasedOnAlarmId(weekdaySection, tomorrowView);
+
     }
 
     private void setAlarmLabel(EditText labelEditText, final Alarm alarmItem) {
@@ -206,16 +218,12 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
 //            }
 //        });
 
-
-
         labelEditText.setOnEditorActionListener(getLabelEditorActionListener(alarmItem, labelEditText));
     }
 
     @NonNull
     private TextView.OnEditorActionListener getLabelEditorActionListener(final Alarm alarmItem, final TextView labelEditText) {
         return new TextView.OnEditorActionListener() {
-
-
 
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
@@ -304,7 +312,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         };
     }
 
-    private void setDayButtons(Alarm alarmItem, LinearLayout weekdaySection) {
+    private void setDayButtons(Alarm alarmItem, LinearLayout weekdaySection, TextView tomorrowView) {
         DayButtonUtility dayButtonUtility = new DayButtonUtility();
 
         dayButtonUtility.setListenerOnDayButtons(context, weekdaySection, alarmItem, tomorrowView);

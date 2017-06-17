@@ -27,7 +27,7 @@ public class NotificationActivity extends Activity {
         boolean isSleeping = intent.getBooleanExtra(IS_SLEEPING, false);
         Alarm alarmPassedInThroughIntent = intent.getParcelableExtra("alarmPassedInThroughIntent");
 
-        GlobalState applicationContext = (GlobalState) getApplicationContext();
+        ApplicationSpace applicationContext = (ApplicationSpace) getApplicationContext();
         Alarm originalAlarm = applicationContext
                                         .getOriginalAlarm(alarmPassedInThroughIntent.getId());
 

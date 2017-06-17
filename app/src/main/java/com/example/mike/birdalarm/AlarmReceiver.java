@@ -14,6 +14,8 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
+import java.util.ArrayList;
+
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class AlarmReceiver extends WakefulBroadcastReceiver {
@@ -26,8 +28,9 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         Alarm alarmPassedInThroughIntent =
                         intent.getExtras().getParcelable("alarmPassedInThroughIntent");
 
+        //Commented out to prevent annoying bug for the moment
         long timestamp = alarmPassedInThroughIntent.getTimestamp();
-        String time = Utility.getFormattedTime(timestamp);
+        //String time = Utility.getFormattedTime(timestamp);
 
         KeyguardManager keyguardManager =
                 (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
@@ -55,7 +58,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
             context.startActivity(alarmIntent);
 
         } else {
-            createPopUpNotification(context, time, alarmPassedInThroughIntent);
+            //Commented out to prevent annoying bug for the moment
+            //createPopUpNotification(context, time, alarmPassedInThroughIntent);
 //                playAlarmSound(context);
 
         }

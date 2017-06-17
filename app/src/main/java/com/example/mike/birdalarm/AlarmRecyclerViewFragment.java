@@ -81,7 +81,7 @@ public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecycler
         layoutManager = new LinearLayoutManager(getActivity());
 
         alarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter
-                                        (getActivity(), alarmItems, this, (MainActivity) getActivity());
+                            (getActivity(), alarmItems, this, (MainActivity) getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(alarmRecyclerViewAdapter);
 
@@ -279,7 +279,7 @@ public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecycler
     }
 
     private void updateAlarmListInGlobalSpace(Context context) {
-        GlobalState applicationContext = (GlobalState) context.getApplicationContext();
+        ApplicationSpace applicationContext = (ApplicationSpace) context.getApplicationContext();
         applicationContext.setAlarmList(alarmItems);
     }
 

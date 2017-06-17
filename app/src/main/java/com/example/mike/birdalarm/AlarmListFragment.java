@@ -202,7 +202,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
     }
 
     private void updateAlarmListInGlobalSpace(Context context) {
-        GlobalState applicationContext = (GlobalState) context.getApplicationContext();
+        ApplicationSpace applicationContext = (ApplicationSpace) context.getApplicationContext();
         applicationContext.setAlarmList(alarmItems);
     }
 

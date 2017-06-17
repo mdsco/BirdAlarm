@@ -29,6 +29,14 @@ class DayButtonUtility {
         Button saturdayButton = (Button) view.findViewById(R.id.Saturday);
         Button sundayButton = (Button) view.findViewById(R.id.Sunday);
 
+        mondayButton.setTag("off");
+        tuesdayButton.setTag("off");
+        wednesdayButton.setTag("off");
+        thursdayButton.setTag("off");
+        fridayButton.setTag("off");
+        saturdayButton.setTag("off");
+        sundayButton.setTag("off");
+
         Alarm.Days[] days = alarm.getDays();
 
         for (Alarm.Days day : days) {
@@ -193,7 +201,7 @@ class DayButtonUtility {
         alarm.setDays(days);
     }
 
-    private  String addDayLabel(String day, Button button, int commaCount, int onCount){
+    private static String addDayLabel(String day, Button button, int commaCount, int onCount){
 
         String alarmDaysLabelString = "";
 
@@ -209,7 +217,7 @@ class DayButtonUtility {
         return alarmDaysLabelString;
     }
 
-    private  void setTomorrowLabelBasedOnAlarmId(
+    public static void setTomorrowLabelBasedOnAlarmId(
                                             LinearLayout linearLayout, TextView tomorrowView){
 
         String alarmDaysLabelString = "";
