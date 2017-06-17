@@ -1,6 +1,7 @@
 package com.example.mike.birdalarm;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -68,12 +69,11 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
 
         alarmViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
 
-//            boolean visible = false;
             boolean visible = false;
 
             @Override
             public void onClick(@NonNull View view) {
-
+                
                 visible = currentAlarm.isExpanded();
 
                 Log.v("Initial elevation", collapsedViewElevation + "");
@@ -128,6 +128,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
             holder.itemView.setElevation(expandedViewElevation);
             holder.itemView.setZ(expandedViewZ);
         }
+
 
     }
 
@@ -197,17 +198,28 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
             labelEditText.setText(label);
         }
 
-        labelEditText.setOnEditorActionListener(getLabelditorActionListener(alarmItem, labelEditText));
+//        labelEditText.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                InputMethodManager imm = (InputMethodManager) context.getSystemService(Service.INPUT_METHOD_SERVICE);
+//                imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+//            }
+//        });
+
+
+
+        labelEditText.setOnEditorActionListener(getLabelEditorActionListener(alarmItem, labelEditText));
     }
 
     @NonNull
-    private TextView.OnEditorActionListener getLabelditorActionListener(final Alarm alarmItem, final TextView labelEditText) {
+    private TextView.OnEditorActionListener getLabelEditorActionListener(final Alarm alarmItem, final TextView labelEditText) {
         return new TextView.OnEditorActionListener() {
+
+
 
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (actionId == EditorInfo.IME_ACTION_DONE || keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK) {
 
                     InputMethodManager inputMethodManager =
                             (InputMethodManager)
@@ -215,7 +227,8 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
 
                     inputMethodManager.hideSoftInputFromWindow(labelEditText.getWindowToken(), 0);
 
-                    labelEditText.clearFocus();
+                    final View focusView = activity.findViewById(R.id.focus_view);
+                    focusView.requestFocus();
 
                     String text = labelEditText.getText().toString();
 

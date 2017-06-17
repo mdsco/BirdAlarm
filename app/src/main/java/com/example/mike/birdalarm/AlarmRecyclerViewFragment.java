@@ -56,17 +56,17 @@ public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecycler
 
     private AlarmRecyclerViewAdapter alarmRecyclerViewAdapter;
     private ArrayList<Alarm> alarmItems = new ArrayList<>();
-    private RecyclerView recyclerView;
     private MainActivity activity;
+    private RecyclerView recyclerView;
+
     private RecyclerView.LayoutManager layoutManager;
-
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         initDataset();
     }
+
 
     @Nullable
     @Override
@@ -147,12 +147,12 @@ public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecycler
 
         alarmRecyclerViewAdapter.notifyDataSetChanged();
 
-        recyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-                recyclerView.smoothScrollToPosition(alarmPosition);
-            }
-        });
+//        recyclerView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                recyclerView.smoothScrollToPosition(alarmPosition);
+//            }
+//        });
 
     }
 
@@ -286,8 +286,13 @@ public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecycler
     public ArrayList<Alarm> getAlarmItems() {
         return alarmItems;
     }
+
     public void setAlarmItems(ArrayList<Alarm> alarmItems) {
         this.alarmItems = alarmItems;
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
     }
 
 }

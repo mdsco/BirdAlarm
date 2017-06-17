@@ -17,6 +17,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+        <View
+            android:id="@+id/focus_view"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            />
+
         <TextView
             android:id="@+id/alarm_time_text_view"
             android:layout_width="wrap_content"
@@ -54,8 +63,6 @@
             android:layout_alignParentEnd="true"
             android:layout_gravity="center_vertical"
             android:checked="true"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/collapse_button"
             android:textColor="@color/colorPrimary"
@@ -95,8 +102,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
                 android:text="Repeat"
                 android:layout_marginRight="8dp"
                 app:layout_constraintRight_toRightOf="@+id/day_layout"
@@ -128,8 +133,6 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/off_day_selection_button_shape"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:tag="off"
                     android:text="S"
                     android:textColor="@color/colorWhite" />
@@ -141,8 +144,6 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/off_day_selection_button_shape"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:tag="off"
                     android:text="M"
                     android:textColor="@color/colorWhite" />
@@ -154,8 +155,6 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/off_day_selection_button_shape"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:tag="off"
                     android:text="T"
                     android:textColor="@color/colorWhite" />
@@ -167,8 +166,6 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/off_day_selection_button_shape"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:tag="off"
                     android:text="W"
                     android:textColor="@color/colorWhite" />
@@ -180,8 +177,6 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/off_day_selection_button_shape"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:tag="off"
                     android:text="T"
                     android:textColor="@color/colorWhite" />
@@ -193,8 +188,6 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/off_day_selection_button_shape"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:tag="off"
                     android:text="F"
                     android:textColor="@color/colorWhite" />
@@ -206,8 +199,6 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/off_day_selection_button_shape"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:tag="off"
                     android:text="S"
                     android:textColor="@color/colorWhite" />
@@ -220,8 +211,6 @@
                 android:layout_height="50dp"
                 android:backgroundTint="@android:color/transparent"
                 android:drawableStart="@drawable/bell_icon"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
                 android:stateListAnimator="@null"
                 android:layout_marginLeft="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -250,8 +239,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
                 android:text="Vibrate"
                 android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -266,13 +253,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
                 android:hint="Label"
                 android:imeOptions="actionDone"
                 android:inputType="textPersonName"
                 android:paddingEnd="@dimen/activity_horizontal_margin"
                 android:paddingStart="@dimen/activity_horizontal_margin"
+                android:clickable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="16dp"
                 android:layout_marginTop="8dp"
