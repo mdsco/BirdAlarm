@@ -184,6 +184,7 @@ class Alarm implements Parcelable, Subject, OnSizeChangedListener {
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, timestamp, pendingAlarmIntent);
     }
 
+
     void setTimestampBasedOnNextViableDay() {
 
         long newTimestamp = NewAlarmTimeStampProvider

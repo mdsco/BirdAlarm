@@ -186,16 +186,17 @@ public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecycler
 
     private void initDataset() {
 
-        ContentResolver contentResolver = getActivity().getContentResolver();
-        Cursor cursor = contentResolver.query(UserCreatedAlarmContract
-                .NewAlarmEntry.CONTENT_URI, projection, null, null, null);
+//        ContentResolver contentResolver = getActivity().getContentResolver();
+//        Cursor cursor = contentResolver.query(UserCreatedAlarmContract
+//                .NewAlarmEntry.CONTENT_URI, projection, null, null, null);
+        alarmItems = AlarmDatabaseHelper.getAlarmItemsFromDatabase(getActivity());
 
-        if (cursor != null && cursor.getCount() > 0) {
-
-            fillAlarmItems(cursor);
+//        if (cursor != null && cursor.getCount() > 0) {
+        if(alarmItems.size() > 0){
+//            fillAlarmItems(cursor);
             sortAlarms(alarmItems);
             setExpandedStateOfAlarmsToFalse(alarmItems);
-            cursor.close();
+//            cursor.close();
 
         }
     }

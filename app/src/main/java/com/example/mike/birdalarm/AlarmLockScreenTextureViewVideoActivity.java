@@ -1,5 +1,6 @@
 package com.example.mike.birdalarm;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.SurfaceTexture;
@@ -27,7 +28,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
         implements TextureView.SurfaceTextureListener, AlarmInfoFragment.DialogClosedListener {
 
     private static final String LOG_TAG =
-            AlarmLockScreenTextureViewVideoActivity.class.getName();
+                            AlarmLockScreenTextureViewVideoActivity.class.getName();
 
     private String FILE_NAME;
     private MediaPlayer mMediaPlayer;
@@ -45,6 +46,7 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
 
         if (savedInstanceState != null) {
             int savedPostion = savedInstanceState.getInt("position", -1);
@@ -125,28 +127,44 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
             @Override
             public void onClick(View view) {
 
-                if (AlarmLockScreenTextureViewVideoActivity.this.vibrate) {
-                    VibrationUtility.cancelVibration(vibrator);
-                }
-
-                ApplicationSpace applicationContext = (ApplicationSpace) getApplicationContext();
-                ArrayList<Alarm> alarmList = applicationContext.getAlarmList();
-
-                Alarm originalAlarm = getOriginalAlarm(alarmList, alarm);
-
-                //Set the next day that this alarm is viable
-                if(originalAlarm != null) {
-                    originalAlarm.setTimestampBasedOnNextViableDay();
-                } else {
-                    //TODO: find alarm in database and set new timestamp
-                    //and set next time
-                }
+//                if (AlarmLockScreenTextureViewVideoActivity.this.vibrate) {
+//                    VibrationUtility.cancelVibration(vibrator);
+//                }
+//
+//                ApplicationSpace applicationContext = (ApplicationSpace) getApplicationContext();
+//                ArrayList<Alarm> alarmList = applicationContext.getAlarmList();
+//
+//                ArrayList<Alarm> alarms = AlarmDatabaseHelper
+//                                    .getAlarmItemsFromDatabase(getBaseContext());
+//
+//                Alarm originalAlarm = getOriginalAlarm(alarmList, alarm);
+//
+//                //Set the next day that this alarm is viable
+//                if(originalAlarm != null) {
+//
+////                    originalAlarm.setTimestampBasedOnNextViableDay();
+//
+//                } else {
+//
+//                    //TODO: find alarm in database and set new timestamp
+//                    //and set next time
+//
+//                }
 
                 finish();
 
             }
         };
     }
+
+
+
+    //I need to do this
+//    @Override
+//    public void onBackPressed() {
+//        stopAlarm();
+//        super.onBackPressed();
+//    }
 
     @NonNull
     private View.OnClickListener getSnoozeAlarmOnClickListener(final Alarm alarm) {
@@ -215,6 +233,13 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
         super.onDestroy();
     }
 
+//    private MediaPlayer.OnErrorListener mErrorListener = (mp, what, extra) -> {
+//        mp.stop();
+//        mp.release();
+//        mHandler.removeCallbacksAndMessages(null);
+//        return true;
+//    };
+
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture,
                                           int surfaceWidth, int surfaceHeight) {
@@ -222,11 +247,12 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
 
         Surface surface = new Surface(surfaceTexture);
 
+        mMediaPlayer = new MediaPlayer();
+//        mMediaPlayer.setOnErrorListener(mErrorListener);
         try {
 
             AssetFileDescriptor birdFileDiscriptor = getAssets().openFd(FILE_NAME);
 
-            mMediaPlayer = new MediaPlayer();
             mMediaPlayer.setDataSource(birdFileDiscriptor.getFileDescriptor(),
                     birdFileDiscriptor.getStartOffset(), birdFileDiscriptor.getLength());
             mMediaPlayer.setSurface(surface);

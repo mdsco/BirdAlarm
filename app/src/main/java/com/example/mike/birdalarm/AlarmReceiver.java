@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -48,13 +49,13 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         }
 
         if (locked || !screenOn) {
-
             Intent alarmIntent =
                     new Intent(context, AlarmLockScreenTextureViewVideoActivity.class);
             alarmIntent.putExtra("alarmPassedInThroughIntent", alarmPassedInThroughIntent);
 
             alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                    | Intent.FLAG_ACTIVITY_MULTIPLE_TASK |
+                    Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
             context.startActivity(alarmIntent);
 
         } else {
