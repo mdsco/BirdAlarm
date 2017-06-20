@@ -31,7 +31,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
         //Commented out to prevent annoying bug for the moment
         long timestamp = alarmPassedInThroughIntent.getTimestamp();
-        //String time = Utility.getFormattedTime(timestamp);
+        String time = Utility.getFormattedTime(timestamp);
 
         KeyguardManager keyguardManager =
                 (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
@@ -60,7 +60,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
         } else {
             //Commented out to prevent annoying bug for the moment
-            //createPopUpNotification(context, time, alarmPassedInThroughIntent);
+            createPopUpNotification(context, time, alarmPassedInThroughIntent);
 //                playAlarmSound(context);
 
         }

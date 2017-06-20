@@ -189,7 +189,7 @@ public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecycler
 //        ContentResolver contentResolver = getActivity().getContentResolver();
 //        Cursor cursor = contentResolver.query(UserCreatedAlarmContract
 //                .NewAlarmEntry.CONTENT_URI, projection, null, null, null);
-        alarmItems = AlarmDatabaseHelper.getAlarmItemsFromDatabase(getActivity());
+        alarmItems = AlarmDatabaseHelper.getAlarmItemsFromDatabase(getActivity(), true);
 
 //        if (cursor != null && cursor.getCount() > 0) {
         if(alarmItems.size() > 0){
@@ -224,7 +224,7 @@ public class AlarmRecyclerViewFragment extends Fragment implements AlarmRecycler
                 boolean vibrateBool = vibrate == 1;
 
                 alarmItems.add(new Alarm(getActivity(), alarmId, timestamp, active, days,
-                        alarmIsRepeating, label, alarmType, vibrateBool));
+                        alarmIsRepeating, label, alarmType, vibrateBool, true));
 
                 updateAlarmListInGlobalSpace(getActivity());
 

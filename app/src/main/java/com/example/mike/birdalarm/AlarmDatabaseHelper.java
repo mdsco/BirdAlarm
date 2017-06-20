@@ -36,7 +36,7 @@ public class AlarmDatabaseHelper {
     private static int COL_VIBRATE = 6;
     private static int COL_LABEL = 7;
 
-    public static ArrayList<Alarm> getAlarmItemsFromDatabase(Context context) {
+    public static ArrayList<Alarm> getAlarmItemsFromDatabase(Context context, boolean register) {
 
         ArrayList<Alarm> alarmItems = new ArrayList<>();
 
@@ -65,7 +65,7 @@ public class AlarmDatabaseHelper {
                 boolean vibrateBool = vibrate == 1;
 
                 alarmItems.add(new Alarm(context, alarmId, timestamp, active, days,
-                        alarmIsRepeating, label, alarmType, vibrateBool));
+                        alarmIsRepeating, label, alarmType, vibrateBool, register));
 
 
             } while (cursor.moveToNext());

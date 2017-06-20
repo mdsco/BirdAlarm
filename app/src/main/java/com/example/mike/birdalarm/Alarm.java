@@ -43,7 +43,7 @@ class Alarm implements Parcelable, Subject, OnSizeChangedListener {
     private int mExpandedHeight = -1;
 
     Alarm(Context context, int alarmId, long timestamp, int active,
-          String days, boolean repeating, String label, String alarmType, boolean vibrate) {
+          String days, boolean repeating, String label, String alarmType, boolean vibrate, boolean register) {
 
         this.context = context;
 
@@ -62,8 +62,9 @@ class Alarm implements Parcelable, Subject, OnSizeChangedListener {
 
         isExpanded = true;
 
-        registerAlarm(this.id);
-
+        if(register) {
+            registerAlarm(this.id);
+        }
     }
 
     Alarm(Context context, int hour, int minute) {

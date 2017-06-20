@@ -14,7 +14,7 @@ public class SnoozeAlarm extends Alarm implements AlarmObserver {
         super(context, originalAlarm.getId(), Utility.getTimeStampForAlarmSleep(context),
                                 originalAlarm.getIsActive(),
                                 Alarm.getDaysStringFromString(originalAlarm.getDays()), originalAlarm.isAlarmIsRepeating(),
-                                originalAlarm.getLabel(), originalAlarm.getAlarmType(), originalAlarm.getVibrate());
+                                originalAlarm.getLabel(), originalAlarm.getAlarmType(), originalAlarm.getVibrate(), true);
 
         this.originalAlarm = originalAlarm;
         this.originalAlarm.registerObserver(this);

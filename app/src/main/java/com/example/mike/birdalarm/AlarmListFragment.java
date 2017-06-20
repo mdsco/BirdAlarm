@@ -149,7 +149,7 @@ public class AlarmListFragment extends ListFragment implements AlarmArrayAdapter
                 boolean vibrateBool = vibrate == 1;
 
                 alarmItems.add(new Alarm(getActivity(), alarmId, timestamp, active, days,
-                        alarmIsRepeating, label, alarmType, vibrateBool));
+                        alarmIsRepeating, label, alarmType, vibrateBool, true));
 
                 updateAlarmListInGlobalSpace(getActivity());
 

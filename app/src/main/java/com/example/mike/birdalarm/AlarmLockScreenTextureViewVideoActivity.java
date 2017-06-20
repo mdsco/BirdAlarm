@@ -127,29 +127,33 @@ public class AlarmLockScreenTextureViewVideoActivity extends FragmentActivity
             @Override
             public void onClick(View view) {
 
-//                if (AlarmLockScreenTextureViewVideoActivity.this.vibrate) {
-//                    VibrationUtility.cancelVibration(vibrator);
-//                }
-//
+                if (AlarmLockScreenTextureViewVideoActivity.this.vibrate) {
+                    VibrationUtility.cancelVibration(vibrator);
+                }
+
+                /**
+                 * Get list of alarms stored in Application space
+                 */
+
 //                ApplicationSpace applicationContext = (ApplicationSpace) getApplicationContext();
 //                ArrayList<Alarm> alarmList = applicationContext.getAlarmList();
-//
-//                ArrayList<Alarm> alarms = AlarmDatabaseHelper
-//                                    .getAlarmItemsFromDatabase(getBaseContext());
-//
-//                Alarm originalAlarm = getOriginalAlarm(alarmList, alarm);
-//
-//                //Set the next day that this alarm is viable
-//                if(originalAlarm != null) {
-//
-////                    originalAlarm.setTimestampBasedOnNextViableDay();
-//
-//                } else {
-//
-//                    //TODO: find alarm in database and set new timestamp
-//                    //and set next time
-//
-//                }
+
+
+
+                ArrayList<Alarm> alarmList = AlarmDatabaseHelper
+                                        .getAlarmItemsFromDatabase(getBaseContext(), false);
+
+                Alarm originalAlarm = getOriginalAlarm(alarmList, alarm);
+
+                //Set the next day that this alarm is viable
+                if(originalAlarm != null) {
+//                    originalAlarm.setTimestampBasedOnNextViableDay();
+                } else {
+
+                    //TODO: find alarm in database and set new timestamp
+                    //and set next time
+
+                }
 
                 finish();
 
